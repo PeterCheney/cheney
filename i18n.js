@@ -98,11 +98,11 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 		// now we can try to load it
 
 		// fallback
-		$.getJSON( "res/i18n/" + this.fallbackLocale + ".json?_=" + timestamp).done(function(fallbackLocale){
+		$.getJSON( "https://cdn.jsdelivr.net/gh/PeterCheney/cheney/res/i18n/" + this.fallbackLocale + ".json?_=" + timestamp).done(function(fallbackLocale){
 			self.messages = fallbackLocale;
 			if (self.language != self.fallbackLocale ) {
 				// legacy
-				$.getJSON( "res/i18n/" + lang + ".json?_=" + timestamp).
+				$.getJSON( "https://cdn.jsdelivr.net/gh/PeterCheney/cheney/res/i18n/" + lang + ".json?_=" + timestamp).
 					then(function(legacyLocale){
 
 						console.log("loaded legacy locale for lang", lang, legacyLocale);
@@ -110,7 +110,7 @@ dojo.declare("com.nuclearunicorn.i18n.Lang", null, {
 						$.extend(self.messages, legacyLocale);
 
 						// crowdin
-						$.getJSON( "res/i18n/crowdin/" + lang + ".json?_=" + timestamp).then(function(crowdinLocale){
+						$.getJSON( "https://cdn.jsdelivr.net/gh/PeterCheney/cheney/res/i18n/crowdin/" + lang + ".json?_=" + timestamp).then(function(crowdinLocale){
 							console.log("loaded crowdin locale for lang", lang, crowdinLocale);
 
 							$.extend(self.messages, crowdinLocale);
