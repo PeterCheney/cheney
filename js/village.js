@@ -290,7 +290,7 @@ dojo.declare("classes.managers.VillageManager", com.nuclearunicorn.core.TabManag
 
 		//Allow festivals to double birth rate.
 		if (this.game.calendar.festivalDays > 0) {
-			kittensPerTick = kittensPerTick * (4 + 2 * this.game.getEffect("festivalArrivalRatio"));
+			kittensPerTick = kittensPerTick * (4 + 4 * this.game.getEffect("festivalArrivalRatio"));
 		}
 		//pollution decreases arrival speed
 		/*var pollutionArrivalSlowdown = this.game.bld.pollutionEffects["pollutionArrivalSlowdown"];
