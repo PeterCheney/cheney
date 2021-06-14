@@ -128,23 +128,6 @@ var cnItems = {
 	'Harbor': '港口',
 	'Warehouse': '仓库',
 	'Brewery': '酿酒厂',
-	'SpaceElevator': '太空电梯',
-	'Sattelite': '人造卫星',
-	'SpaceStation': '空间站',
-	'MoonOutpost': '月球前哨',
-	'MoonBase': '月球基地',
-	'PlanetCracker': '星球肢解',
-	'Hydrofracturer': '流体切割',
-	'SpiceRefinery': '香料提炼厂',
-	'ResearchVessel': '研究船',
-	'OrbitalArray': '轨道阵列',
-	'Sunlifter': '太阳能抽取',
-	'ContainmentChamber': '遏制室',
-	'Cryostation': '低温恒温储存站',
-	'SpaceBeacon': '太空灯塔',
-	'TerraformingStation': '星球改造站',
-	'Hydroponics': '水栽培',
-	'Tectonic': '构造',
 	'Solarchant': '阳光赞歌',
 	'Scholasticism': '经院哲学',
 	'GoldenSpire': '金色塔尖',
@@ -1566,6 +1549,7 @@ var run = function() {
 			}*/
 			var subOptions = options.auto.options;
 			if (options.auto.autoparagon.enabled) this.reset();
+			if (options.auto.trade.enabled) this.trade();
 			if (subOptions.enabled && subOptions.items.observe.enabled) this.observeStars();
 			if (options.auto.upgrade.enabled) this.upgrade();
 			if (subOptions.enabled && subOptions.items.festival.enabled) this.holdFestival();
@@ -1573,7 +1557,6 @@ var run = function() {
 			if (options.auto.space.enabled) this.space();
 			if (options.auto.faith.enabled) this.worship();
 			if (options.auto.craft.enabled) this.craft();
-			if (options.auto.trade.enabled) this.trade();
 			if (subOptions.enabled && subOptions.items.hunt.enabled) this.hunt();
 			if (options.auto.time.enabled) this.chrono();
 			//if (subOptions.enabled && subOptions.items.crypto.enabled) this.crypto();
@@ -1921,9 +1904,9 @@ var run = function() {
 											var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
 											game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
 											spaceModel.options.controller.build(spaceModel, spaceNumber);
-                                            if (game.resPool.resources[10].value < 1e4) {
-                                            	game.saveToFile(true);
-                                            }
+											if (game.resPool.resources[10].value < 1e4) {
+												game.saveToFile(true);
+											}
 										}
 										break;
 									case 'culture':
@@ -1967,7 +1950,7 @@ var run = function() {
 						if (Number.isInteger(game.stats.statGroups[0].group[3].val / 40)) {
 							game.saveToFile(true);
 						}
-                    }
+					}
 					for (var i = 0; i < game.challenges.challenges.length; i++) {
 						game.challenges.challenges[i].pending = false;
 					}
@@ -2206,16 +2189,16 @@ var run = function() {
 
 			if (upgrades.policies.enabled && game.science.meta[0].meta[10].researched) {
 				var poli = game.science.policies;
-				let noup = [8,34];
-				let autoparagon = [0, 3, 11, 16, 22, 23, 26, 27, 31,36];
-				let infiniit = [1, 2, 37];
-				if (options.auto.autoparagon.items.infinite.enabled) {
-					noup = noup.concat(infiniit);
-				} else {
+				let noup = [];
+				let autoparagon = [0, 3, 8, 11, 16, 22, 23, 26, 27, 31,34,36];
+				let infiniit = [1, 2, 37,8,34];
+				if ( options.auto.autoparagon.enabled) {
 					noup = noup.concat(autoparagon);
+				} else if (options.auto.autoparagon.items.infinite.enabled) {
+					noup = noup.concat(infiniit);
 				}
-				for (i = 0; i < noup.length; i++) {
-					var a = (noup[i]);
+				for (var i = 0; i < noup.length; i++) {
+					var a = noup[i];
 					if (poli[a].researched || !poli[a].unlocked) {
 						continue;
 					}
@@ -2513,7 +2496,7 @@ var run = function() {
 		},
 		hunt: function() {
 			var manpower = this.craftManager.getResource('manpower');
-            if (manpower.value < 100 || game.challenges.isActive("pacifism")) {return;}
+			if (manpower.value < 100 || game.challenges.isActive("pacifism")) {return;}
 			if (options.auto.options.items.hunt.subTrigger <= manpower.value / manpower.maxValue) {
 				// No way to send only some hunters. Thus, we hunt with everything
 				var huntCount = Math.floor(manpower.value / 100);
