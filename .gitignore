@@ -2,3 +2,5 @@ node_modules
 yarn-error.log
 build.version.json
 /res/i18n/
+paragon.html
+infinite.html
