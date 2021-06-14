@@ -1609,10 +1609,10 @@ var run = function() {
 					}
 				}
 
-				if (game.resPool.get("timeCrystal").value < 1e4  && options.auto.build.items.chronosphere.limited) {
+				if (game.resPool.get("timeCrystal").value < 1e4 && options.auto.build.items.chronosphere.limited) {
 					options.auto.build.items.chronosphere.limited = 0; //水晶低于保留值时关闭超时空传送仪
 				}
-			} 
+			}
 
 			if (!options.auto.autoparagon.items.infinite.enabled && options.auto.autoparagon.enabled) {
 				if (game.bld.get("workshop").on > 0 && game.science.get("construction").researched) {
@@ -1842,7 +1842,7 @@ var run = function() {
 					}
 				} else { //无限流
 					localStorage['cbc.kitten-scientists'] =
-						'{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true, "trade":' + false/*(xfldc_tradepost != 0)*/ + ',"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-templars":true,"toggle-limited-templars":' +
+						'{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true, "trade":' + false /*(xfldc_tradepost != 0)*/ + ',"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-templars":true,"toggle-limited-templars":' +
 						retain_templars +
 						',"toggle-field":false,"toggle-mine":false,"toggle-lumberMill":false,"toggle-quarry":false,"toggle-smelter":false,"toggle-biolab":false,"toggle-calciner":false,"toggle-reactor":false,"toggle-steamworks":false,"toggle-magneto":false,"toggle-library":true,"toggle-limited-library":300,"toggle-observatory":false,"toggle-tradepost":' +
 						(xfldc_tradepost != 0) + ',"toggle-limited-tradepost":' + xfldc_tradepost +
@@ -1865,7 +1865,7 @@ var run = function() {
 				else //无限流
 					localStorage['cbc.kitten-scientists'] =
 					'{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":false,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":true,"toggle-techs":true,"toggle-mine":false,"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-infinite":' +
-					options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-library":50,"toggle-limited-temple":' + retain_temple + ',"toggle-limited-hut":10,"toggle-limited-logHouse":' + retain_loghouse + ',"toggle-logHouse":true,"toggle-hut":true,"toggle-limited-workshop":' + retain_workshop + ',"toggle-hunt":false,"toggle-transcendence":true, "toggle-templars":true,"toggle-races":true,"toggle-missions":true,"set-missions-subTrigger":5,"toggle-mint":true,"toggle-limited-mint":10,"toggle-factory":false,"toggle-xfldc":' +false /*options.auto.autoparagon.items.xfldc.enabled*/ + '},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"space":0,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
+					options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-library":50,"toggle-limited-temple":' + retain_temple + ',"toggle-limited-hut":10,"toggle-limited-logHouse":' + retain_loghouse + ',"toggle-logHouse":true,"toggle-hut":true,"toggle-limited-workshop":' + retain_workshop + ',"toggle-hunt":false,"toggle-transcendence":true, "toggle-templars":true,"toggle-races":true,"toggle-missions":true,"set-missions-subTrigger":5,"toggle-mint":true,"toggle-limited-mint":10,"toggle-factory":false,"toggle-xfldc":' + false /*options.auto.autoparagon.items.xfldc.enabled*/ + '},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"space":0,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
 				loadFromKittenStorage();
 
 				if (localStorage['cbc.resetAutomatic.step'] == 1 || !localStorage['cbc.resetAutomatic.step']) {
@@ -2199,8 +2199,8 @@ var run = function() {
 			if (upgrades.policies.enabled && game.science.meta[0].meta[10].researched) {
 				var poli = game.science.policies;
 				let noup = [];
-				let autoparagon = [0, 3, 8, 11, 16, 22, 23, 26, 27, 31,34,36];
-				let infiniit = [1, 2, 37,8,34];
+				let autoparagon = [0, 3, 8, 11, 16, 22, 23, 26, 27, 31, 34, 36];
+				let infiniit = [1, 2, 37, 8, 34];
 				if (options.auto.autoparagon.enabled) {
 					noup = noup.concat(autoparagon);
 				} else if (options.auto.autoparagon.items.infinite.enabled) {
@@ -2505,7 +2505,9 @@ var run = function() {
 		},
 		hunt: function() {
 			var manpower = this.craftManager.getResource('manpower');
-			if (manpower.value < 100 || game.challenges.isActive("pacifism")) {return;}
+			if (manpower.value < 100 || game.challenges.isActive("pacifism")) {
+				return;
+			}
 			if (options.auto.options.items.hunt.subTrigger <= manpower.value / manpower.maxValue) {
 				// No way to send only some hunters. Thus, we hunt with everything
 				var huntCount = Math.floor(manpower.value / 100);
@@ -4122,7 +4124,7 @@ var run = function() {
 
 	var right = $('#rightColumn');
 
-	var addRule = function(rule) {
+	var addRule = function (rule) {
 		var sheets = document.styleSheets;
 		sheets[0].insertRule(rule, 0);
 	};
