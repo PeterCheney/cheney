@@ -756,7 +756,7 @@ var run = function() {
 					// Moon
 					moonOutpost: {
 						require: 'uranium',
-						limited: 9999,
+						limited: 100,
 						enabled: false
 					},
 					moonBase: {
@@ -785,7 +785,7 @@ var run = function() {
 					// Piscine
 					researchVessel: {
 						require: 'titanium',
-						limited: 9999,
+						limited: 60,
 						enabled: false
 					},
 					orbitalArray: {
@@ -1601,12 +1601,6 @@ var run = function() {
 					}
 					gamePage.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, x);
 					gamePage.timeTab.cfPanel.children[0].children[0].update();
-					if (game.console.filters["trade"].enabled) {
-						for (var i in game.console.filters) {
-							game.console.filters[i].enabled = false;
-						}
-						game.ui.renderFilters();
-					}
 				}
 
 				if (game.resPool.get("timeCrystal").value < 1e4 && options.auto.build.items.chronosphere.limited) {
@@ -1619,6 +1613,12 @@ var run = function() {
 					if (game.resPool.get("scaffold").value >= 2e8 && options.auto.craft.items.scaffold.limited) {
 						options.auto.craft.items.beam.enabled = false;
 						options.auto.craft.items.scaffold.limited = false;
+                        if (game.console.filters["trade"].enabled) {
+                        	for (var i in game.console.filters) {
+                        		game.console.filters[i].enabled = false;
+                        	}
+                        	game.ui.renderFilters();
+                        }
 					}
 
 					if (game.bld.get("factory").on == 160 && game.resPool.get("concrate").value > 1e8 && options.auto.craft.items.concrate.enabled) {
@@ -1665,7 +1665,7 @@ var run = function() {
 				if (game.religion.meta[1].meta[5].val == 0 && game.resPool.get("gold").value < 500) {
 					game.tabs[3].buttons[54].controller.onPurchase(game.tabs[3].buttons[54].model), game.tabs[3].buttons[55].controller.onPurchase(game.tabs[3].buttons[55].model);
 				}
-				game.update();
+				game.updateModel();
 			}
 
 			var kittens_check = false;
@@ -2073,9 +2073,9 @@ var run = function() {
 				}
 			}
 
-			if (refreshRequired) {
+			/*if (refreshRequired) {
 				game.ui.render();
-			}
+			}*/
 		},
 		chrono: function() {
 			if (!game.timeTab.visible) {
@@ -2142,19 +2142,19 @@ var run = function() {
 				if (options.auto.autoparagon.items.infinite.enabled)
 					noup = noup.concat(infiniteban);
 				workLoop:
-					for (var upg in work) {
+					for (var upg = 0; upg < work.length; upg++) {
 						if (work[upg].researched || !work[upg].unlocked) {
 							continue;
 						}
 
 						var prices = work[upg].prices;
-						for (var resource in prices) {
-							if (craftManager.getValueAvailable(prices[resource].name, true) < prices[resource].val) {
+						for (let workResource of prices) {
+							if (craftManager.getValueAvailable(workResource.name, true) < workResource.val) {
 								continue workLoop;
 							}
 						}
-						for (var name in noup) {
-							if (work[upg].name == noup[name]) {
+						for (let workName of noup) {
+							if (work[upg].name == workName) {
 								continue workLoop;
 							}
 						}
@@ -2175,20 +2175,19 @@ var run = function() {
 					noup = noup.concat(autoparagonban);
 				}
 				techLoop:
-					for (var upg in tech) {
+					for (var upg = 0; upg < tech.length; upg++) {
 						if (tech[upg].researched || !tech[upg].unlocked) {
 							continue;
 						}
 
 						var prices = tech[upg].prices;
-						for (var resource in prices) {
-							if (craftManager.getValueAvailable(prices[resource].name, true) < prices[resource].val && prices[resource].name !=
-								'parchment') {
+						for (let techResource of prices) {
+							if (craftManager.getValueAvailable(techResource.name, true) < techResource.val) {
 								continue techLoop;
 							}
 						}
-						for (var name in noup) {
-							if (tech[upg].name == noup[name]) {
+						for (let techName of noup) {
+							if (tech[upg].name == techName) {
 								continue techLoop;
 							}
 						}
@@ -2229,8 +2228,8 @@ var run = function() {
 
 						var model = game.tabs[6].GCPanel.children[i];
 						var prices = model.model.prices;
-						for (var resource in prices) {
-							if (craftManager.getValueAvailable(prices[resource].name, true) < prices[resource].val) {
+						for (let missResource of prices) {
+							if (craftManager.getValueAvailable(missResource.name, true) < missResource.val) {
 								continue missionLoop;
 							}
 						}
@@ -2401,9 +2400,9 @@ var run = function() {
 					refreshRequired = true;
 				}
 			}
-			if (refreshRequired) {
+			/*if (refreshRequired) {
 				game.ui.render();
-			}
+			}*/
 		},
 		space: function() {
 			var builds = options.auto.space.items;
@@ -2429,9 +2428,9 @@ var run = function() {
 					refreshRequired = true;
 				}
 			}
-			if (refreshRequired) {
+			/*if (refreshRequired) {
 				game.ui.render();
-			}
+			}*/
 		},
 		craft: function() {
 			var crafts = options.auto.craft.items;
@@ -2510,7 +2509,7 @@ var run = function() {
 			}
 			if (options.auto.options.items.hunt.subTrigger <= manpower.value / manpower.maxValue) {
 				// No way to send only some hunters. Thus, we hunt with everything
-				var huntCount = Math.floor(manpower.value / 100);
+				var huntCount = Math.floor(manpower.value / 100) - 1;
 				storeForSummary('hunt', huntCount);
 				activity('派出 ' + huntCount + ' 波小猫去打猎', 'ks-hunt');
 
@@ -2540,7 +2539,7 @@ var run = function() {
 			var trades = [];
 			var requireTrigger = options.auto.trade.trigger;
 
-			tradeManager.manager.render();
+			if (tradeManager.getTradeButton("zebras") == undefined) {tradeManager.manager.render();}
 
 			if (!tradeManager.singleTradePossible(undefined)) {
 				return;
