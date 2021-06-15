@@ -2253,12 +2253,13 @@ var run = function() {
 				var maxRaces = (game.diplomacy.get('leviathans').unlocked) ? 8 : 7;
 				if (game.diplomacyTab.racePanels.length < maxRaces) {
 					var manpower = craftManager.getValueAvailable('manpower', true);
+                    var freshrequire = false;
 					if (!game.diplomacy.get('lizards').unlocked) {
 						if (manpower >= 1000) {
 							game.resPool.get('manpower').value -= 1000;
 							activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
 							manpower -= 1000;
-							game.ui.render();
+							freshrequire =true;
 						}
 					}
 					if (!game.diplomacy.get('sharks').unlocked) {
@@ -2266,7 +2267,7 @@ var run = function() {
 							game.resPool.get('manpower').value -= 1000;
 							activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
 							manpower -= 1000;
-							game.ui.render();
+							freshrequire =true;
 						}
 					}
 					if (!game.diplomacy.get('griffins').unlocked) {
@@ -2274,7 +2275,7 @@ var run = function() {
 							game.resPool.get('manpower').value -= 1000;
 							activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
 							manpower -= 1000;
-							game.ui.render();
+							freshrequire =true;
 						}
 					}
 					if (!game.diplomacy.get('nagas').unlocked && game.resPool.get("culture").value >= 1500) {
@@ -2282,7 +2283,7 @@ var run = function() {
 							game.resPool.get('manpower').value -= 1000;
 							activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
 							manpower -= 1000;
-							game.ui.render();
+							freshrequire =true;
 						}
 					}
 					if (!game.diplomacy.get('zebras').unlocked && game.resPool.get("ship").value >= 1) {
@@ -2290,7 +2291,7 @@ var run = function() {
 							game.resPool.get('manpower').value -= 1000;
 							activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
 							manpower -= 1000;
-							game.ui.render();
+							freshrequire =true;
 						}
 					}
 					if (!game.diplomacy.get('spiders').unlocked && game.resPool.get("ship").value >= 100 && game.resPool.get(
@@ -2299,7 +2300,7 @@ var run = function() {
 							game.resPool.get('manpower').value -= 1000;
 							activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
 							manpower -= 1000;
-							game.ui.render();
+							freshrequire =true;
 						}
 					}
 					if (!game.diplomacy.get('dragons').unlocked && game.science.get("nuclearFission").researched) {
@@ -2307,9 +2308,10 @@ var run = function() {
 							game.resPool.get('manpower').value -= 1000;
 							activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
 							manpower -= 1000;
-							game.ui.render();
+							freshrequire =true;
 						}
 					}
+                    if (freshrequire) {game.render();}
 				}
 			}
 
