@@ -1613,12 +1613,6 @@ var run = function() {
 					if (game.resPool.get("scaffold").value >= 2e8 && options.auto.craft.items.scaffold.limited) {
 						options.auto.craft.items.beam.enabled = false;
 						options.auto.craft.items.scaffold.limited = false;
-                        if (game.console.filters["trade"].enabled) {
-                        	for (var i in game.console.filters) {
-                        		game.console.filters[i].enabled = false;
-                        	}
-                        	game.ui.renderFilters();
-                        }
 					}
 
 					if (game.bld.get("factory").on == 160 && game.resPool.get("concrate").value > 1e8 && options.auto.craft.items.concrate.enabled) {
@@ -1637,7 +1631,7 @@ var run = function() {
 						}
 					}
 
-					if (game.resPool.get("slab").value > 5e10 && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
+					if (game.resPool.get("slab").value > 2e10 && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
 						options.auto.craft.items.slab.enabled = false;
 						game.clearLog();
 					}
@@ -1648,8 +1642,19 @@ var run = function() {
 						options.auto.space.items.sattelite.limited = 50, options.auto.space.items.planetCracker.enabled = true, options.auto.build.items.mansion.limited = 999;
 						$("#toggle-spaceStation")[0].click();
 					}
-					if (!game.workshop.get("mWReactor").researched && game.resPool.get("unobtainium").value >= 1000 && game.space.meta[2].meta[0].on >= 1) {
+					if (!game.workshop.get("mWReactor").researched && game.resPool.get("unobtainium").value >= 1000 && game.space.meta[2].meta[0].on) {
 						game.craft("eludium", 1);
+					}
+				}
+
+				if (game.resPool.get("spice").value &&  game.science.getPolicy("carnivale").researched) {
+					game.tabs[2].policyPanel.children[27].controller.onPurchase(game.tabs[2].policyPanel.children[27].model, {}, function() {});
+
+					if (game.console.filters["trade"].enabled) {
+						for (var i in game.console.filters) {
+							game.console.filters[i].enabled = false;
+						}
+						game.ui.renderFilters();
 					}
 				}
 
