@@ -1647,7 +1647,7 @@ var run = function() {
 					}
 				}
 
-				if (game.resPool.get("spice").value &&  game.science.getPolicy("carnivale").researched) {
+				if (game.resPool.get("spice").value && !game.science.getPolicy("carnivale").researched) {
 					game.tabs[2].policyPanel.children[27].controller.onPurchase(game.tabs[2].policyPanel.children[27].model, {}, function() {});
 
 					if (game.console.filters["trade"].enabled) {
@@ -2203,7 +2203,7 @@ var run = function() {
 			if (upgrades.policies.enabled && game.science.meta[0].meta[10].researched) {
 				var poli = game.science.policies;
 				let noup = [];
-				let autoparagon = [0, 3, 8, 11, 16, 22, 23, 26, 27, 31, 34, 36];
+				let autoparagon = [0, 3, 8, 11, 16, 22, 23, 26, 31, 34, 36];
 				let infiniit = [1, 2, 37, 8, 34];
 				if (options.auto.autoparagon.enabled) {
 					noup = noup.concat(autoparagon);
