@@ -1590,6 +1590,7 @@ dojo.declare("com.nuclearunicorn.game.ui.GamePage", null, {
 			showNonApplicableButtons: false,
 			usePercentageConsumptionValues: false,
 			highlightUnavailable: true,
+            autoSaveReset: false,
 			hideSell: false,
 			hideDowngrade: false,
 			hideBGImage: false,
