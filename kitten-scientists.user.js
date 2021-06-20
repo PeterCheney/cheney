@@ -1595,7 +1595,7 @@ var run = function() {
                     gamePage.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, 20);
                 }
 
-                if (gamePage.workshop.get("chronoforge").researched && game.tabs[6].GCPanel.children[3].model.metaCached.val && gamePage.calendar.cycle != 5 && options.auto.autoparagon.items.infinite.enabled != true) {
+                if (gamePage.workshop.get("chronoforge").researched && game.tabs[6].GCPanel.children[3].model.metadata.val && gamePage.calendar.cycle != 5 && options.auto.autoparagon.items.infinite.enabled != true) {
                     var x = 5;
                     if (x > 4 && gamePage.calendar.cycleYear != 0) {
                         x = x - gamePage.calendar.cycleYear;
@@ -1639,7 +1639,7 @@ var run = function() {
                 }
 
                 if (game.science.meta[0].meta[41].researched && options.auto.build.items.mansion.limited < 999) {
-                    if (game.spaceTab.planetPanels.length && game.spaceTab.planetPanels[0].children[0].model.on > 12) {
+                    if (game.spaceTab.planetPanels.length && game.spaceTab.planetPanels[0].children[0].model.metadata.on > 12) {
                         options.auto.space.items.sattelite.limited = 50, options.auto.space.items.planetCracker.enabled = true, options.auto.build.items.mansion.limited = 999;
                         $("#toggle-spaceStation")[0].click();
                     }
@@ -1671,8 +1671,7 @@ var run = function() {
                 if (game.religion.meta[1].meta[5].val == 0 && game.resPool.get("gold").value < 500) {
                     game.tabs[3].buttons[54].controller.onPurchase(game.tabs[3].buttons[54].model), game.tabs[3].buttons[55].controller.onPurchase(game.tabs[3].buttons[55].model);
                 }
-                game.resPool.update();
-                game.bld.update();
+                game.updateCaches();
                 game.village.update();
             }
 
@@ -1829,9 +1828,7 @@ var run = function() {
             }
 
             var oldautoparagonstep = localStorage['cbc.autoparagon.step'] || 1;
-            if (game.religion.meta[1].meta[5].val > 0 && (localStorage['cbc.resetAutomatic.step'] == 1 || !
-                    localStorage['cbc.resetAutomatic.step']))
-                localStorage['cbc.autoparagon.step'] = 2;
+            if (game.religion.meta[1].meta[5].val > 0 && (localStorage['cbc.resetAutomatic.step'] == 1 || !localStorage['cbc.resetAutomatic.step'])) {localStorage['cbc.autoparagon.step'] = 2;}
             if (localStorage['cbc.autoparagon.step'] == 2 && oldautoparagonstep == 1) {
                 var base_unobtainium = game.space.meta[2].meta[1].on ? game.resPool.get("unobtainium").maxValue / (game.space.meta[
                     2].meta[1].on + 1) : game.resPool.get("unobtainium").maxValue;
@@ -1864,16 +1861,17 @@ var run = function() {
                 }
                 loadFromKittenStorage();
             }
-            if ((game.resPool.get("kittens").value >= options.auto.autoparagon.trigger / 1000 - 1) && (game.resPool.get("kittens").value >= game.resPool.get("kittens").maxValue || kittens_check) && game.bld.get("chronosphere").val >=
+            if ((game.resPool.get("kittens").value >= 500) && (game.resPool.get("kittens").value >= game.resPool.get("kittens").maxValue || kittens_check) && game.bld.get("chronosphere").val >=
                 options.auto.autoparagon.trigger % 1000 && game.resPool.get("faith").value >= 10000 && game.resPool.get("gold").value >= 10000 && game.resPool.get("science").value >= 500000 / (0.015 * (options.auto.autoparagon.trigger % 1000)) && game.workshop.get("fluxCondensator").researched) {
                 localStorage['cbc.autoparagon.step'] = 1;
-                if (!options.auto.autoparagon.items.infinite.enabled)
+                if (!options.auto.autoparagon.items.infinite.enabled) {
                     localStorage['cbc.kitten-scientists'] =
                     '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":false,"toggle-techs":true,"toggle-mine":false,"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-broadcastTower":false,"toggle-unicornPasture":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-library":true,"toggle-limited-library":25,"toggle-limited-temple":1,"toggle-limited-hut":10,"toggle-limited-logHouse":20,"toggle-logHouse":true,"toggle-factory":false,"toggle-mansion":false,"toggle-hut":true,"toggle-observe":true},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
-                else //无限流
+                } else{ //无限流
                     localStorage['cbc.kitten-scientists'] =
                     '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":false,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":true,"toggle-techs":true,"toggle-mine":false,"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-infinite":' +
                     options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-library":50,"toggle-limited-temple":' + retain_temple + ',"toggle-limited-hut":10,"toggle-limited-logHouse":' + retain_loghouse + ',"toggle-logHouse":true,"toggle-hut":true,"toggle-limited-workshop":' + retain_workshop + ',"toggle-hunt":false,"toggle-transcendence":true, "toggle-templars":true,"toggle-races":true,"toggle-missions":true,"set-missions-subTrigger":5,"toggle-mint":true,"toggle-limited-mint":10,"toggle-factory":false,"toggle-xfldc":' + false /*options.auto.autoparagon.items.xfldc.enabled*/ + '},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"space":0,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
+                }
                 loadFromKittenStorage();
 
                 if (localStorage['cbc.resetAutomatic.step'] == 1 || !localStorage['cbc.resetAutomatic.step']) {
@@ -1921,7 +1919,7 @@ var run = function() {
                                             var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
                                             game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
                                             spaceModel.options.controller.build(spaceModel, spaceNumber);
-                                            if (game.opts.autoSaveReset && game.resPool.resources[10].value < 1e4) {
+                                            if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset&& game.resPool.resources[10].value < 1e4) {
                                                 game.saveToFile(true);
                                             }
                                         }
@@ -1965,7 +1963,7 @@ var run = function() {
                         game.resPool.get("manpower").value += game.resPool.get("manpower").maxValue;
                         game.resPool.get("wold").value = game.resPool.get("wold").maxValue;
                         game.resPool.get("science").value = game.resPool.get("science").maxValue;
-                        if (game.opts.autoSaveReset && Number.isInteger(game.stats.statGroups[0].group[3].val / 40)) {
+                        if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset && Number.isInteger(game.stats.statGroups[0].group[3].val / 40)) {
                             game.saveToFile(true);
                         }
                     }
@@ -2428,9 +2426,6 @@ var run = function() {
             for (var name in builds) {
                 var build = builds[name]
                 metaData[name] = buildManager.getBuild(name);
-                if (buildManager.getBuild(name) === undefined && !refreshRequired) {
-                    refreshRequired = true;
-                }
             }
             if (refreshRequired) {
                 buildManager.manager.render();
@@ -3305,10 +3300,8 @@ var run = function() {
             var build = this.getBuild(name);
             var button = this.getBuildButton(name);
 
-            if (!build.unlocked || !button || !button.model.enabled || !options.auto.space.items[name].enabled) {
-                game.spaceTab.render();
-                return;
-            }
+            if (!build.unlocked || !options.auto.space.items[name].enabled) {return;}
+            if (!button || !button.model.enabled) {return game.spaceTab.render();}
             var amountTemp = amount;
             var label = build.label;
             amount = this.bulkManager.construct(button.model, button, amount);
