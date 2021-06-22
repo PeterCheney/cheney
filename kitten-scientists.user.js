@@ -2476,33 +2476,24 @@ var run = function() {
             }
         },
         holdFestival: function() {
-            if (!(game.science.get('drama').researched && game.calendar.festivalDays < 400)) {
-                return;
-            }
-            if (!game.prestige.getPerk('carnivals').researched && game.calendar.festivalDays > 0) {
-                return;
-            }
+            if (!(game.science.get('drama').researched && game.calendar.festivalDays < 400)) {return;}
+            if (!game.prestige.getPerk('carnivals').researched && game.calendar.festivalDays > 0) {return;}
 
             var craftManager = this.craftManager;
 
-            if (craftManager.getValueAvailable('manpower', true) < 1500 || craftManager.getValueAvailable('culture', true) <
-                5000) {
-                return;
-            }
+            if (craftManager.getValueAvailable('manpower', true) < 1500 || craftManager.getValueAvailable('culture', true) <5000) {return;}
 
             var catpowProf = 4000 * craftManager.getTickVal(craftManager.getResource('manpower')) > 1500;
             var cultureProf = 4000 * craftManager.getTickVal(craftManager.getResource('culture')) > 5000;
             var parchProf = 4000 * craftManager.getTickVal(craftManager.getResource('parchment')) > 2500;
 
-            if (!(catpowProf && cultureProf && parchProf)) {
-                return;
-            }
+            if (!(catpowProf && cultureProf && parchProf)) {return;}
 
             // Render the tab to make sure that the buttons actually exist in the DOM. Otherwise we can't click them.
-            if (game.villageTab.festivalBtn == null) {
-                this.villageManager.render();
-            }
+            if (game.villageTab.festivalBtn == null) {game.villageTab.render();}
 
+            if (!game.villageTab.festivalBtn.model.enabled) {game.villageTab.festivalBtn.controller.updateEnabled(game.villageTab.festivalBtn.model);}
+            
             if (game.villageTab.festivalBtn.model.enabled) {
                 var beforeDays = game.calendar.festivalDays;
                 game.villageTab.festivalBtn.onClick();
