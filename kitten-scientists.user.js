@@ -1343,13 +1343,13 @@ var run = function() {
                         variant: "ks-activity type_ks-craft"
                     },
                     upgradeFilter: {
-                        enabled: true,
+                        enabled: false,
                         filter: true,
                         label: '升级',
                         variant: "ks-activity type_ks-upgrade"
                     },
                     researchFilter: {
-                        enabled: true,
+                        enabled: false,
                         filter: true,
                         label: '研究',
                         variant: "ks-activity type_ks-research"
@@ -1614,9 +1614,16 @@ var run = function() {
 
             if (!options.auto.autoparagon.items.infinite.enabled && options.auto.autoparagon.enabled) {
                 if (game.bld.get("workshop").on > 0 && game.science.get("construction").researched) {
+                    var sloar = (10 + game.getEffect("solarRevolutionLimit")) / 50;
                     if (game.resPool.get("scaffold").value >= 2e8 && options.auto.craft.items.scaffold.limited) {
-                        options.auto.craft.items.beam.enabled = false;
-                        options.auto.craft.items.scaffold.limited = false;
+                        options.auto.craft.items.beam.enabled = false;//关闭木梁
+                        options.auto.craft.items.scaffold.limited = false;//关闭脚手架
+                        if (game.console.filters["trade"].enabled) {//日志过滤
+                            for (var i in game.console.filters) {
+                                game.console.filters[i].enabled = false;
+                            }
+                            game.ui.renderFilters();
+                        }
                     }
 
                     if (game.bld.get("factory").on == 160 && game.resPool.get("concrate").value > 4e8 && options.auto.craft.items.concrate.enabled) {
@@ -1639,7 +1646,8 @@ var run = function() {
                         options.auto.craft.items.slab.enabled = true;
                     }
 
-                    if (game.resPool.get("slab").value > 3e10 && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
+                    
+                    if (game.resPool.get("slab").value > 5e10 * Math.log(sloar) && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
                         options.auto.craft.items.slab.enabled = false;
                         game.clearLog();
                     }
@@ -1657,13 +1665,6 @@ var run = function() {
 
                 if (game.resPool.get("spice").value && !game.science.getPolicy("carnivale").researched) {
                     game.tabs[2].policyPanel.children[27].controller.onPurchase(game.tabs[2].policyPanel.children[27].model, {}, function() {});
-
-                    if (game.console.filters["trade"].enabled) {
-                        for (var i in game.console.filters) {
-                            game.console.filters[i].enabled = false;
-                        }
-                        game.ui.renderFilters();
-                    }
                 }
 
                 if (game.bld.get("chronosphere").val >= 8 && game.resPool.get("eludium").value > 720 && options.auto.craft.items.eludium.enabled) {
@@ -2134,7 +2135,7 @@ var run = function() {
             var bulkManager = this.bulkManager;
             var buildManager = this.buildManager;
 
-            if (upgrades.upgrades.enabled && game.tabs[3].visible) {
+            if (upgrades.upgrades.enabled && game.workshopTab.visible) {
                 var work = game.workshop.upgrades;
                 let noup = ["factoryOptimization", "factoryRobotics", "spaceEngineers", "chronoEngineers", "amFission",
                     "biofuel", "gmo", "factoryAutomation", "advancedAutomation", "pneumaticPress", "steelPlants",
@@ -2163,7 +2164,7 @@ var run = function() {
 
                         var prices = work[upg].prices;
                         for (let workResource of prices) {
-                            if (craftManager.getValueAvailable(workResource.name, true) < workResource.val) {
+                            if (game.resPool.get(workResource.name) < workResource.val) {
                                 continue workLoop;
                             }
                         }
@@ -2172,11 +2173,11 @@ var run = function() {
                                 continue workLoop;
                             }
                         }
-                        game.tabs[3].buttons[upg].controller.onPurchase(game.tabs[3].buttons[upg].model, {}, function() {});
+                        upgradeManager.build(game.workshop.upgrades[upg], 'workshop');
                     }
             }
 
-            if (upgrades.techs.enabled && game.tabs[2].visible) {
+            if (upgrades.techs.enabled && game.libraryTab.visible) {
                 var tech = game.science.techs;
                 let noup = [];
                 let autoparagonban = ["antimatter", "cryptotheology", "voidSpace", "paradoxalKnowledge", "quantumCryptography"];
@@ -2205,14 +2206,14 @@ var run = function() {
                                 continue techLoop;
                             }
                         }
-                        game.tabs[2].buttons[upg].controller.onPurchase(game.tabs[2].buttons[upg].model, {}, function() {});
+                        upgradeManager.build(game.science.techs[upg], 'science');
                     }
             }
 
             if (upgrades.policies.enabled && game.science.meta[0].meta[10].researched) {
                 var poli = game.science.policies;
                 let noup = [];
-                let autoparagon = [0, 3, 8, 11, 16, 22, 23, 26, 31, 34, 36];
+                let autoparagon = [0, 3, 8, 11, 15, 20, 23, 26, 31, 34, 36];
                 let infiniit = [1, 2, 37, 8, 34];
                 if (options.auto.autoparagon.enabled) {
                     noup = noup.concat(autoparagon);
@@ -2227,7 +2228,7 @@ var run = function() {
                     if (game.resPool.get("culture").value < poli[a].prices[0].val) {
                         continue;
                     }
-                    game.tabs[2].policyPanel.children[a].controller.onPurchase(game.tabs[2].policyPanel.children[a].model, {}, function() {});
+                    upgradeManager.build(game.science.policies[a], 'policy');
                 }
             }
 
@@ -2267,7 +2268,7 @@ var run = function() {
                     if (!game.diplomacy.get('lizards').unlocked) {
                         if (manpower >= 1000) {
                             game.resPool.get('manpower').value -= 1000;
-                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
+                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().title, 'ks-upgrade');
                             manpower -= 1000;
                             freshrequire = true;
                         }
@@ -2275,7 +2276,7 @@ var run = function() {
                     if (!game.diplomacy.get('sharks').unlocked) {
                         if (manpower >= 1000) {
                             game.resPool.get('manpower').value -= 1000;
-                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
+                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().title, 'ks-upgrade');
                             manpower -= 1000;
                             freshrequire = true;
                         }
@@ -2283,7 +2284,7 @@ var run = function() {
                     if (!game.diplomacy.get('griffins').unlocked) {
                         if (manpower >= 1000) {
                             game.resPool.get('manpower').value -= 1000;
-                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
+                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().title, 'ks-upgrade');
                             manpower -= 1000;
                             freshrequire = true;
                         }
@@ -2291,7 +2292,7 @@ var run = function() {
                     if (!game.diplomacy.get('nagas').unlocked && game.resPool.get("culture").value >= 1500) {
                         if (manpower >= 1000) {
                             game.resPool.get('manpower').value -= 1000;
-                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
+                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().title, 'ks-upgrade');
                             manpower -= 1000;
                             freshrequire = true;
                         }
@@ -2299,7 +2300,7 @@ var run = function() {
                     if (!game.diplomacy.get('zebras').unlocked && game.resPool.get("ship").value >= 1) {
                         if (manpower >= 1000) {
                             game.resPool.get('manpower').value -= 1000;
-                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
+                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().title, 'ks-upgrade');
                             manpower -= 1000;
                             freshrequire = true;
                         }
@@ -2308,7 +2309,7 @@ var run = function() {
                             "science").maxValue > 125000) {
                         if (manpower >= 1000) {
                             game.resPool.get('manpower').value -= 1000;
-                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
+                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().title, 'ks-upgrade');
                             manpower -= 1000;
                             freshrequire = true;
                         }
@@ -2316,7 +2317,7 @@ var run = function() {
                     if (!game.diplomacy.get('dragons').unlocked && game.science.get("nuclearFission").researched) {
                         if (manpower >= 1000) {
                             game.resPool.get('manpower').value -= 1000;
-                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().name, 'ks-upgrade');
+                            activity('小猫遇到了 ' + game.diplomacy.unlockRandomRace().title, 'ks-upgrade');
                             manpower -= 1000;
                             freshrequire = true;
                         }
@@ -2384,7 +2385,7 @@ var run = function() {
                 }
             }
             if (freshrequire) {
-                game.render();
+                //game.render();
             }
         },
         build: function() {
@@ -2841,6 +2842,21 @@ var run = function() {
                         return;
                     }
                 }
+                
+                if (options.auto.autoparagon.enabled && freeKittens >= 1) {
+                    let fresh = false;
+                    if (game.village.jobs[3].unlocked && !game.village.jobs[3].value) {
+                        game.village.assignJob(game.village.getJob("hunter"), 1);
+                        fresh = true;
+                    }
+
+                    if (game.village.jobs[4].unlocked && !game.village.jobs[4].value) {
+                        game.village.assignJob(game.village.getJob("miner"), 1);
+                        fresh = true;
+                    }
+
+                    if (fresh) {return game.villageTab.updateTab();}
+                }
 
                 var jobName = '';
                 var minRatio = Infinity;
@@ -3201,27 +3217,35 @@ var run = function() {
         manager: undefined,
         crafts: undefined,
         build: function(upgrade, variant) {
+
             var button = this.getBuildButton(upgrade, variant);
 
             if (!button || !button.model.enabled) return;
 
             //need to simulate a click so the game updates everything properly
             var label = upgrade.label;
+            //button.controller.payPrice(button.model, {}, function() {});
+            button.controller.onPurchase(button.model, {}, function() {});
 
             if (variant === 'workshop') {
                 storeForSummary(label, 1, 'upgrade');
                 activity('小猫购买了 ' + label + ' 升级', 'ks-upgrade');
+            }  else if (variant === 'policy') {
+                activity('小猫颁布了 ' + label + ' 政策', 'ks-upgrade');
             } else {
                 storeForSummary(label, 1, 'research');
-                activity('小猫购买了 ' + label + ' 科学', 'ks-research');
+                activity('小猫研究了 ' + label + ' 科学', 'ks-research');
             }
         },
         getBuildButton: function(upgrade, variant) {
             if (variant === 'workshop') {
-                var buttons = this.workManager.tab.buttons;
+                var buttons = game.workshopTab.buttons;
             } else if (variant === 'science') {
-                var buttons = this.sciManager.tab.buttons;
+                var buttons = game.libraryTab.buttons;
+            } else if (variant === 'policy') {
+                var buttons = game.libraryTab.policyPanel.children;
             }
+
             for (let i of buttons) {
                 var haystack = i.model.name;
                 if (haystack === upgrade.label) {
@@ -3822,12 +3846,14 @@ var run = function() {
             }
             if (!model.enabled ) {button.controller.updateEnabled(model);}
             if (model.enabled && button.controller.hasResources(model) || game.devMode) {
-                while (button.controller.hasResources(model) && amount > 0) {
-                    model.prices = button.controller.getPrices(model);
-                    button.controller.build(model, amount, function() {});
-                    //button.controller.incrementValue(model);
+                //while (button.controller.hasResources(model) && amount > 0) {
+                while (amount > 0) {//console.log(button)
+                    //model.prices = button.controller.getPrices(model);
+                    //button.controller.build(model, amount, function() {});
+                    button.controller.payPrice(button.model);
+                    button.controller.incrementValue(model);
                     counter++;
-                    amount = 0;
+                    amount--;
                 }
                 if (meta.breakIronWill) {
                     game.ironWill = false;
