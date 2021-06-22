@@ -1595,11 +1595,14 @@ var run = function() {
                     gamePage.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, 20);
                 }
 
-                if (gamePage.workshop.get("chronoforge").researched && game.tabs[6].GCPanel.children[3].model.metadata.val && gamePage.calendar.cycle != 5 && options.auto.autoparagon.items.infinite.enabled != true) {
+                //if (!game.spaceTab.GCPanel.children[3]) {game.timeTab.render();}
+
+                if (gamePage.workshop.get("chronoforge").researched && game.spaceTab.GCPanel.children[3].model.metadata.val && gamePage.calendar.cycle != 5 && options.auto.autoparagon.items.infinite.enabled != true) {
                     var x = 5;
                     if (x > 4 && gamePage.calendar.cycleYear != 0) {
                         x = x - gamePage.calendar.cycleYear;
                     }
+                    if (!game.timeTab.cfPanel.children[0].children[0]) {game.timeTab.render();}
                     gamePage.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, x);
                     gamePage.timeTab.cfPanel.children[0].children[0].update();
                 }
@@ -1632,7 +1635,11 @@ var run = function() {
                         }
                     }
 
-                    if (game.resPool.get("slab").value > 1e10 && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
+                    if (game.resPool.get("slab").value < 50 && !options.auto.craft.items.slab.enabled) {
+                        options.auto.craft.items.slab.enabled = true;
+                    }
+
+                    if (game.resPool.get("slab").value > 3e10 && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
                         options.auto.craft.items.slab.enabled = false;
                         game.clearLog();
                     }
@@ -2226,22 +2233,23 @@ var run = function() {
 
             if (upgrades.missions.enabled && game.science.meta[0].meta[41].researched) {
                 var missions = game.space.meta[0].meta;
+                let freshrequire = false;
                 missionLoop:
-
                     for (var i = 0; i < options.auto.upgrade.items.missions.subTrigger; i++) {
                         if (!(missions[i].unlocked && missions[i].val < 1)) {
                             continue;
                         }
-                        if (game.spaceTab.planetPanels.length) {game.spaceTab.render();}
-                        var model = game.tabs[6].GCPanel.children[i];
+                        var Btn = game.spaceTab.GCPanel.children[i];
+                        if (!Btn || Btn.model.metadata) {game.spaceTab.render();}
+                        if (Btn.model.metadata.val || Btn.model.metadata.on) {continue;}
                         
-                        var prices = model.model.prices;
+                        var prices = Btn.model.prices;
                         for (let missResource of prices) {
                             if (craftManager.getValueAvailable(missResource.name, true) < missResource.val) {
                                 continue missionLoop;
                             }
                         }
-                        game.tabs[6].GCPanel.children[i].controller.buyItem(game.tabs[6].GCPanel.children[i].model, {}, function() {});
+                        Btn.controller.build(Btn.model,1);
                         if (i === 8 || i === 9 || i === 10) {
                             activity('小猫执行了 ' + missions[i].label, 'ks-upgrade');
                         } else if (i === 12) {
@@ -2392,9 +2400,6 @@ var run = function() {
             for (var name in builds) {
                 var build = builds[name];
                 metaData[name] = buildManager.getBuild(build.name || name).meta;
-                if (!metaData[name] && !refreshRequired ) {
-                    refreshRequired = true;
-                }
             }
             if (refreshRequired) {
                 buildManager.manager.render();
@@ -3048,7 +3053,8 @@ var run = function() {
             var build = this.getBuild(name, variant);
             var button = this.getBuildButton(name, variant);
 
-            if (!button || !button.model.enabled) return;
+            if (!button.model.enabled) {return;}
+            if (!button || !button.model.metadata) {return game.religionTab.render();}
 
             var amountTemp = amount;
             var label = build.label;
@@ -3251,7 +3257,9 @@ var run = function() {
             var build = this.getBuild(name);
             var button = this.getBuildButton(name, stage);
 
-            if (!button || !button.model.enabled) return;
+            if (!build.meta.unlocked) {return;}
+            if (!button || !button.model.metadata) {return game.bldTab.render();}
+
             var amountTemp = amount;
             var label = build.meta.label ? build.meta.label : build.meta.stages[stage].label;
             amount = this.bulkManager.construct(button.model, button, amount);
@@ -3260,7 +3268,9 @@ var run = function() {
             }
             storeForSummary(label, amount, 'build');
 
-            if (amount === 1) {
+            if (amount === 0) {
+                return;
+            } else if (amount === 1) {
                 activity('小猫建造了一个新的 ' + label, 'ks-build');
             } else {
                 activity('小猫建造了 ' + amount + ' 个新的 ' + label, 'ks-build');
@@ -3310,7 +3320,9 @@ var run = function() {
             }
             storeForSummary(label, amount, 'build');
 
-            if (amount === 1) {
+            if (amount === 0) {
+                return;
+            } else if (amount === 1) {
                 activity('小猫建造了一个新的 ' + label, 'ks-build');
             } else {
                 activity('小猫建造了 ' + amount + ' 个新的 ' + label, 'ks-build');
@@ -3509,9 +3521,7 @@ var run = function() {
             return output;
         },
         getResource: function(name) {
-            if (name === 'slabs') {
-                name = 'slab';
-            } //KG BETA BUGFIX
+            //KG BETA BUGFIX
             // for (var i in game.resPool.resources) {
             //     var res = game.resPool.resources[i];
             //     if (res.name === name) return res;
@@ -3819,6 +3829,7 @@ var run = function() {
             if (typeof meta.limitBuild == "number" && meta.limitBuild - meta.val < amount) {
                 amount = meta.limitBuild - meta.val;
             }
+            if (!model.enabled ) {button.controller.updateEnabled(model);}
             if (model.enabled && button.controller.hasResources(model) || game.devMode) {
                 while (button.controller.hasResources(model) && amount > 0) {
                     model.prices = button.controller.getPrices(model);
