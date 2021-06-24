@@ -1849,7 +1849,6 @@ var run = function() {
                     var buildFilter = cbcSave.items["toggle-buildFilter"] != null ? cbcSave.items["toggle-buildFilter"] : true;
                     var tradeFilter = cbcSave.items["toggle-tradeFilter"] != null ? cbcSave.items["toggle-tradeFilter"] : true;
                 }
-                console.log(upgradeFilter,researchFilter,buildFilter,tradeFilter)
                 if (!options.auto.autoparagon.items.infinite.enabled) {
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"space":true,"craft":true,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-solarchant":true,"toggle-scholasticism":false,"toggle-goldenSpire":true,"toggle-sunAltar":true,"toggle-stainedGlass":false,"toggle-basilica":true,"toggle-templars":true,"toggle-apocripha": true,"toggle-transcendence":true,"toggle-solarFarm":true,"toggle-mine":true,"toggle-lumberMill":true,"toggle-hydroPlant":true,"toggle-oilWell":true,"toggle-quarry":true,"toggle-smelter":true,"toggle-factory":true,"toggle-dataCenter":true,"toggle-academy":true,"toggle-observatory":true,"toggle-tradepost":true,"toggle-broadcastTower":true,"toggle-brewery":true,"toggle-unicornPasture":true,"toggle-chronosphere":true,"toggle-limited-chronosphere":' +
