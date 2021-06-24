@@ -1597,92 +1597,93 @@ var run = function() {
 
                 //if (!game.spaceTab.GCPanel.children[3]) {game.timeTab.render();}
 
-                if (gamePage.workshop.get("chronoforge").researched && game.spaceTab.GCPanel.children[3].model.metadata.val && gamePage.calendar.cycle != 5 && options.auto.autoparagon.items.infinite.enabled != true) {
-                    var x = 5;
-                    if (x > 4 && gamePage.calendar.cycleYear != 0) {
-                        x = x - gamePage.calendar.cycleYear;
-                    }
-                    if (!game.timeTab.cfPanel.children[0].children[0]) {game.timeTab.render();}
-                    gamePage.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, x);
-                    gamePage.timeTab.cfPanel.children[0].children[0].update();
-                }
-
                 if (game.resPool.get("timeCrystal").value < 1e4 && options.auto.build.items.chronosphere.limited) {
                     options.auto.build.items.chronosphere.limited = 0; //水晶低于保留值时关闭超时空传送仪
                 }
-            }
 
-            if (!options.auto.autoparagon.items.infinite.enabled && options.auto.autoparagon.enabled) {
-                if (game.bld.get("workshop").on > 0 && game.science.get("construction").researched) {
-                    var sloar = (10 + game.getEffect("solarRevolutionLimit")) / 50;
-                    if (game.resPool.get("scaffold").value >= 2e8 && options.auto.craft.items.scaffold.limited) {
-                        options.auto.craft.items.beam.enabled = false;//关闭木梁
-                        options.auto.craft.items.scaffold.limited = false;//关闭脚手架
-                        if (game.console.filters["trade"].enabled) {//日志过滤
-                            for (var i in game.console.filters) {
-                                game.console.filters[i].enabled = false;
+                if (!options.auto.autoparagon.items.infinite.enabled && options.auto.autoparagon.enabled) {
+                    if (game.bld.get("workshop").on > 0 && game.science.get("construction").researched) {
+                        var sloar = (10 + game.getEffect("solarRevolutionLimit")) / 50;
+                        if (game.resPool.get("scaffold").value >= 2e8 && options.auto.craft.items.scaffold.limited) {
+                            options.auto.craft.items.beam.enabled = false; //关闭木梁
+                            options.auto.craft.items.scaffold.limited = false; //关闭脚手架
+                            if (game.console.filters["trade"].enabled) { //日志过滤
+                                for (var i in game.console.filters) {
+                                    game.console.filters[i].enabled = false;
+                                }
+                                game.ui.renderFilters();
                             }
-                            game.ui.renderFilters();
+                        }
+
+                        if (game.bld.get("factory").on == 160 && game.resPool.get("concrate").value > 4e8 && options.auto.craft.items.concrate.enabled) {
+                            $("#toggle-concrate")[0].click();
+                        }
+
+                        if (game.bld.get("reactor").on == 160) {
+                            if (game.resPool.get("plate").value > 1e7 && options.auto.craft.items.plate.enabled) {
+                                $("#toggle-plate")[0].click();
+                            }
+
+                            if (game.bld.get("steamworks").on == 92 && game.bld.get("temple").on == 150 && game.resPool.get("compedium").value > 1e6 && game.resPool.get("blueprint").value > 1e6 && options.auto.craft.items.blueprint.enabled) {
+                                options.auto.craft.items.blueprint.enabled = false;
+                                options.auto.craft.items.compedium.enabled = false;
+                                options.auto.craft.items.manuscript.enabled = false;
+                            }
+                        }
+
+                        if (!options.auto.craft.items.slab.enabled && game.resPool.get("slab").value < game.bldTab.children[7].model.prices[1].val) {
+                            options.auto.craft.items.slab.enabled = true;
+                        }
+
+                        if (!game.workshop.get("mWReactor").researched && game.resPool.get("unobtainium").value >= 1000 && game.space.meta[2].meta[0].on) {
+                            game.craft("eludium", 1);
+                        }
+
+                        if (game.resPool.get("slab").value > 5e10 * Math.log(sloar) && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
+                            options.auto.craft.items.slab.enabled = false;
+                            game.clearLog();
                         }
                     }
 
-                    if (game.bld.get("factory").on == 160 && game.resPool.get("concrate").value > 4e8 && options.auto.craft.items.concrate.enabled) {
-                        $("#toggle-concrate")[0].click();
-                    }
-
-                    if (game.bld.get("reactor").on == 160) {
-                        if (game.resPool.get("plate").value > 1e7 && options.auto.craft.items.plate.enabled) {
-                            $("#toggle-plate")[0].click();
+                    if (gamePage.workshop.get("chronoforge").researched && game.spaceTab.GCPanel.children[3].model.metadata.val && gamePage.calendar.cycle != 5) {
+                        var x = 5;
+                        if (x > 4 && gamePage.calendar.cycleYear != 0) {
+                            x = x - gamePage.calendar.cycleYear;
                         }
-
-                        if (game.bld.get("steamworks").on == 92 && game.bld.get("temple").on == 150 && game.resPool.get("compedium").value > 1e6 && game.resPool.get("blueprint").value > 1e6 && options.auto.craft.items.blueprint.enabled) {
-                            options.auto.craft.items.blueprint.enabled = false;
-                            options.auto.craft.items.compedium.enabled = false;
-                            options.auto.craft.items.manuscript.enabled = false;
+                        if (!game.timeTab.cfPanel.children[0].children[0]) {
+                            game.timeTab.render();
+                        }
+                        gamePage.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, x);
+                        gamePage.timeTab.cfPanel.children[0].children[0].update();
+                    }
+                    if (game.science.meta[0].meta[41].researched && options.auto.build.items.mansion.limited < 999) {
+                        if (game.spaceTab.planetPanels.length && game.spaceTab.planetPanels[0].children[0].model.metadata.on > 12) {
+                            options.auto.space.items.sattelite.limited = 50, options.auto.space.items.planetCracker.enabled = true, options.auto.build.items.mansion.limited = 999;
+                            $("#toggle-spaceStation")[0].click();
                         }
                     }
 
-                    if (game.resPool.get("slab").value < 50 && !options.auto.craft.items.slab.enabled) {
-                        options.auto.craft.items.slab.enabled = true;
+                    if (game.resPool.get("spice").value && !game.science.getPolicy("carnivale").researched) {
+                        game.libraryTab.policyPanel.children[27].controller.onPurchase(game.libraryTab.policyPanel.children[27].model, {}, function() {});
                     }
 
-                    if (!game.workshop.get("mWReactor").researched && game.resPool.get("unobtainium").value >= 1000 && game.space.meta[2].meta[0].on) {
-                        game.craft("eludium", 1);
+                    if (game.bld.get("chronosphere").val >= 8 && game.resPool.get("eludium").value > 720 && options.auto.craft.items.eludium.enabled) {
+                        $("#toggle-eludium")[0].click();
                     }
-                    
-                    if (game.resPool.get("slab").value > 5e10 * Math.log(sloar) && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
-                        options.auto.craft.items.slab.enabled = false;
-                        game.clearLog();
+
+                    if (game.resPool.get("antimatter").value && game.resPool.get("antimatter").value < 1) {
+                        game.resPool.get("antimatter").value = 0;
+                        game.resPool.get("antimatter").isHidden = true;
                     }
-                }
 
-                if (game.science.meta[0].meta[41].researched && options.auto.build.items.mansion.limited < 999) {
-                    if (game.spaceTab.planetPanels.length && game.spaceTab.planetPanels[0].children[0].model.metadata.on > 12) {
-                        options.auto.space.items.sattelite.limited = 50, options.auto.space.items.planetCracker.enabled = true, options.auto.build.items.mansion.limited = 999;
-                        $("#toggle-spaceStation")[0].click();
+                    if (game.religion.meta[1].meta[5].val == 0 && game.resPool.get("gold").value < 500) {
+                        game.workshopTab.buttons[54].controller.onPurchase(game.workshopTab.buttons[54].model, {}, function() {});
                     }
+                    for (var i of game.resPool.resources) {
+                        game.resPool.addRes(i.name, game.getResourcePerTick(i.name, false), false);
+                    }
+                    game.village.update();
                 }
-
-                if (game.resPool.get("spice").value && !game.science.getPolicy("carnivale").researched) {
-                    game.libraryTab.policyPanel.children[27].controller.onPurchase(game.libraryTab.policyPanel.children[27].model, {}, function() {});
-                }
-
-                if (game.bld.get("chronosphere").val >= 8 && game.resPool.get("eludium").value > 720 && options.auto.craft.items.eludium.enabled) {
-                    $("#toggle-eludium")[0].click();
-                }
-
-                if (game.resPool.get("antimatter").value && game.resPool.get("antimatter").value < 1) {
-                    game.resPool.get("antimatter").value = 0;
-                    game.resPool.get("antimatter").isHidden = true;
-                }
-
-                if (game.religion.meta[1].meta[5].val == 0 && game.resPool.get("gold").value < 500) {
-                    game.workshopTab.buttons[54].controller.onPurchase(game.workshopTab.buttons[54].model, {}, function(){});
-                }
-                for (var i of game.resPool.resources) {
-                    game.resPool.addRes(i.name, game.getResourcePerTick(i.name, false), false);
-                }
-                game.village.update();
             }
 
             var kittens_check = false;
@@ -1838,7 +1839,9 @@ var run = function() {
             }
 
             var oldautoparagonstep = localStorage['cbc.autoparagon.step'] || 1;
-            if (game.religion.meta[1].meta[5].val > 0 && (localStorage['cbc.resetAutomatic.step'] == 1 || !localStorage['cbc.resetAutomatic.step'])) {localStorage['cbc.autoparagon.step'] = 2;}
+            if (game.religion.meta[1].meta[5].val > 0 && (localStorage['cbc.resetAutomatic.step'] == 1 || !localStorage['cbc.resetAutomatic.step'])) {
+                localStorage['cbc.autoparagon.step'] = 2;
+            }
             if (localStorage['cbc.autoparagon.step'] == 2 && oldautoparagonstep == 1) {
                 var base_unobtainium = game.space.meta[2].meta[1].on ? game.resPool.get("unobtainium").maxValue / (game.space.meta[
                     2].meta[1].on + 1) : game.resPool.get("unobtainium").maxValue;
@@ -1890,12 +1893,12 @@ var run = function() {
                         var tradeFilter = cbcSave.items["toggle-tradeFilter"] != null ? cbcSave.items["toggle-tradeFilter"] : true;
                     }
                     localStorage['cbc.kitten-scientists'] =
-                    '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":false,"toggle-techs":true,"toggle-mine":false,"toggle-upgradeFilter":'
-                    + upgradeFilter +',"toggle-researchFilter":' + researchFilter +',"toggle-buildFilter":' + buildFilter +',"toggle-tradeFilter":' + tradeFilter +',"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-broadcastTower":false,"toggle-unicornPasture":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-library":true,"toggle-limited-library":25,"toggle-limited-temple":1,"toggle-limited-hut":10,"toggle-limited-logHouse":20,"toggle-logHouse":true,"toggle-factory":false,"toggle-mansion":false,"toggle-hut":true,"toggle-observe":true},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
-                } else{ //无限流
+                        '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":false,"toggle-techs":true,"toggle-mine":false,"toggle-upgradeFilter":' +
+                        upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-broadcastTower":false,"toggle-unicornPasture":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-library":true,"toggle-limited-library":25,"toggle-limited-temple":1,"toggle-limited-hut":10,"toggle-limited-logHouse":20,"toggle-logHouse":true,"toggle-factory":false,"toggle-mansion":false,"toggle-hut":true,"toggle-observe":true},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
+                } else { //无限流
                     localStorage['cbc.kitten-scientists'] =
-                    '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":false,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":true,"toggle-techs":true,"toggle-mine":false,"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-infinite":' +
-                    options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-library":50,"toggle-limited-temple":' + retain_temple + ',"toggle-limited-hut":10,"toggle-limited-logHouse":' + retain_loghouse + ',"toggle-logHouse":true,"toggle-hut":true,"toggle-limited-workshop":' + retain_workshop + ',"toggle-hunt":false,"toggle-transcendence":true, "toggle-templars":true,"toggle-races":true,"toggle-missions":true,"set-missions-subTrigger":5,"toggle-mint":true,"toggle-limited-mint":10,"toggle-factory":false,"toggle-xfldc":' + false /*options.auto.autoparagon.items.xfldc.enabled*/ + '},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"space":0,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
+                        '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":false,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":true,"toggle-techs":true,"toggle-mine":false,"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-infinite":' +
+                        options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-library":50,"toggle-limited-temple":' + retain_temple + ',"toggle-limited-hut":10,"toggle-limited-logHouse":' + retain_loghouse + ',"toggle-logHouse":true,"toggle-hut":true,"toggle-limited-workshop":' + retain_workshop + ',"toggle-hunt":false,"toggle-transcendence":true, "toggle-templars":true,"toggle-races":true,"toggle-missions":true,"set-missions-subTrigger":5,"toggle-mint":true,"toggle-limited-mint":10,"toggle-factory":false,"toggle-xfldc":' + false /*options.auto.autoparagon.items.xfldc.enabled*/ + '},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"space":0,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
                 }
                 loadFromKittenStorage();
 
@@ -1944,7 +1947,7 @@ var run = function() {
                                             var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
                                             game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
                                             spaceModel.options.controller.build(spaceModel, spaceNumber);
-                                            if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset&& game.resPool.resources[10].value < 1e4) {
+                                            if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset && game.resPool.resources[10].value < 1e4) {
                                                 game.saveToFile(true);
                                             }
                                         }
@@ -2093,6 +2096,7 @@ var run = function() {
                 } else {
                     var model = buildManager.getBuildButton(name, build.variant).model;
                     var panel = (build.variant === 'c') ? game.science.techs[58].researched : true;
+                    if (!model.enabled) {model.controller.updateEnabled(model);}
                     metaData[name].rHidden = !(model.visible && model.enabled && panel);
                 }
             }
@@ -2258,16 +2262,20 @@ var run = function() {
                             continue;
                         }
                         var Btn = game.spaceTab.GCPanel.children[i];
-                        if (!Btn || Btn.model.metadata) {game.spaceTab.render();}
-                        if (Btn.model.metadata.val || Btn.model.metadata.on) {continue;}
-                        
+                        if (!Btn || Btn.model.metadata) {
+                            game.spaceTab.render();
+                        }
+                        if (Btn.model.metadata.val || Btn.model.metadata.on) {
+                            continue;
+                        }
+
                         var prices = Btn.model.prices;
                         for (let missResource of prices) {
                             if (craftManager.getValueAvailable(missResource.name, true) < missResource.val) {
                                 continue missionLoop;
                             }
                         }
-                        Btn.controller.build(Btn.model,1);
+                        Btn.controller.build(Btn.model, 1);
                         if (i === 8 || i === 9 || i === 10) {
                             activity('小猫执行了 ' + missions[i].label, 'ks-upgrade');
                         } else if (i === 12) {
@@ -2547,7 +2555,7 @@ var run = function() {
 
                 for (var out in aveOutput) {
                     var res = this.craftManager.getResource(out);
-                    trueOutput[out] = (res.maxValue > 0) ? Math.min(aveOutput[out] * huntCount, Math.max(res.maxValue - res.value,0)) : aveOutput[out] * huntCount;
+                    trueOutput[out] = (res.maxValue > 0) ? Math.min(aveOutput[out] * huntCount, Math.max(res.maxValue - res.value, 0)) : aveOutput[out] * huntCount;
 
                     if (manpower.value >= manpower.maxValue) {
                         var huntCount = Math.ceil(manpower.value / 100000000);
@@ -2859,7 +2867,7 @@ var run = function() {
                         return;
                     }
                 }
-                
+
                 if (options.auto.autoparagon.enabled && freeKittens >= 1) {
                     let fresh = false;
                     if (game.village.jobs[3].unlocked && !game.village.jobs[3].value) {
@@ -2872,7 +2880,9 @@ var run = function() {
                         fresh = true;
                     }
 
-                    if (fresh) {return game.villageTab.updateTab();}
+                    if (fresh) {
+                        return game.villageTab.updateTab();
+                    }
                 }
 
                 var jobName = '';
@@ -3077,8 +3087,12 @@ var run = function() {
             var build = this.getBuild(name, variant);
             var button = this.getBuildButton(name, variant);
 
-            if (!button || !button.model.metadata) {return game.religionTab.render();}
-            if (!button.model.enabled) {return button.controller.updateEnabled(button.model);}
+            if (!button || !button.model.metadata) {
+                return game.religionTab.render();
+            }
+            if (!button.model.enabled) {
+                return button.controller.updateEnabled(button.model);
+            }
 
             var amountTemp = amount;
             var label = build.label;
@@ -3181,8 +3195,12 @@ var run = function() {
             var build = this.getBuild(name, variant);
             var button = this.getBuildButton(name, variant);
 
-            if (!button || !button.model.metadata) {return game.timeTab.render();}
-            if (!button.model.enabled) {return button.controller.updateEnabled(button.model);}
+            if (!button || !button.model.metadata) {
+                return game.timeTab.render();
+            }
+            if (!button.model.enabled) {
+                return button.controller.updateEnabled(button.model);
+            }
 
             var amountTemp = amount;
             var label = build.label;
@@ -3246,7 +3264,9 @@ var run = function() {
                 }
                 return;
             }
-            if (!button.model.enabled) {return button.controller.updateEnabled(button.model);}
+            if (!button.model.enabled) {
+                return button.controller.updateEnabled(button.model);
+            }
 
             //need to simulate a click so the game updates everything properly
             var label = upgrade.label;
@@ -3256,7 +3276,7 @@ var run = function() {
             if (variant === 'workshop') {
                 storeForSummary(label, 1, 'upgrade');
                 activity('小猫购买了 ' + label + ' 升级', 'ks-upgrade');
-            }  else if (variant === 'policy') {
+            } else if (variant === 'policy') {
                 activity('小猫颁布了 ' + label + ' 政策', 'ks-upgrade');
             } else {
                 storeForSummary(label, 1, 'research');
@@ -3298,9 +3318,15 @@ var run = function() {
             var build = this.getBuild(name);
             var button = this.getBuildButton(name, stage);
 
-            if (!build.meta.unlocked) {return;}
-            if (!button || !button.model.metadata) {return game.bldTab.render();}
-            if (!button.model.enabled) {return button.controller.updateEnabled(button.model);}
+            if (!build.meta.unlocked) {
+                return;
+            }
+            if (!button || !button.model.metadata) {
+                return game.bldTab.render();
+            }
+            if (!button.model.enabled) {
+                return button.controller.updateEnabled(button.model);
+            }
 
             var amountTemp = amount;
             var label = build.meta.label ? build.meta.label : build.meta.stages[stage].label;
@@ -3352,9 +3378,15 @@ var run = function() {
             var build = this.getBuild(name);
             var button = this.getBuildButton(name);
 
-            if (!build.unlocked || !options.auto.space.items[name].enabled) {return;}
-            if (!button || !button.model.metadata) {return game.spaceTab.render();}
-            if (!button.model.enabled) {return button.controller.updateEnabled(button.model);}
+            if (!build.unlocked || !options.auto.space.items[name].enabled) {
+                return;
+            }
+            if (!button || !button.model.metadata) {
+                return game.spaceTab.render();
+            }
+            if (!button.model.enabled) {
+                return button.controller.updateEnabled(button.model);
+            }
 
             var amountTemp = amount;
             var label = build.label;
@@ -3595,7 +3627,7 @@ var run = function() {
             }
 
             if ('catnip' === name) {
-                var pastures = (game.bld.getBuildingExt('pasture').meta.stage === 0) ? game.bld.getBuildingExt('pasture').meta .val : 0;
+                var pastures = (game.bld.getBuildingExt('pasture').meta.stage === 0) ? game.bld.getBuildingExt('pasture').meta.val : 0;
                 var aqueducts = (game.bld.getBuildingExt('aqueduct').meta.stage === 0) ? game.bld.getBuildingExt('aqueduct').meta.val : 0;
                 var resPerTick = this.getPotentialCatnip(true, pastures, aqueducts);
 
@@ -3699,7 +3731,7 @@ var run = function() {
                     continue;
                 }
                 if (name === 'cryochambers' && (game.time.getVSU('usedCryochambers').val > 0 ||
-                    game.bld.getBuildingExt('chronosphere').meta.val <= data.val)) {
+                        game.bld.getBuildingExt('chronosphere').meta.val <= data.val)) {
                     continue;
                 }
                 if (name === 'ressourceRetrieval' && data.val >= 100) {
@@ -3872,10 +3904,12 @@ var run = function() {
             if (typeof meta.limitBuild == "number" && meta.limitBuild - meta.val < amount) {
                 amount = meta.limitBuild - meta.val;
             }
-            if (!model.enabled ) {button.controller.updateEnabled(model);}
+            if (!model.enabled) {
+                button.controller.updateEnabled(model);
+            }
             if (model.enabled && button.controller.hasResources(model) || game.devMode) {
                 //while (button.controller.hasResources(model) && amount > 0) {
-                while (amount > 0) {//console.log(button)
+                while (amount > 0) { //console.log(button)
                     //model.prices = button.controller.getPrices(model);
                     //button.controller.build(model, amount, function() {});
                     button.controller.payPrice(button.model);
