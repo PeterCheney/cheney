@@ -2090,13 +2090,14 @@ var run = function() {
                 var build = builds[name]
                 metaData[name] = buildManager.getBuild(name, build.variant);
 
-                if (!buildManager.getBuildButton(name, build.variant)) {
+                var button = buildManager.getBuildButton(name, build.variant);
+                if (!button) {
                     buildManager.manager.render();
                     metaData[name].rHidden = true;
                 } else {
-                    var model = buildManager.getBuildButton(name, build.variant).model;
+                    var model = button.model;
                     var panel = (build.variant === 'c') ? game.science.techs[58].researched : true;
-                    if (!model.enabled) {model.controller.updateEnabled(model);}
+                    if (!model.enabled) {button.controller.updateEnabled(model);}
                     metaData[name].rHidden = !(model.visible && model.enabled && panel);
                 }
             }
