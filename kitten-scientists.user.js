@@ -1646,6 +1646,9 @@ var run = function() {
                         options.auto.craft.items.slab.enabled = true;
                     }
 
+                    if (!game.workshop.get("mWReactor").researched && game.resPool.get("unobtainium").value >= 1000 && game.space.meta[2].meta[0].on) {
+                        game.craft("eludium", 1);
+                    }
                     
                     if (game.resPool.get("slab").value > 5e10 * Math.log(sloar) && options.auto.craft.items.slab.enabled && options.auto.craft.items.concrate.enabled) {
                         options.auto.craft.items.slab.enabled = false;
@@ -1657,9 +1660,6 @@ var run = function() {
                     if (game.spaceTab.planetPanels.length && game.spaceTab.planetPanels[0].children[0].model.metadata.on > 12) {
                         options.auto.space.items.sattelite.limited = 50, options.auto.space.items.planetCracker.enabled = true, options.auto.build.items.mansion.limited = 999;
                         $("#toggle-spaceStation")[0].click();
-                    }
-                    if (!game.workshop.get("mWReactor").researched && game.resPool.get("unobtainium").value >= 1000 && game.space.meta[2].meta[0].on) {
-                        game.craft("eludium", 1);
                     }
                 }
 
