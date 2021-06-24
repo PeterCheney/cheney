@@ -1587,7 +1587,7 @@ var run = function() {
                 if (game.diplomacyTab.visible && game.resPool.get("unobtainium").value >= 6000 && !game.science.getPolicy("necrocracy").researched) {
                     if (game.diplomacyTab.racePanels.length == 8) {
                         game.diplomacy.tradeMultiple(game.diplomacy.get("leviathans"), 1);
-                        game.tabs[2].policyPanel.children[13].controller.onPurchase(game.tabs[2].policyPanel.children[13].model, {}, function() {});
+                        game.libraryTab.policyPanel.children[13].controller.onPurchase(game.libraryTab.policyPanel.children[13].model, {}, function() {});
                     }
                 }
 
@@ -1664,7 +1664,7 @@ var run = function() {
                 }
 
                 if (game.resPool.get("spice").value && !game.science.getPolicy("carnivale").researched) {
-                    game.tabs[2].policyPanel.children[27].controller.onPurchase(game.tabs[2].policyPanel.children[27].model, {}, function() {});
+                    game.libraryTab.policyPanel.children[27].controller.onPurchase(game.libraryTab.policyPanel.children[27].model, {}, function() {});
                 }
 
                 if (game.bld.get("chronosphere").val >= 8 && game.resPool.get("eludium").value > 720 && options.auto.craft.items.eludium.enabled) {
@@ -1677,9 +1677,11 @@ var run = function() {
                 }
 
                 if (game.religion.meta[1].meta[5].val == 0 && game.resPool.get("gold").value < 500) {
-                    game.tabs[3].buttons[54].controller.onPurchase(game.tabs[3].buttons[54].model), game.tabs[3].buttons[55].controller.onPurchase(game.tabs[3].buttons[55].model);
+                    game.workshopTab.buttons[54].controller.onPurchase(game.workshopTab.buttons[54].model, {}, function(){});
                 }
-                game.updateCaches();
+                for (var i of game.resPool.resources) {
+                    game.resPool.addRes(i.name, game.getResourcePerTick(i.name, false), false);
+                }
                 game.village.update();
             }
 
@@ -1935,7 +1937,7 @@ var run = function() {
                                     case 'science':
                                         var scienceValue = Math.max(0, Math.floor(res.value - 1e290));
                                         if (game.space.getBuilding("containmentChamber").unlocked && scienceValue) {
-                                            game.spaceTab.render()
+                                            game.spaceTab.render();
                                             var spaceModel = game.spaceTab.planetPanels[4].children[1].model;
                                             var buildingPrices = game.spaceTab.planetPanels[4].children[1].model.prices[1].val;
                                             var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 16;
@@ -1978,8 +1980,8 @@ var run = function() {
                             }
                         }
                     }
-                    if (game.tabs[6].planetPanels[0] != undefined && !options.auto.autoparagon.items.infinite.enabled) {
-                        game.resPool.get("starchart").value += game.tabs[6].planetPanels[0].children[2].model.prices[2].val * 20;
+                    if (game.spaceTab.planetPanels[0] != undefined && !options.auto.autoparagon.items.infinite.enabled) {
+                        game.resPool.get("starchart").value += game.spaceTab.planetPanels[0].children[2].model.prices[2].val * 20;
                         game.resPool.get("Beam").value += 100000;
                         game.resPool.get("gold").value = game.resPool.get("gold").maxValue;
                         game.resPool.get("minerals").value = game.resPool.get("minerals").maxValue;
@@ -2805,8 +2807,8 @@ var run = function() {
                     var rank = leader.rank;
                     if (game.village.sim.promote(leader, rank + 1) == 1) {
                         activity('你的领袖被提拔到了 ' + leader.rank + ' 级', 'ks-promote');
-                        game.tabs[1].censusPanel.census.renderGovernment(game.tabs[1].censusPanel.census);
-                        game.tabs[1].censusPanel.census.update();
+                        game.villageTab.censusPanel.census.renderGovernment(game.villageTab.censusPanel.census);
+                        game.villageTab.censusPanel.census.update();
                     }
                 }
             }
@@ -2853,7 +2855,7 @@ var run = function() {
                 if (options.auto.autoparagon.items.infinite.enabled && freeKittens >= 1) {
                     if (game.village.jobs[3].unlocked) {
                         game.village.assignJob(game.village.getJob("hunter"), freeKittens);
-                        game.tabs[1].updateTab();
+                        game.villageTab.updateTab();
                         return;
                     }
                 }
@@ -3656,8 +3658,7 @@ var run = function() {
                 if (game.challenges.currentChallenge == "anarchy") {
                     baseDemand *= 1 + happyCon * (1 + game.getEffect("catnipDemandWorkerRatioGlobal"));
                 } else {
-                    baseDemand *= 1 + happyCon * (1 + game.getEffect("catnipDemandWorkerRatioGlobal")) * (1 - game.village.getFreeKittens() /
-                        game.village.sim.kittens.length);
+                    baseDemand *= 1 + happyCon * (1 + game.getEffect("catnipDemandWorkerRatioGlobal")) * (1 - game.village.getFreeKittens() / game.village.sim.kittens.length);
                 }
             }
             baseProd += baseDemand;
@@ -3698,7 +3699,7 @@ var run = function() {
                     continue;
                 }
                 if (name === 'cryochambers' && (game.time.getVSU('usedCryochambers').val > 0 ||
-                        game.bld.getBuildingExt('chronosphere').meta.val <= data.val)) {
+                    game.bld.getBuildingExt('chronosphere').meta.val <= data.val)) {
                     continue;
                 }
                 if (name === 'ressourceRetrieval' && data.val >= 100) {
