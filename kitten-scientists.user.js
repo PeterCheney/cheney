@@ -1986,12 +1986,12 @@ var run = function() {
                     }
                     if (game.spaceTab.planetPanels[0] != undefined && !options.auto.autoparagon.items.infinite.enabled) {
                         game.resPool.get("starchart").value += game.spaceTab.planetPanels[0].children[2].model.prices[2].val * 20;
-                        game.resPool.get("Beam").value += 100000;
+                        game.resPool.resources[39].value += 1e5;
                         game.resPool.get("gold").value = game.resPool.get("gold").maxValue;
                         game.resPool.get("minerals").value = game.resPool.get("minerals").maxValue;
                         game.resPool.get("manpower").value += game.resPool.get("manpower").maxValue;
                         game.resPool.get("uranium").value += game.resPool.get("uranium").maxValue;
-                        game.resPool.get("wold").value = game.resPool.get("wold").maxValue;
+                        game.resPool.resources[2].value = game.resPool.get("wold").maxValue;
                         game.resPool.get("science").value = game.resPool.get("science").maxValue;
                         if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset && Number.isInteger(game.stats.statGroups[0].group[3].val / 40)) {
                             game.saveToFile(true);
