@@ -756,7 +756,7 @@ var run = function() {
                     // Moon
                     moonOutpost: {
                         require: 'uranium',
-                        limited: 100,
+                        limited: 60,
                         enabled: false
                     },
                     moonBase: {
@@ -785,7 +785,7 @@ var run = function() {
                     // Piscine
                     researchVessel: {
                         require: 'titanium',
-                        limited: 60,
+                        limited: 50,
                         enabled: false
                     },
                     orbitalArray: {
@@ -1656,6 +1656,7 @@ var run = function() {
                         gamePage.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, x);
                         gamePage.timeTab.cfPanel.children[0].children[0].update();
                     }
+
                     if (game.science.meta[0].meta[41].researched && options.auto.build.items.mansion.limited < 999) {
                         if (game.spaceTab.planetPanels.length && game.spaceTab.planetPanels[0].children[0].model.metadata.on > 12) {
                             options.auto.space.items.sattelite.limited = 50, options.auto.space.items.planetCracker.enabled = true, options.auto.build.items.mansion.limited = 999;
@@ -1989,6 +1990,7 @@ var run = function() {
                         game.resPool.get("gold").value = game.resPool.get("gold").maxValue;
                         game.resPool.get("minerals").value = game.resPool.get("minerals").maxValue;
                         game.resPool.get("manpower").value += game.resPool.get("manpower").maxValue;
+                        game.resPool.get("uranium").value += game.resPool.get("uranium").maxValue;
                         game.resPool.get("wold").value = game.resPool.get("wold").maxValue;
                         game.resPool.get("science").value = game.resPool.get("science").maxValue;
                         if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset && Number.isInteger(game.stats.statGroups[0].group[3].val / 40)) {
@@ -2091,13 +2093,13 @@ var run = function() {
                 metaData[name] = buildManager.getBuild(name, build.variant);
 
                 var button = buildManager.getBuildButton(name, build.variant);
+                if (!button) {buildManager.manager.render();}
                 if (!button) {
-                    buildManager.manager.render();
                     metaData[name].rHidden = true;
                 } else {
                     var model = button.model;
                     var panel = (build.variant === 'c') ? game.science.techs[58].researched : true;
-                    if (!model.enabled) {button.controller.updateEnabled(model);}
+                    if (!model.enabled && model.visible && panel) {button.controller.updateEnabled(model);}
                     metaData[name].rHidden = !(model.visible && model.enabled && panel);
                 }
             }
@@ -2263,12 +2265,13 @@ var run = function() {
                             continue;
                         }
                         var Btn = game.spaceTab.GCPanel.children[i];
-                        if (!Btn || Btn.model.metadata) {
+                        if (!Btn || !Btn.model.metadata) {
                             game.spaceTab.render();
                         }
                         if (Btn.model.metadata.val || Btn.model.metadata.on) {
                             continue;
                         }
+                        if (!Btn.model.enabled) {Btn.controller.updateEnabled(Btn.model);}
 
                         var prices = Btn.model.prices;
                         for (let missResource of prices) {
@@ -3091,9 +3094,7 @@ var run = function() {
             if (!button || !button.model.metadata) {
                 return game.religionTab.render();
             }
-            if (!button.model.enabled) {
-                return button.controller.updateEnabled(button.model);
-            }
+            if (!button.model.enabled) {button.controller.updateEnabled(button.model);}
 
             var amountTemp = amount;
             var label = build.label;
@@ -3265,9 +3266,7 @@ var run = function() {
                 }
                 return;
             }
-            if (!button.model.enabled) {
-                return button.controller.updateEnabled(button.model);
-            }
+            if (!button.model.enabled) {button.controller.updateEnabled(button.model);}
 
             //need to simulate a click so the game updates everything properly
             var label = upgrade.label;
