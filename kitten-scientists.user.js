@@ -258,7 +258,7 @@ var run = function() {
         debug: false,
 
         // The interval at which the internal processing loop is run, in milliseconds.
-        interval: 1500,
+        interval: 1000,
 
         // The default color for KS messages in the game log (like enabling and disabling items).
         msgcolor: '#aa50fe', // dark purple
@@ -1515,9 +1515,6 @@ var run = function() {
         start: function() {
             if (game.isWebWorkerSupported() && game.useWorkers) {
                 console.log('启用后台猫咪科学家！！喵~');
-                if (localStorage['cbc.autoparagon.trigger'] > 10) {
-                    options.interval = 1000;
-                }
                 var blob = new Blob([
                     "onmessage = function(e) { setInterval(function(){postMessage('miaowu')}, '" + options.interval + "' ); }"
                 ]);
@@ -2102,20 +2099,21 @@ var run = function() {
             var refreshRequired = false;
             var metaData = {};
             for (var name in builds) {
-                var build = builds[name]
+                var build = builds[name];
                 metaData[name] = buildManager.getBuild(name, build.variant);
 
                 var button = buildManager.getBuildButton(name, build.variant);
-                if (!build.enabled) {continue;}
-                if (!button  || !button.model.metadata) {
+
+                if (!button || !button.model.metadata) {
                     buildManager.manager.render();
+                    continue;
                 }
                 if (!button) {
                     metaData[name].rHidden = true;
                 } else {
                     var model = button.model;
                     var panel = (build.variant === 'c') ? game.science.techs[58].researched : true;
-                    if (!model.enabled && model.visible && panel) {
+                    if (!model.enabled && panel) {
                         button.controller.updateEnabled(model);
                     }
                     metaData[name].rHidden = !(model.visible && model.enabled && panel);
@@ -2149,7 +2147,7 @@ var run = function() {
 
             var metaData = {};
             for (var name in builds) {
-                var build = builds[name]
+                var build = builds[name];
                 metaData[name] = buildManager.getBuild(name, build.variant);
                 var model = buildManager.getBuildButton(name, build.variant).model;
                 var panel = (build.variant === 'chrono') ? game.tabs[7].cfPanel : game.tabs[7].vsPanel;
@@ -2177,7 +2175,8 @@ var run = function() {
             var bulkManager = this.bulkManager;
             var buildManager = this.buildManager;
 
-            if (upgrades.upgrades.enabled && game.workshopTab.visible) {
+            if (upgrades.upgrades.enabled && game.bld.meta[0].meta[21].on) {
+                if (!game.workshopTab.buttons) {game.workshopTab.render()}
                 var work = game.workshop.upgrades;
                 let noup = ["factoryOptimization", "factoryRobotics", "spaceEngineers", "chronoEngineers", "amFission",
                     "biofuel", "gmo", "factoryAutomation", "advancedAutomation", "pneumaticPress", "steelPlants",
@@ -2219,7 +2218,8 @@ var run = function() {
                     }
             }
 
-            if (upgrades.techs.enabled && game.libraryTab.visible) {
+            if (upgrades.techs.enabled && game.bld.meta[0].meta[6].on) {
+                if (!game.libraryTab.buttons) {game.libraryTab.render();}
                 var tech = game.science.techs;
                 let noup = [];
                 let autoparagonban = ["antimatter", "cryptotheology", "voidSpace", "paradoxalKnowledge", "quantumCryptography"];
@@ -2253,6 +2253,7 @@ var run = function() {
             }
 
             if (upgrades.policies.enabled && game.science.meta[0].meta[10].researched) {
+                if (!game.libraryTab.policyPanel || !game.libraryTab.policyPanel.children) {game.libraryTab.render();}
                 var poli = game.science.policies;
                 let noup = [];
                 let autoparagon = [0, 3, 8, 11, 15, 20, 23, 26, 31, 34, 36];
@@ -2479,7 +2480,7 @@ var run = function() {
             var refreshRequired = false;
             var metaData = {};
             for (var name in builds) {
-                var build = builds[name]
+                var build = builds[name];
                 metaData[name] = buildManager.getBuild(name);
             }
             if (refreshRequired) {
@@ -2610,10 +2611,6 @@ var run = function() {
             var trades = [];
             var requireTrigger = options.auto.trade.trigger;
 
-            if (tradeManager.getTradeButton("zebras") == undefined) {
-                tradeManager.manager.render();
-            }
-
             if (!tradeManager.singleTradePossible(undefined)) {
                 return;
             }
@@ -2632,7 +2629,10 @@ var run = function() {
                     continue;
                 }
                 var button = tradeManager.getTradeButton(race.name);
-                if (!button) {game.diplomacyTab.render();}
+                if (!button) {
+                    game.diplomacyTab.render();
+                    continue;
+                }
                 if (!button.model.enabled) {
                     button.controller.updateEnabled(button.model)
                     continue;
@@ -3943,12 +3943,11 @@ var run = function() {
                 button.controller.updateEnabled(model);
             }
             if (model.enabled && button.controller.hasResources(model) || game.devMode) {
-                //while (button.controller.hasResources(model) && amount > 0) {
-                while (amount > 0) { //console.log(button)
+                button.controller.getPrices(model);//while (button.controller.hasResources(model) && amount > 0) {
+                while (button.controller.hasResources(model) && amount > 0) {
                     //model.prices = button.controller.getPrices(model);
-                    //button.controller.build(model, amount, function() {});
-                    button.controller.payPrice(button.model);
                     button.controller.incrementValue(model);
+                    button.controller.payPrice(button.model);
                     counter++;
                     amount--;
                 }
