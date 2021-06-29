@@ -1893,7 +1893,7 @@ var run = function() {
                 }
                 loadFromKittenStorage();
             }
-            if ((game.resPool.get("kittens").value >= 500) && (game.resPool.get("kittens").value >= game.resPool.get("kittens").maxValue || kittens_check) && game.bld.get("chronosphere").val >= options.auto.autoparagon.trigger % 1000 && game.resPool.get("faith").value >= 10000 && game.resPool.get("gold").value >= 10000 && game.resPool.get("science").value >= 500000 / (0.015 * (options.auto.autoparagon.trigger % 1000)) && game.workshop.get("fluxCondensator").researched) {
+            if ((game.resPool.get("kittens").value >= 500 || options.auto.autoparagon.items.infinite.enabled)&& (game.resPool.get("kittens").value >= game.resPool.get("kittens").maxValue || kittens_check) && game.bld.get("chronosphere").val >= options.auto.autoparagon.trigger % 1000 && game.resPool.get("faith").value >= 10000 && game.resPool.get("gold").value >= 10000 && game.resPool.get("science").value >= 500000 / (0.015 * (options.auto.autoparagon.trigger % 1000)) && game.workshop.get("fluxCondensator").researched) {
                 localStorage['cbc.autoparagon.step'] = 1;
                 if (!options.auto.autoparagon.items.infinite.enabled) {
                     let cbcSave = JSON.parse(localStorage['cbc.kitten-scientists']);
@@ -2218,7 +2218,7 @@ var run = function() {
                     }
             }
 
-            if (upgrades.techs.enabled && game.bld.meta[0].meta[6].on) {
+            if (upgrades.techs.enabled && game.libraryTab.visible) {
                 if (!game.libraryTab.buttons) {game.libraryTab.render();}
                 var tech = game.science.techs;
                 let noup = [];
