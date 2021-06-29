@@ -21,7 +21,7 @@ var cnItems = {
     ],
     _OTHER_: [],
 
-    'village': '村庄',
+    /*'village': '村庄',
     'forest': '森林',
     'friendly': '友好',
     'neutral': '中立',
@@ -63,23 +63,6 @@ var cnItems = {
     'Void': '虚空',
     'ElderBox': '礼盒',
     'WrappingPaper': '包装纸',
-    'Beam': '木梁',
-    'Slab': '石板',
-    'Plate': '金属板',
-    'Steel': '钢',
-    'Gear': '齿轮',
-    'Alloy': '合金',
-    'Eludium': 'E合金',
-    'Scaffold': '脚手架',
-    'Ship': '船',
-    'Tanker': '油轮',
-    'Kerosene': '煤油',
-    'Parchment': '羊皮纸',
-    'Manuscript': '手稿',
-    'Compedium': '概要',
-    'Blueprint': '蓝图',
-    'Thorium': '钍',
-    'Megalith': '巨石',
     'Dragons': '龙',
     'Lizards': '蜥蜴',
     'Sharks': '鲨鱼',
@@ -137,7 +120,24 @@ var cnItems = {
     'Basilica': '大教堂',
     'Templars': '圣殿骑士',
     'Apocripha': '新约外传',
-    'Transcendence': '超越',
+    'Transcendence': '超越',*/
+    'Beam': '木梁',
+    'Slab': '石板',
+    'Plate': '金属板',
+    'Steel': '钢',
+    'Gear': '齿轮',
+    'Alloy': '合金',
+    'Eludium': 'E合金',
+    'Scaffold': '脚手架',
+    'Ship': '船',
+    'Tanker': '油轮',
+    'Kerosene': '煤油',
+    'Parchment': '羊皮纸',
+    'Manuscript': '手稿',
+    'Compedium': '概要',
+    'Blueprint': '蓝图',
+    'Thorium': '钍',
+    'Megalith': '巨石',
     'Enable Scientists': '启用科学家',
     'Building': '建筑',
     'Space': '太空',
@@ -226,12 +226,12 @@ var cnItem = function() {
     }
 
     //未收录则保存
-    cnItems._OTHER_.push(text);
+    /*cnItems._OTHER_.push(text);
     cnItems._OTHER_.sort(
         function(a, b) {
             return a.localeCompare(b)
         }
-    );
+    );*/
 
     /*
     		//开启生词打印
@@ -1584,10 +1584,6 @@ var run = function() {
                     }
                 }
 
-                if (gamePage.workshop.get("chronoforge").researched && gamePage.calendar.cycle != 4 && options.auto.autoparagon.items.infinite.enabled) {
-                    gamePage.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, 20);
-                }
-
                 if (game.resPool.get("timeCrystal").value < 1e4 && options.auto.build.items.chronosphere.limited) {
                     options.auto.build.items.chronosphere.limited = 0; //水晶低于保留值时关闭超时空传送仪
                 }
@@ -1950,16 +1946,22 @@ var run = function() {
                                         break;
                                     case 'science':
                                         var scienceValue = Math.max(0, Math.floor(res.value - 1e290));
-                                        if (game.space.getBuilding("containmentChamber").unlocked && scienceValue) {
-                                            game.spaceTab.render();
-                                            var spaceModel = game.spaceTab.planetPanels[4].children[1].model;
-                                            var buildingPrices = game.spaceTab.planetPanels[4].children[1].model.prices[1].val;
-                                            var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 16;
-                                            var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
-                                            game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
-                                            spaceModel.options.controller.build(spaceModel, spaceNumber);
-                                            if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset && game.resPool.resources[10].value < 1e4) {
-                                                game.saveToFile(true);
+                                        if (scienceValue) {
+                                            if (game.workshop.get("chronoforge").researched && gamePage.calendar.cycle != 4) {
+                                                if(!game.timeTab.cfPanel) {game.timeTab.render();}
+                                                game.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, 20);
+                                            }
+                                            if (game.space.getBuilding("containmentChamber").unlocked) {
+                                                game.spaceTab.render();
+                                                var spaceModel = game.spaceTab.planetPanels[4].children[1].model;
+                                                var buildingPrices = game.spaceTab.planetPanels[4].children[1].model.prices[1].val;
+                                                var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 16;
+                                                var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
+                                                game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
+                                                spaceModel.options.controller.build(spaceModel, spaceNumber);
+                                                if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset && game.resPool.resources[10].value < 1e4) {
+                                                    game.saveToFile(true);
+                                                }
                                             }
                                         }
                                         break;
@@ -2996,9 +2998,9 @@ var run = function() {
     };
 
     var getButton = function(tab, buttonName) {
-        for (var i in game.tabs[tab].children) {
-            if (game.tabs[tab].children[i].opts.building == buttonName)
-                return parseInt(i);
+        for (var i of game.tabs[tab].children) {
+            if (i.opts.building == buttonName)
+                return i;
         }
     };
 
@@ -3193,9 +3195,9 @@ var run = function() {
                     }
                     //检测升级所需眼泪
                     var btn = game.tabs[5].zgUpgradeButtons[i];
-                    for (var j in btn.model.prices) {
-                        if (btn.model.prices[j].name == "tears") {
-                            var unicornPrice = btn.model.prices[j].val;
+                    for (var j of btn.model.prices) {
+                        if (j.name == "tears") {
+                            var unicornPrice = j.val;
                         }
                     }
                     //自动献祭独角兽
@@ -3980,22 +3982,22 @@ var run = function() {
         singleBuildPossible: function(data, prices, priceRatio, source) {
             var pricesDiscount = game.getLimitedDR(game.getEffect(data.name + "CostReduction"), 1);
             var priceModifier = 1 - pricesDiscount;
-            for (var price in prices) {
-                var resPriceDiscount = game.getLimitedDR(game.getEffect(prices[price].name + "CostReduction"), 1);
+            for (var price of prices) {
+                var resPriceDiscount = game.getLimitedDR(game.getEffect(price.name + "CostReduction"), 1);
                 var resPriceModifier = 1 - resPriceDiscount;
-                var rightPrice = prices[price].val * priceModifier * resPriceModifier;
-                if (source && source === 'space' && prices[price].name === 'oil') {
+                var rightPrice = price.val * priceModifier * resPriceModifier;
+                if (source && source === 'space' && price.name === 'oil') {
                     var oilPrice = rightPrice * (1 - game.getLimitedDR(game.getEffect('oilReductionRatio'), 0.75));
                     if (this.craftManager.getValueAvailable('oil', true) < oilPrice * Math.pow(1.05, data.val)) {
                         return false;
                     }
-                } else if (data.name === 'cryochambers' && prices[price].name === 'karma') {
+                } else if (data.name === 'cryochambers' && price.name === 'karma') {
                     var karmaPrice = rightPrice * (1 - game.getLimitedDR(0.01 * game.prestige.getBurnedParagonRatio(), 1.0));
                     if (this.craftManager.getValueAvailable('karma', true) < karmaPrice * Math.pow(priceRatio, data.val)) {
                         return false;
                     }
                 } else {
-                    if (this.craftManager.getValueAvailable(prices[price].name, true) < rightPrice * Math.pow(priceRatio, data.val)) {
+                    if (this.craftManager.getValueAvailable(price.name, true) < rightPrice * Math.pow(priceRatio, data.val)) {
                         return false;
                     }
                 }
