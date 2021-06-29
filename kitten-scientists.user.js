@@ -2105,6 +2105,7 @@ var run = function() {
                 var button = buildManager.getBuildButton(name, build.variant);
 
                 if (!button || !button.model.metadata) {
+                    if (!game.bld.getBuildingExt("ziggurat").on && build.variant =="z") {continue;}
                     buildManager.manager.render();
                     continue;
                 }
@@ -2116,7 +2117,10 @@ var run = function() {
                     if (!model.enabled && panel) {
                         button.controller.updateEnabled(model);
                     }
-                    metaData[name].rHidden = !(model.visible && model.enabled && panel);
+                    /*if (!model.visible && panel) {
+                        button.controller.updateVisible(model);
+                    }*/
+                    metaData[name].rHidden = !(model.enabled && panel);
                 }
             }
 
@@ -2452,15 +2456,12 @@ var run = function() {
                 var build = builds[name];
                 metaData[name] = buildManager.getBuild(build.name || name).meta;
             }
-            if (refreshRequired) {
-                buildManager.manager.render();
-            }
 
             var buildList = bulkManager.bulk(builds, metaData, trigger, 'bonfire');
             //var refreshRequired = false;
-            for (var entry in buildList) {
-                if (buildList[entry].count > 0) {
-                    buildManager.build(buildList[entry].name || buildList[entry].id, buildList[entry].stage, buildList[entry].count);
+            for (var entry of buildList) {
+                if (entry.count > 0) {
+                    buildManager.build(entry.name || entry.id, entry.stage, entry.count);
                     //refreshRequired = true;
                 }
             }
@@ -3943,7 +3944,7 @@ var run = function() {
                 button.controller.updateEnabled(model);
             }
             if (model.enabled && button.controller.hasResources(model) || game.devMode) {
-                button.controller.getPrices(model);//while (button.controller.hasResources(model) && amount > 0) {
+                //button.controller.getPrices(model);//while (button.controller.hasResources(model) && amount > 0) {
                 while (button.controller.hasResources(model) && amount > 0) {
                     //model.prices = button.controller.getPrices(model);
                     button.controller.incrementValue(model);
