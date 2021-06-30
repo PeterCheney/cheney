@@ -1997,7 +1997,7 @@ var run = function() {
                             }
                         }
                     }
-                    if (game.spaceTab.planetPanels[0] != undefined && !options.auto.autoparagon.items.infinite.enabled) {
+                    if (!options.auto.autoparagon.items.infinite.enabled) {
                         game.resPool.get("starchart").value += game.spaceTab.planetPanels[0].children[2].model.prices[2].val * 20;
                         game.resPool.resources[39].value += 1e5;
                         game.resPool.get("gold").value = game.resPool.get("gold").maxValue;
