@@ -63,17 +63,6 @@ var cnItems = {
     'Void': '虚空',
     'ElderBox': '礼盒',
     'WrappingPaper': '包装纸',
-    'Dragons': '龙',
-    'Lizards': '蜥蜴',
-    'Sharks': '鲨鱼',
-    'Griffins': '狮鹫',
-    'Nagas': '娜迦',
-    'Spiders': '蜘蛛',
-    'Leviathans': '利维坦',
-    'Spring': '春季',
-    'Summer': '夏季',
-    'Autumn': '秋季',
-    'Winter': '冬季',
     'Hut': '小屋',
     'LogHouse': '木屋',
     'Mansion': '宅邸',
@@ -121,6 +110,18 @@ var cnItems = {
     'Templars': '圣殿骑士',
     'Apocripha': '新约外传',
     'Transcendence': '超越',*/
+    'Dragons': '龙',
+    'Lizards': '蜥蜴',
+    'Sharks': '鲨鱼',
+    'Griffins': '狮鹫',
+    'Nagas': '娜迦',
+    'Spiders': '蜘蛛',
+    'Leviathans': '利维坦',
+    'Spring': '春季',
+    'Summer': '夏季',
+    'Autumn': '秋季',
+    'Winter': '冬季',
+    'Wood': '木材',
     'Beam': '木梁',
     'Slab': '石板',
     'Plate': '金属板',
@@ -1224,7 +1225,7 @@ var run = function() {
                         enabled: false
                     },
                     policies: {
-                        enabled: false
+                        enabled: true
                     }
                 }
             },
@@ -1343,13 +1344,13 @@ var run = function() {
                         variant: "ks-activity type_ks-craft"
                     },
                     upgradeFilter: {
-                        enabled: false,
+                        enabled: true,
                         filter: true,
                         label: '升级',
                         variant: "ks-activity type_ks-upgrade"
                     },
                     researchFilter: {
-                        enabled: false,
+                        enabled: true,
                         filter: true,
                         label: '研究',
                         variant: "ks-activity type_ks-research"
@@ -1865,7 +1866,7 @@ var run = function() {
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"space":true,"craft":true,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-solarchant":true,"toggle-scholasticism":false,"toggle-goldenSpire":true,"toggle-sunAltar":true,"toggle-stainedGlass":false,"toggle-basilica":true,"toggle-templars":true,"toggle-apocripha":true,"toggle-transcendence":true,"toggle-solarFarm":true,"toggle-mine":true,"toggle-lumberMill":true,"toggle-hydroPlant":true,"toggle-oilWell":true,"toggle-quarry":true,"toggle-smelter":true,"toggle-factory":true,"toggle-dataCenter":true,"toggle-academy":true,"toggle-observatory":true,"toggle-tradepost":true,"toggle-broadcastTower":true,"toggle-brewery":true,"toggle-unicornPasture":true,"toggle-chronosphere":true,"toggle-limited-chronosphere":' +
                         (options.auto.autoparagon.trigger % 1000 + 3) +
-                        ',"toggle-ziggurat":true,"toggle-barn":true,"toggle-field":true,"toggle-hut":true,"toggle-logHouse":true,"toggle-mansion":true,"toggle-library":true,"toggle-limited-library":270,"toggle-biolab":true,"toggle-calciner":true,"toggle-reactor":true,"toggle-accelerator":true,"toggle-chapel":true,"toggle-steamworks":true,"toggle-magneto":true,"toggle-mint":true,"toggle-spaceStation":false,"toggle-sattelite":true,"toggle-spaceElevator":true,"toggle-moonOutpost":true,"toggle-moonBase":true,"toggle-planetCracker":false,"toggle-hydrofracturer":true,"toggle-researchVessel":true,"toggle-beam":true,"toggle-limited-beam":true,"toggle-slab":true,"toggle-limited-slab":true,"toggle-steel":true,"toggle-limited-steel":true,"toggle-plate":true,"toggle-limited-plate":true,"toggle-alloy":true,"toggle-limited-alloy":true,"toggle-concrate":true,"toggle-limited-concrate":true,"toggle-gear":true,"toggle-limited-gear":true,"toggle-scaffold":true,"toggle-limited-scaffold":true,"toggle-ship":true,"toggle-limited-ship":true,"toggle-tanker":false,"toggle-limited-tanker":true,"toggle-parchment":true,"toggle-limited-parchment":false,"toggle-manuscript":true,"toggle-limited-manuscript":true,"toggle-compedium":true,"toggle-limited-compedium":true,"toggle-blueprint":true,"toggle-limited-blueprint":true,"toggle-kerosene":true,"toggle-limited-kerosene":true,"toggle-megalith":false,"toggle-limited-megalith":true,"toggle-eludium":true,"toggle-limited-eludium":true,"toggle-thorium":false,"toggle-limited-thorium":false,"toggle-upgrades":true,"toggle-missions":true,"toggle-policies":true,"toggle-techs":true,"toggle-races":true,"toggle-buildings":true,"toggle-zebras":true,"toggle-limited-zebras":true,"toggle-zebras-autumn":true,"toggle-zebras-spring":true,"toggle-zebras-winter":true,"toggle-harbor":true,"toggle-warehouse":true,"toggle-limited-ziggurat":8,"toggle-limited-spaceElevator":' +
+                        ',"toggle-ziggurat":true,"toggle-barn":true,"toggle-field":true,"toggle-hut":true,"toggle-logHouse":true,"toggle-mansion":true,"toggle-library":true,"toggle-limited-library":270,"toggle-biolab":true,"toggle-calciner":true,"toggle-reactor":true,"toggle-accelerator":true,"toggle-chapel":true,"toggle-steamworks":true,"toggle-magneto":true,"toggle-mint":true,"toggle-spaceStation":false,"toggle-sattelite":true,"toggle-spaceElevator":true,"toggle-moonOutpost":true,"toggle-moonBase":true,"toggle-planetCracker":false,"toggle-hydrofracturer":true,"toggle-researchVessel":true,"toggle-beam":true,"toggle-limited-beam":true,"toggle-slab":true,"toggle-limited-slab":true,"toggle-steel":true,"toggle-limited-steel":true,"toggle-plate":true,"toggle-limited-plate":true,"toggle-alloy":true,"toggle-limited-alloy":true,"toggle-concrate":true,"toggle-limited-concrate":true,"toggle-gear":true,"toggle-limited-gear":true,"toggle-scaffold":true,"toggle-limited-scaffold":true,"toggle-ship":true,"toggle-limited-ship":true,"toggle-tanker":false,"toggle-limited-tanker":true,"toggle-parchment":true,"toggle-limited-parchment":false,"toggle-manuscript":true,"toggle-limited-manuscript":true,"toggle-compedium":true,"toggle-limited-compedium":true,"toggle-blueprint":true,"toggle-limited-blueprint":true,"toggle-kerosene":true,"toggle-limited-kerosene":true,"toggle-megalith":false,"toggle-limited-megalith":true,"toggle-eludium":true,"toggle-limited-eludium":true,"toggle-thorium":false,"toggle-limited-thorium":false,"toggle-upgrades":true,"toggle-missions":true,"toggle-techs":true,"toggle-races":true,"toggle-buildings":true,"toggle-zebras":true,"toggle-limited-zebras":true,"toggle-zebras-autumn":true,"toggle-zebras-spring":true,"toggle-zebras-winter":true,"toggle-harbor":true,"toggle-warehouse":true,"toggle-limited-ziggurat":8,"toggle-limited-spaceElevator":' +
                         (2 * options.auto.autoparagon.trigger % 1000 + 1) +
                         ',"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":160,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":92,"toggle-limited-magneto":95,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
                         MoonBase_limit +
@@ -2258,15 +2259,15 @@ var run = function() {
                     }
             }
 
-            if (upgrades.policies.enabled && game.science.meta[0].meta[10].researched) {
+            if (upgrades.policies.enabled && game.science.meta[0].meta[10].researched && options.auto.autoparagon.enabled) {
                 if (!game.libraryTab.policyPanel || !game.libraryTab.policyPanel.children) {game.libraryTab.render();}
                 var poli = game.science.policies;
                 let noup = [];
                 let autoparagon = [0, 3, 8, 11, 15, 20, 23, 26, 31, 34, 36];
-                let infiniit = [1, 2, 37, 8, 34];
-                if (options.auto.autoparagon.enabled) {
+                let infiniit = [1, 2, 8, 25, 30,34,37];
+                if (!options.auto.autoparagon.items.infinite.enabled) {
                     noup = noup.concat(autoparagon);
-                } else if (options.auto.autoparagon.items.infinite.enabled) {
+                } else {//(options.auto.autoparagon.items.infinite.enabled) {
                     noup = noup.concat(infiniit);
                 }
                 for (var i = 0; i < noup.length; i++) {
@@ -3946,9 +3947,9 @@ var run = function() {
                 button.controller.updateEnabled(model);
             }
             if (model.enabled && button.controller.hasResources(model) || game.devMode) {
-                //button.controller.getPrices(model);//while (button.controller.hasResources(model) && amount > 0) {
+                model.prices = button.controller.getPrices(model);
                 while (button.controller.hasResources(model) && amount > 0) {
-                    //model.prices = button.controller.getPrices(model);
+                    model.prices = button.controller.getPrices(model);
                     button.controller.incrementValue(model);
                     button.controller.payPrice(button.model);
                     counter++;
