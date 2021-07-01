@@ -1591,7 +1591,7 @@ var run = function() {
 
                 if (!options.auto.autoparagon.items.infinite.enabled && options.auto.autoparagon.enabled) {
                     var solarproduction = 1e4 * (10 + game.getEffect("solarRevolutionLimit") + (game.challenges.getChallenge("atheism").researched ? (game.religion.transcendenceTier) : 0)) * (1 + game.getLimitedDR(game.getEffect("faithSolarRevolutionBoost"), 4));
-                    var productionRatio = solarproduction * (game.prestige.getParagonProductionRatio() + 1) / 2.1e6;
+                    var productionRatio = solarproduction * (game.prestige.getParagonProductionRatio() + 1) / 3e6;
                     var steamworksVal = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("steamworks").meta.priceRatio + game.getEffect("priceRatio"));
                     var mineVal = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("mine").meta.priceRatio + game.getEffect("priceRatio"));
                     var lumberMillval  = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("lumberMill").meta.priceRatio + game.getEffect("priceRatio"));
