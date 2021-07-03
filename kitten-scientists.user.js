@@ -2229,7 +2229,7 @@ var run = function() {
                 if (!game.libraryTab.buttons) {game.libraryTab.render();}
                 var tech = game.science.techs;
                 let noup = [];
-                let autoparagonban = ["antimatter", "cryptotheology", "voidSpace", "paradoxalKnowledge", "quantumCryptography"];
+                let autoparagonban = ["antimatter", "cryptotheology", "voidSpace", "paradoxalKnowledge", "quantumCryptography", "metaphysics"];
                 let infiniteban = ["metaphysics", "biochemistry", "antimatter", "metalurgy", "combustion", "cryptotheology", "robotics",
                     "superconductors", "dimensionalPhysics", "quantumCryptography", "paradoxalKnowledge"
                 ];
