@@ -1774,7 +1774,7 @@ var run = function() {
                     if (game.resPool.get("furs").value >= 175)
                         game.craft("parchment", Math.floor(game.resPool.get("furs").value / game.workshop.getCraft("parchment").prices[0].val)); //所有毛皮都进行转换
                     if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000)
-                        game.craft("manuscript", Math.floor(Math.min(game.resPool.get("parchment").value, game.resPool.get("culture").value / 300) * 0.01));
+                        game.craft("manuscript", Math.floor(Math.min(game.resPool.get("parchment").value, game.resPool.get("culture").value / 400) * 0.01));
                     if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000 && game.resPool.get("manuscript").value >= retain_limit) //手稿转概要
                         game.craft("compedium", Math.floor(Math.min(game.resPool.get("manuscript").value - 100, game.resPool.get("science").value / 10000) * 0.01));
                     if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000) //概要转蓝图
@@ -1951,12 +1951,10 @@ var run = function() {
                                             if (game.workshop.get("chronoforge").researched && gamePage.calendar.cycle != 4) {
                                                 if(!game.timeTab.cfPanel) {game.timeTab.render();}
                                                 game.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, 20);
-                                            }
-                                            if (game.space.getBuilding("containmentChamber").unlocked) {
                                                 game.spaceTab.render();
                                                 var spaceModel = game.spaceTab.planetPanels[4].children[1].model;
                                                 var buildingPrices = game.spaceTab.planetPanels[4].children[1].model.prices[1].val;
-                                                var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 16;
+                                                var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 10;
                                                 var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
                                                 game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
                                                 spaceModel.options.controller.build(spaceModel, spaceNumber);
@@ -1967,14 +1965,13 @@ var run = function() {
                                         }
                                         break;
                                     case 'culture':
-                                        var cultureValue = Math.max(0, Math.floor((res.value - 1e290) / 100));
+                                        var cultureValue = Math.max(0, Math.floor(res.value - 1e290));
                                         if (cultureValue) {
-                                            var levelNumber = Math.floor(Math.log(cultureValue) / Math.log(1.15)) - 11;
-                                            var embassyPrices = game.diplomacyTab.racePanels[0].embassyButton.model.prices[0].val;
-                                            var levelPrices = embassyPrices * ((Math.pow(1.15, levelNumber) - 1) / 0.15);
-                                            game.resPool.get("culture").value -= 1 * levelPrices;
-                                            game.diplomacyTab.racePanels[0].race.embassyLevel += levelNumber;
-                                            activity('建造 ' + levelNumber + '个蜥蜴的' + ' 大使馆 ', 'ks-trade');
+                                            var number = Math.floor(Math.log(0.15 * cultureValue + 100) * 7.1550236 - 32.95);
+                                            if (!number) {break;}
+                                            var levelPrices = 100 * ((Math.pow(1.15, number ) - 1) / 0.15);
+                                            game.resPool.get("culture").value -= levelPrices;
+                                            activity('建造 ' +number + '个蜥蜴的' + ' 大使馆 ', 'ks-build');
                                         }
                                         break;
                                     case 'oil':
