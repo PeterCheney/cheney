@@ -1591,7 +1591,7 @@ var run = function() {
 
                 if (!options.auto.autoparagon.items.infinite.enabled && options.auto.autoparagon.enabled) {
                     var solarproduction = 1e4 * (10 + game.getEffect("solarRevolutionLimit") + (game.challenges.getChallenge("atheism").researched ? (game.religion.transcendenceTier) : 0)) * (1 + game.getLimitedDR(game.getEffect("faithSolarRevolutionBoost"), 4));
-                    var productionRatio = solarproduction * (game.prestige.getParagonProductionRatio() + 1) / 2.1e6;
+                    var productionRatio = solarproduction * (game.prestige.getParagonProductionRatio() + 1) / 3e6;
                     var steamworksVal = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("steamworks").meta.priceRatio + game.getEffect("priceRatio"));
                     var mineVal = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("mine").meta.priceRatio + game.getEffect("priceRatio"));
                     var lumberMillval  = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("lumberMill").meta.priceRatio + game.getEffect("priceRatio"));
@@ -1608,7 +1608,11 @@ var run = function() {
                         options.auto.build.items.steamworks.limited += Math.ceil(steamworksVal);
                         options.auto.build.items.magneto.limited += Math.ceil(steamworksVal);
                     }
-                    
+
+                    if (options.auto.build.items.hut.limited == 10 && game.workshop.get("concreteHuts").researched) {
+                        options.auto.build.items.hut.limited = 999;//小屋等混凝土小屋在造
+                    }
+
                     if (game.bld.get("workshop").on > 0 && game.science.get("construction").researched) {
                         if (game.resPool.get("scaffold").value >= 2e8 && options.auto.craft.items.scaffold.limited) {
                             $("#toggle-beam")[0].click();
@@ -1774,7 +1778,7 @@ var run = function() {
                     if (game.resPool.get("furs").value >= 175)
                         game.craft("parchment", Math.floor(game.resPool.get("furs").value / game.workshop.getCraft("parchment").prices[0].val)); //所有毛皮都进行转换
                     if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000)
-                        game.craft("manuscript", Math.floor(Math.min(game.resPool.get("parchment").value, game.resPool.get("culture").value / 300) * 0.01));
+                        game.craft("manuscript", Math.floor(Math.min(game.resPool.get("parchment").value, game.resPool.get("culture").value / 400) * 0.01));
                     if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000 && game.resPool.get("manuscript").value >= retain_limit) //手稿转概要
                         game.craft("compedium", Math.floor(Math.min(game.resPool.get("manuscript").value - 100, game.resPool.get("science").value / 10000) * 0.01));
                     if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000) //概要转蓝图
@@ -1870,16 +1874,21 @@ var run = function() {
                         (2 * options.auto.autoparagon.trigger % 1000 + 1) +
                         ',"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":160,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":92,"toggle-limited-magneto":95,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
                         MoonBase_limit +
-                        ',"toggle-upgradeFilter":' + upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-limited-hut":999,"toggle-limited-brewery":999,"toggle-limited-logHouse":999},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.98,"trade":0.98,"autoparagon":500007}}';
+                        ',"toggle-upgradeFilter":' + upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-limited-hut":10,"toggle-limited-brewery":999,"toggle-limited-logHouse":999},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.98,"trade":0.98,"autoparagon":500007}}';
                     if (game.resPool.get("faith").value > game.resPool.get("faith").maxValue) {
                         game.religion.praise();
                     }
                 } else { //无限流
+                    var retain_tradepost = 0;
+                    if (game.resPool.get("timeCrystal").value < 4e5) {
+                        var postN = Math.min(game.resPool.get("wood").value,game.resPool.get("minerals").value,game.resPool.get("gold").value,0)
+                        retain_tradepost = 36 * Math.floor(Math.max(Math.log10(postN) - 11, 0));
+                    }
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true, "trade":' + false /*(xfldc_tradepost != 0)*/ + ',"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-templars":true,"toggle-limited-templars":' +
                         retain_templars +
                         ',"toggle-field":false,"toggle-mine":false,"toggle-lumberMill":false,"toggle-quarry":false,"toggle-smelter":false,"toggle-biolab":false,"toggle-calciner":false,"toggle-reactor":false,"toggle-steamworks":false,"toggle-magneto":false,"toggle-library":true,"toggle-limited-library":300,"toggle-observatory":false,"toggle-tradepost":' +
-                        (xfldc_tradepost != 0) + ',"toggle-limited-tradepost":' + xfldc_tradepost +
+                        (retain_tradepost != 0) + ',"toggle-limited-tradepost":' + retain_tradepost +
                         ',"toggle-limited-workshop":' + retain_workshop + ',"toggle-factory":true,"toggle-limited-factory":' + retain_factory + ',"toggle-limited-temple":' +
                         retain_temple + ',"toggle-mint":true,"toggle-limited-mint":' + retain_mint + ',"toggle-limited-ziggurat":1,"toggle-chronosphere":true,"toggle-limited-chronosphere":' + retain_chronosphere +
                         ',"toggle-barn":false,"toggle-harbor":false,"toggle-warehouse":false,"toggle-hut":true,"toggle-limited-hut":' +
@@ -1902,7 +1911,7 @@ var run = function() {
                     }
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":false,"toggle-techs":true,"toggle-mine":false,"toggle-upgradeFilter":' +
-                        upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-broadcastTower":false,"toggle-unicornPasture":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-library":true,"toggle-limited-library":25,"toggle-limited-temple":1,"toggle-limited-hut":10,"toggle-limited-logHouse":20,"toggle-logHouse":true,"toggle-factory":false,"toggle-mansion":false,"toggle-hut":true,"toggle-observe":true},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
+                        upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-broadcastTower":false,"toggle-unicornPasture":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-library":true,"toggle-limited-library":25,"toggle-limited-temple":1,"toggle-limited-hut":5,"toggle-limited-logHouse":20,"toggle-logHouse":true,"toggle-factory":false,"toggle-mansion":false,"toggle-hut":true,"toggle-observe":true},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
                 } else { //无限流
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":false,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":true,"toggle-techs":true,"toggle-mine":false,"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-infinite":' +
@@ -1951,12 +1960,10 @@ var run = function() {
                                             if (game.workshop.get("chronoforge").researched && gamePage.calendar.cycle != 4) {
                                                 if(!game.timeTab.cfPanel) {game.timeTab.render();}
                                                 game.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, 20);
-                                            }
-                                            if (game.space.getBuilding("containmentChamber").unlocked) {
                                                 game.spaceTab.render();
                                                 var spaceModel = game.spaceTab.planetPanels[4].children[1].model;
                                                 var buildingPrices = game.spaceTab.planetPanels[4].children[1].model.prices[1].val;
-                                                var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 16;
+                                                var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 10;
                                                 var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
                                                 game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
                                                 spaceModel.options.controller.build(spaceModel, spaceNumber);
@@ -1967,14 +1974,13 @@ var run = function() {
                                         }
                                         break;
                                     case 'culture':
-                                        var cultureValue = Math.max(0, Math.floor((res.value - 1e290) / 100));
+                                        var cultureValue = Math.max(0, Math.floor(res.value - 1e290));
                                         if (cultureValue) {
-                                            var levelNumber = Math.floor(Math.log(cultureValue) / Math.log(1.15)) - 11;
-                                            var embassyPrices = game.diplomacyTab.racePanels[0].embassyButton.model.prices[0].val;
-                                            var levelPrices = embassyPrices * ((Math.pow(1.15, levelNumber) - 1) / 0.15);
-                                            game.resPool.get("culture").value -= 1 * levelPrices;
-                                            game.diplomacyTab.racePanels[0].race.embassyLevel += levelNumber;
-                                            activity('建造 ' + levelNumber + '个蜥蜴的' + ' 大使馆 ', 'ks-trade');
+                                            var number = Math.floor(Math.log(0.15 * cultureValue + 100) * 7.1550236 - 32.95);
+                                            if (!number) {break;}
+                                            var levelPrices = 100 * ((Math.pow(1.15, number ) - 1) / 0.15);
+                                            game.resPool.get("culture").value -= levelPrices;
+                                            activity('建造 ' +number + '个蜥蜴的' + ' 大使馆 ', 'ks-build');
                                         }
                                         break;
                                     case 'oil':
@@ -2229,7 +2235,7 @@ var run = function() {
                 if (!game.libraryTab.buttons) {game.libraryTab.render();}
                 var tech = game.science.techs;
                 let noup = [];
-                let autoparagonban = ["antimatter", "cryptotheology", "voidSpace", "paradoxalKnowledge", "quantumCryptography"];
+                let autoparagonban = ["antimatter", "cryptotheology", "voidSpace", "paradoxalKnowledge", "quantumCryptography", "metaphysics"];
                 let infiniteban = ["metaphysics", "biochemistry", "antimatter", "metalurgy", "combustion", "cryptotheology", "robotics",
                     "superconductors", "dimensionalPhysics", "quantumCryptography", "paradoxalKnowledge"
                 ];
@@ -2903,6 +2909,11 @@ var run = function() {
                     return;
                 }
                 if (options.auto.autoparagon.items.infinite.enabled && freeKittens >= 1) {
+                    /*if (game.village.jobs[2].unlocked && game.resPool.get("science").value <){
+                        game.village.assignJob(game.village.getJob("scholar"), freeKittens);
+                        game.villageTab.updateTab();
+                        return;
+                    }*/
                     if (game.village.jobs[3].unlocked) {
                         game.village.assignJob(game.village.getJob("hunter"), freeKittens);
                         game.villageTab.updateTab();
