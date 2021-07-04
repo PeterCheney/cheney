@@ -1608,7 +1608,11 @@ var run = function() {
                         options.auto.build.items.steamworks.limited += Math.ceil(steamworksVal);
                         options.auto.build.items.magneto.limited += Math.ceil(steamworksVal);
                     }
-                    
+
+                    if (options.auto.build.items.hut.limited == 10 && game.workshop.get("concreteHuts").researched) {
+                        options.auto.build.items.hut.limited = 999;//小屋等混凝土小屋在造
+                    }
+
                     if (game.bld.get("workshop").on > 0 && game.science.get("construction").researched) {
                         if (game.resPool.get("scaffold").value >= 2e8 && options.auto.craft.items.scaffold.limited) {
                             $("#toggle-beam")[0].click();
@@ -1870,16 +1874,21 @@ var run = function() {
                         (2 * options.auto.autoparagon.trigger % 1000 + 1) +
                         ',"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":160,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":92,"toggle-limited-magneto":95,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
                         MoonBase_limit +
-                        ',"toggle-upgradeFilter":' + upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-limited-hut":999,"toggle-limited-brewery":999,"toggle-limited-logHouse":999},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.98,"trade":0.98,"autoparagon":500007}}';
+                        ',"toggle-upgradeFilter":' + upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-limited-hut":10,"toggle-limited-brewery":999,"toggle-limited-logHouse":999},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.98,"trade":0.98,"autoparagon":500007}}';
                     if (game.resPool.get("faith").value > game.resPool.get("faith").maxValue) {
                         game.religion.praise();
                     }
                 } else { //无限流
+                    var retain_tradepost = 0;
+                    if (game.resPool.get("timeCrystal").value < 4e5) {
+                        var postN = Math.min(game.resPool.get("wood").value,game.resPool.get("minerals").value,game.resPool.get("gold").value,0)
+                        retain_tradepost = 36 * Math.floor(Math.max(Math.log10(postN) - 11, 0));
+                    }
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true, "trade":' + false /*(xfldc_tradepost != 0)*/ + ',"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-templars":true,"toggle-limited-templars":' +
                         retain_templars +
                         ',"toggle-field":false,"toggle-mine":false,"toggle-lumberMill":false,"toggle-quarry":false,"toggle-smelter":false,"toggle-biolab":false,"toggle-calciner":false,"toggle-reactor":false,"toggle-steamworks":false,"toggle-magneto":false,"toggle-library":true,"toggle-limited-library":300,"toggle-observatory":false,"toggle-tradepost":' +
-                        (xfldc_tradepost != 0) + ',"toggle-limited-tradepost":' + xfldc_tradepost +
+                        (retain_tradepost != 0) + ',"toggle-limited-tradepost":' + retain_tradepost +
                         ',"toggle-limited-workshop":' + retain_workshop + ',"toggle-factory":true,"toggle-limited-factory":' + retain_factory + ',"toggle-limited-temple":' +
                         retain_temple + ',"toggle-mint":true,"toggle-limited-mint":' + retain_mint + ',"toggle-limited-ziggurat":1,"toggle-chronosphere":true,"toggle-limited-chronosphere":' + retain_chronosphere +
                         ',"toggle-barn":false,"toggle-harbor":false,"toggle-warehouse":false,"toggle-hut":true,"toggle-limited-hut":' +
@@ -1902,7 +1911,7 @@ var run = function() {
                     }
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":false,"toggle-techs":true,"toggle-mine":false,"toggle-upgradeFilter":' +
-                        upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-broadcastTower":false,"toggle-unicornPasture":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-library":true,"toggle-limited-library":25,"toggle-limited-temple":1,"toggle-limited-hut":10,"toggle-limited-logHouse":20,"toggle-logHouse":true,"toggle-factory":false,"toggle-mansion":false,"toggle-hut":true,"toggle-observe":true},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
+                        upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-broadcastTower":false,"toggle-unicornPasture":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-library":true,"toggle-limited-library":25,"toggle-limited-temple":1,"toggle-limited-hut":5,"toggle-limited-logHouse":20,"toggle-logHouse":true,"toggle-factory":false,"toggle-mansion":false,"toggle-hut":true,"toggle-observe":true},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
                 } else { //无限流
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true,"trade":false,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-upgrades":true,"toggle-techs":true,"toggle-mine":false,"toggle-lumberMill":false,"toggle-smelter":false,"toggle-observatory":false,"toggle-tradepost":false,"toggle-ziggurat":false,"toggle-barn":false,"toggle-field":false,"toggle-infinite":' +
@@ -2900,6 +2909,11 @@ var run = function() {
                     return;
                 }
                 if (options.auto.autoparagon.items.infinite.enabled && freeKittens >= 1) {
+                    /*if (game.village.jobs[2].unlocked && game.resPool.get("science").value <){
+                        game.village.assignJob(game.village.getJob("scholar"), freeKittens);
+                        game.villageTab.updateTab();
+                        return;
+                    }*/
                     if (game.village.jobs[3].unlocked) {
                         game.village.assignJob(game.village.getJob("hunter"), freeKittens);
                         game.villageTab.updateTab();
