@@ -2642,9 +2642,9 @@ dojo.declare("com.nuclearunicorn.game.ui.tab.Village", com.nuclearunicorn.game.u
 		//----------------- happiness and things ----------------------
 
 		this.statisticsPanel = new com.nuclearunicorn.game.ui.Panel($I("village.panel.management"), this.game.village);
-		if (this.game.village.getKittens() < 5 && this.game.resPool.get("zebras").value == 0){
+		/*if (this.game.village.getKittens() < 1 && this.game.resPool.get("zebras").value == 0){
 			this.statisticsPanel.setVisible(false);
-		}
+		}*/
 		var statPanelContainer = this.statisticsPanel.render(tabContainer);
 
 		var advVillageTable = dojo.create("table", { style: {
@@ -2786,7 +2786,7 @@ dojo.declare("com.nuclearunicorn.game.ui.tab.Village", com.nuclearunicorn.game.u
 
 		if (this.statisticsPanel){
 			this.statisticsPanel.setVisible(
-				this.game.village.getKittens() >= 5 || this.game.resPool.get("zebras").value > 0
+				this.game.village.getKittens() >= 0 || this.game.resPool.get("zebras").value > 0
 			);
 		}
 		if (this.huntBtn){
