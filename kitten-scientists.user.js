@@ -688,7 +688,7 @@ var run = function() {
                     unicornPasture: {
                         require: false,
                         limited: 9999,
-                        enabled: true
+                        enabled: false
                     },
                     ziggurat: {
                         require: false,
@@ -1729,6 +1729,7 @@ var run = function() {
                 //var retain_spaceStation = kittens_check ? parseFloat(retain_data[8]) : 0;
                 var retain_templars = 6 + (2 * Math.floor(Math.max(Math.log10(faithN) - 11, 0)));
                 var retain_chronosphere = options.auto.autoparagon.trigger % 1000;
+                var retain_library = 250 + (36 * Math.floor(Math.max(Math.log10(woodN) - 11, 0)));
                 if (options.auto.autoparagon.trigger % 1000 == 73) {
                     retain_chronosphere = 73 + (15 * Math.floor(Math.max(Math.log10(chronosphereN) - 11, 0)));
                 }
@@ -1886,13 +1887,20 @@ var run = function() {
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true, "trade":' + false /*(xfldc_tradepost != 0)*/ + ',"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-templars":true,"toggle-limited-templars":' +
                         retain_templars +
-                        ',"toggle-field":false,"toggle-mine":false,"toggle-lumberMill":false,"toggle-quarry":false,"toggle-smelter":false,"toggle-biolab":false,"toggle-calciner":false,"toggle-reactor":false,"toggle-steamworks":false,"toggle-magneto":false,"toggle-library":true,"toggle-limited-library":300,"toggle-observatory":false,"toggle-tradepost":' +
-                        (retain_tradepost != 0) + ',"toggle-limited-tradepost":' + retain_tradepost +
-                        ',"toggle-limited-workshop":' + retain_workshop + ',"toggle-factory":true,"toggle-limited-factory":' + retain_factory + ',"toggle-limited-temple":' +
-                        retain_temple + ',"toggle-mint":true,"toggle-limited-mint":' + retain_mint + ',"toggle-limited-ziggurat":1,"toggle-chronosphere":true,"toggle-limited-chronosphere":' + retain_chronosphere +
+                        ',"toggle-field":false,"toggle-mine":false,"toggle-lumberMill":false,"toggle-quarry":false,"toggle-smelter":false,"toggle-biolab":false,"toggle-calciner":false,"toggle-reactor":false,"toggle-steamworks":false,"toggle-magneto":false,"toggle-library":true,"toggle-limited-library":' + 
+                        retain_library + ',"toggle-observatory":false,"toggle-tradepost":' +
+                        (retain_tradepost != 0) + ',"toggle-limited-tradepost":' + 
+                        retain_tradepost +
+                        ',"toggle-limited-workshop":' + 
+                        retain_workshop + ',"toggle-factory":true,"toggle-limited-factory":' + 
+                        retain_factory + ',"toggle-limited-temple":' +
+                        retain_temple + ',"toggle-mint":true,"toggle-limited-mint":' + 
+                        retain_mint + ',"toggle-limited-ziggurat":1,"toggle-chronosphere":true,"toggle-limited-chronosphere":' + retain_chronosphere +
                         ',"toggle-barn":false,"toggle-harbor":false,"toggle-warehouse":false,"toggle-hut":true,"toggle-limited-hut":' +
-                        retain_hut + ',"toggle-logHouse":true,"toggle-limited-logHouse":' + retain_loghouse +
-                        ',"toggle-mansion":true,"toggle-limited-mansion":' + retain_mansion +
+                        retain_hut + ',"toggle-logHouse":true,"toggle-limited-logHouse":' + 
+                        retain_loghouse +
+                        ',"toggle-mansion":true,"toggle-limited-mansion":' + 
+                        retain_mansion +
                         ',"toggle-upgrades":true,"toggle-techs":true,"toggle-buildings":false,"toggle-zebras":false,"toggle-leviathans":true,"toggle-hunt":true,"toggle-infinite":' +
                         options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-chronocontrol":0},"resources":{},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.85,"trade":0.98,"autoparagon":500007}}';
                 }
@@ -1917,7 +1925,6 @@ var run = function() {
                         options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-library":50,"toggle-limited-temple":' + retain_temple + ',"toggle-limited-hut":10,"toggle-limited-logHouse":' + retain_loghouse + ',"toggle-logHouse":true,"toggle-hut":true,"toggle-limited-workshop":' + retain_workshop + ',"toggle-hunt":false,"toggle-transcendence":true, "toggle-templars":true,"toggle-races":true,"toggle-missions":true,"set-missions-subTrigger":5,"toggle-mint":true,"toggle-limited-mint":10,"toggle-factory":false,"toggle-xfldc":' + false /*options.auto.autoparagon.items.xfldc.enabled*/ + '},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"space":0,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
                 }
                 loadFromKittenStorage();
-
                 if (localStorage['cbc.resetAutomatic.step'] == 1 || !localStorage['cbc.resetAutomatic.step']) {
                     localStorage['cbc.resetAutomatic.step'] = 2;
                     if (options.auto.autoparagon.items.infinite.enabled && gamePage.science.get("oilProcessing").researched) {
@@ -1960,15 +1967,18 @@ var run = function() {
                                                 if(!game.timeTab.cfPanel) {game.timeTab.render();}
                                                 game.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, 20);
                                                 game.spaceTab.render();
+                                                if(!game.spaceTab.planetPanels[4]) {
+                                                    if (game.opts.autoSaveReset && game.resPool.resources[10].value < 1e4) {
+                                                        game.saveToFile(true);
+                                                    }
+                                                    break;
+                                                }
                                                 var spaceModel = game.spaceTab.planetPanels[4].children[1].model;
                                                 var buildingPrices = game.spaceTab.planetPanels[4].children[1].model.prices[1].val;
                                                 var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 10;
                                                 var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
                                                 game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
                                                 spaceModel.options.controller.build(spaceModel, spaceNumber);
-                                                if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset && game.resPool.resources[10].value < 1e4) {
-                                                    game.saveToFile(true);
-                                                }
                                             }
                                         }
                                         break;
@@ -2912,11 +2922,11 @@ var run = function() {
                     return;
                 }
                 if (options.auto.autoparagon.items.infinite.enabled && freeKittens >= 1) {
-                    /*if (game.village.jobs[2].unlocked && game.resPool.get("science").value < 1e13){
+                    if (game.village.jobs[2].unlocked && game.resPool.get("science").value < 1e13){
                         game.village.assignJob(game.village.getJob("scholar"), freeKittens);
                         game.villageTab.updateTab();
                         return;
-                    }*/
+                    }
                     if (game.village.jobs[3].unlocked) {
                         game.village.assignJob(game.village.getJob("hunter"), freeKittens);
                         game.villageTab.updateTab();
