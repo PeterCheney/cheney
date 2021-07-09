@@ -246,8 +246,7 @@ var cnItem = function() {
 };
 
 
-var kg_version = '珂学家修改自零神脚本-Cheney';
-var address = '1MC7Vj5ovpq3mzn9JhyhYMPEBRFoRZgDwa';
+var kg_version = '珂学家-Cheney';
 
 // Game will be referenced in loadTest function
 var game = this.game;
@@ -1899,7 +1898,7 @@ var run = function() {
                 }
                 loadFromKittenStorage();
             }
-            if ((game.resPool.get("kittens").value >= 500 || options.auto.autoparagon.items.infinite.enabled)&& (game.resPool.get("kittens").value >= game.resPool.get("kittens").maxValue || kittens_check) && game.bld.get("chronosphere").val >= options.auto.autoparagon.trigger % 1000 && game.resPool.get("faith").value >= 10000 && game.resPool.get("gold").value >= 10000 && game.resPool.get("science").value >= 500000 / (0.015 * (options.auto.autoparagon.trigger % 1000)) && game.workshop.get("fluxCondensator").researched) {
+            if ((game.resPool.get("kittens").value >= 500 || options.auto.autoparagon.items.infinite.enabled) && (game.resPool.get("kittens").value >= game.resPool.get("kittens").maxValue || kittens_check) && game.bld.get("chronosphere").val >= options.auto.autoparagon.trigger % 1000 && game.resPool.get("gold").value >= 10000 && game.resPool.get("science").value >= 500000 / (0.015 * (options.auto.autoparagon.trigger % 1000)) && game.workshop.get("fluxCondensator").researched) {
                 localStorage['cbc.autoparagon.step'] = 1;
                 if (!options.auto.autoparagon.items.infinite.enabled) {
                     let cbcSave = JSON.parse(localStorage['cbc.kitten-scientists']);
@@ -2006,6 +2005,7 @@ var run = function() {
                     if (!options.auto.autoparagon.items.infinite.enabled) {
                         game.resPool.get("starchart").value += game.spaceTab.planetPanels[0].children[2].model.prices[2].val * 20;
                         game.resPool.resources[39].value += 1e5;
+                        game.resPool.get("faith").value += 1e5;
                         game.resPool.get("gold").value = game.resPool.get("gold").maxValue;
                         game.resPool.get("minerals").value = game.resPool.get("minerals").maxValue;
                         game.resPool.get("manpower").value += game.resPool.get("manpower").maxValue;
@@ -2045,11 +2045,14 @@ var run = function() {
         },
         autotime: function() {
             if (game.workshop.get("chronoforge").researched && !game.challenges.anyChallengeActive() && !game.bld.get("steamworks").isAutomationEnabled && game.time.getCFU("ressourceRetrieval").on == 0) {
+                if (game.resPool.get("burnedParagon").value + game.resPool.get("paragon").value > 2e9) {
+                    return;
+                }
                 var autotime = options.auto.autotime.items;
                 var factor = game.challenges.getChallenge("1000Years").researched ? 5 : 10;
                 var skipTimeYear = Math.floor(options.auto.autotime.items.x1.subTrigger / 1000) * 1000;
                 if (skipTimeYear > 0) {
-                    skipTimeYear = Math.min(10000000, skipTimeYear);
+                    skipTimeYear = Math.min(1e7, skipTimeYear);
                 } else {
                     return;
                 }
@@ -2058,9 +2061,9 @@ var run = function() {
                 var d1 = 1 + 0.00001 * darkYears;
                 var h1 = 1 + 0.01 * game.time.heat - 0.01 * game.getEffect("heatMax");
                 if (darkYears > 0 && game.time.heat > game.getEffect("heatMax")) {
-                    sumPrices += d1 * h1 * skipTimeYear + h1 * 0.00001 * ((skipTimeYear * skipTimeYear + skipTimeYear) / 2) + 0.05 * ((skipTimeYear * skipTimeYear + skipTimeYear) / 2) * d1 + (0.0000005 * (skipTimeYear * (skipTimeYear + 1) * (2 * skipTimeYear + 1)) / 6);
+                    sumPrices += d1 * h1 * skipTimeYear + h1 * 0.00001 * ((skipTimeYear * skipTimeYear + skipTimeYear) / 2) + 0.05 * ((skipTimeYear * skipTimeYear + skipTimeYear) * 0.5) * d1 + (0.0000005 * (skipTimeYear * (skipTimeYear + 1) * (2 * skipTimeYear + 1)) / 6);
                 } else if (darkYears + skipTimeYear > 0 || game.time.heat + factor * skipTimeYear > game.getEffect("heatMax")) {
-                    var heatYear2 = Math.ceil((game.getEffect("heatMax") - game.time.heat) / 5);
+                    var heatYear2 = Math.ceil((game.getEffect("heatMax") - game.time.heat) * 0.2);
                     var darkYear1 = 1 + 0.00001 * darkYears + skipTimeYear;
                     if (d1 < 0) {
                         d1 = 1;
@@ -2083,9 +2086,9 @@ var run = function() {
                         game.resPool.addResEvent("temporalFlux", game.bld.get("chronosphere").on * skipTimeYear);
                     }
                     game.diplomacy.unlockElders();
-                    game.resPool.get("paragon").value += (skipTimeYear / 1000);
+                    game.resPool.get("paragon").value += (skipTimeYear * 0.001);
                     game.resPool.get("timeCrystal").value -= sumPrices;
-                    game.stats.getStat("totalParagon").val += skipTimeYear / 1000;
+                    game.stats.getStat("totalParagon").val += skipTimeYear * 0.001;
                     game.stats.getStat("totalYears").val += skipTimeYear;
                     game.calendar.day = 0;
                     game.calendar.season = 0;
@@ -2269,7 +2272,7 @@ var run = function() {
                 if (!game.libraryTab.policyPanel || !game.libraryTab.policyPanel.children) {game.libraryTab.render();}
                 var poli = game.science.policies;
                 let noup = [];
-                let autoparagon = [0, 3, 8, 11, 15, 20, 23, 26, 31, 34, 36];
+                let autoparagon = [0, 3, 8, 11, 15, 20, 23, 26, 31, 34, 37];
                 let infiniit = [1, 2, 8, 25, 30,34,37];
                 if (!options.auto.autoparagon.items.infinite.enabled) {
                     noup = noup.concat(autoparagon);
@@ -2909,7 +2912,7 @@ var run = function() {
                     return;
                 }
                 if (options.auto.autoparagon.items.infinite.enabled && freeKittens >= 1) {
-                    /*if (game.village.jobs[2].unlocked && game.resPool.get("science").value <){
+                    /*if (game.village.jobs[2].unlocked && game.resPool.get("science").value < 1e13){
                         game.village.assignJob(game.village.getJob("scholar"), freeKittens);
                         game.villageTab.updateTab();
                         return;
@@ -2921,7 +2924,7 @@ var run = function() {
                     }
                 }
 
-                if (options.auto.autoparagon.enabled && freeKittens >= 1) {
+                if (options.auto.autoparagon.enabled && freeKittens >= 1 && !game.village.jobs[4].value) {
                     let fresh = false;
                     if (game.village.jobs[3].unlocked && !game.village.jobs[3].value) {
                         game.village.assignJob(game.village.getJob("hunter"), 1);
