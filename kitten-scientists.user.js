@@ -1600,7 +1600,7 @@ var run = function() {
                     var mineLim = options.auto.build.items.mine.limited;
                     var steamworksLim = options.auto.build.items.steamworks.limited;
                     var magnetoLim = options.auto.build.items.magneto.limited;
-                    if (productionRatio > 1.17 && reactorLim == 160 && steamworksLim == 92) {
+                    if (productionRatio > 1.17 && reactorLim == 160 && steamworksLim == 85) {
                         options.auto.build.items.reactor.limited += 160 +Math.ceil(reactorVal);
                         options.auto.build.items.lumberMill.limited += Math.ceil(lumberMillval);
                         options.auto.build.items.mine.limited += Math.ceil(mineVal);
@@ -1872,7 +1872,7 @@ var run = function() {
                         (options.auto.autoparagon.trigger % 1000 + 4) +
                         ',"toggle-ziggurat":true,"toggle-barn":true,"toggle-field":true,"toggle-hut":true,"toggle-logHouse":true,"toggle-mansion":true,"toggle-library":true,"toggle-limited-library":270,"toggle-biolab":true,"toggle-calciner":true,"toggle-reactor":true,"toggle-accelerator":true,"toggle-chapel":true,"toggle-steamworks":true,"toggle-magneto":true,"toggle-mint":true,"toggle-spaceStation":false,"toggle-sattelite":true,"toggle-spaceElevator":true,"toggle-moonOutpost":true,"toggle-moonBase":true,"toggle-planetCracker":false,"toggle-hydrofracturer":true,"toggle-researchVessel":true,"toggle-beam":true,"toggle-limited-beam":true,"toggle-slab":true,"toggle-limited-slab":true,"toggle-steel":true,"toggle-limited-steel":true,"toggle-plate":true,"toggle-limited-plate":true,"toggle-alloy":true,"toggle-limited-alloy":true,"toggle-concrate":true,"toggle-limited-concrate":true,"toggle-gear":true,"toggle-limited-gear":true,"toggle-scaffold":true,"toggle-limited-scaffold":true,"toggle-ship":true,"toggle-limited-ship":true,"toggle-tanker":false,"toggle-limited-tanker":true,"toggle-parchment":true,"toggle-limited-parchment":false,"toggle-manuscript":true,"toggle-limited-manuscript":true,"toggle-compedium":true,"toggle-limited-compedium":true,"toggle-blueprint":true,"toggle-limited-blueprint":true,"toggle-kerosene":true,"toggle-limited-kerosene":true,"toggle-megalith":false,"toggle-limited-megalith":true,"toggle-eludium":true,"toggle-limited-eludium":true,"toggle-thorium":false,"toggle-limited-thorium":false,"toggle-upgrades":true,"toggle-missions":true,"toggle-techs":true,"toggle-races":true,"toggle-buildings":true,"toggle-zebras":true,"toggle-limited-zebras":true,"toggle-zebras-autumn":true,"toggle-zebras-spring":true,"toggle-zebras-winter":true,"toggle-harbor":true,"toggle-warehouse":true,"toggle-limited-ziggurat":8,"toggle-limited-spaceElevator":' +
                         (2 * options.auto.autoparagon.trigger % 1000 + 1) +
-                        ',"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":160,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":92,"toggle-limited-magneto":95,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
+                        ',"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":160,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":85,"toggle-limited-magneto":87,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
                         MoonBase_limit +
                         ',"toggle-upgradeFilter":' + upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-limited-hut":10,"toggle-limited-brewery":999,"toggle-limited-logHouse":999},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.98,"trade":0.98,"autoparagon":500007}}';
                     if (game.resPool.get("faith").value > game.resPool.get("faith").maxValue) {
@@ -2738,7 +2738,6 @@ var run = function() {
             }
             if (tradesDone.length === 0) {
                 return;
-                console.log()
             }
 
             var tradeNet = {};
