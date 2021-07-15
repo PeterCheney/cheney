@@ -1417,9 +1417,9 @@ var run = function() {
             		cache:    [],
             		cacheSum: {}
             }*/
-            inoutdeploy: {
+           /* inoutdeploy: {
                 trigger: ''
-            }
+            }*/
         }
     };
 
@@ -1870,9 +1870,9 @@ var run = function() {
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"space":true,"craft":true,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-solarchant":true,"toggle-scholasticism":false,"toggle-goldenSpire":true,"toggle-sunAltar":true,"toggle-stainedGlass":false,"toggle-basilica":true,"toggle-templars":true,"toggle-apocripha":true,"toggle-transcendence":true,"toggle-solarFarm":true,"toggle-mine":true,"toggle-lumberMill":true,"toggle-hydroPlant":true,"toggle-oilWell":true,"toggle-quarry":true,"toggle-smelter":true,"toggle-factory":true,"toggle-dataCenter":true,"toggle-academy":true,"toggle-observatory":true,"toggle-tradepost":true,"toggle-broadcastTower":true,"toggle-brewery":true,"toggle-unicornPasture":true,"toggle-chronosphere":true,"toggle-limited-chronosphere":' +
                         (options.auto.autoparagon.trigger % 1000 + 4) +
-                        ',"toggle-ziggurat":true,"toggle-barn":true,"toggle-field":true,"toggle-hut":true,"toggle-logHouse":true,"toggle-mansion":true,"toggle-library":true,"toggle-limited-library":270,"toggle-biolab":true,"toggle-calciner":true,"toggle-reactor":true,"toggle-accelerator":true,"toggle-chapel":true,"toggle-steamworks":true,"toggle-magneto":true,"toggle-mint":true,"toggle-spaceStation":false,"toggle-sattelite":true,"toggle-spaceElevator":true,"toggle-moonOutpost":true,"toggle-moonBase":true,"toggle-planetCracker":false,"toggle-hydrofracturer":true,"toggle-researchVessel":true,"toggle-beam":true,"toggle-limited-beam":true,"toggle-slab":true,"toggle-limited-slab":true,"toggle-steel":true,"toggle-limited-steel":true,"toggle-plate":true,"toggle-limited-plate":true,"toggle-alloy":true,"toggle-limited-alloy":true,"toggle-concrate":true,"toggle-limited-concrate":true,"toggle-gear":true,"toggle-limited-gear":true,"toggle-scaffold":true,"toggle-limited-scaffold":true,"toggle-ship":true,"toggle-limited-ship":true,"toggle-tanker":false,"toggle-limited-tanker":true,"toggle-parchment":true,"toggle-limited-parchment":false,"toggle-manuscript":true,"toggle-limited-manuscript":true,"toggle-compedium":true,"toggle-limited-compedium":true,"toggle-blueprint":true,"toggle-limited-blueprint":true,"toggle-kerosene":true,"toggle-limited-kerosene":true,"toggle-megalith":false,"toggle-limited-megalith":true,"toggle-eludium":true,"toggle-limited-eludium":true,"toggle-thorium":false,"toggle-limited-thorium":false,"toggle-upgrades":true,"toggle-missions":true,"toggle-techs":true,"toggle-races":true,"toggle-buildings":true,"toggle-zebras":true,"toggle-limited-zebras":true,"toggle-zebras-autumn":true,"toggle-zebras-spring":true,"toggle-zebras-winter":true,"toggle-harbor":true,"toggle-warehouse":true,"toggle-limited-ziggurat":8,"toggle-limited-spaceElevator":' +
+                        ',"toggle-ziggurat":true,"toggle-barn":true,"toggle-field":true,"toggle-hut":true,"toggle-logHouse":true,"toggle-mansion":true,"toggle-library":true,"toggle-biolab":true,"toggle-calciner":true,"toggle-reactor":true,"toggle-accelerator":true,"toggle-chapel":true,"toggle-steamworks":true,"toggle-magneto":true,"toggle-mint":true,"toggle-spaceStation":false,"toggle-sattelite":true,"toggle-spaceElevator":true,"toggle-moonOutpost":true,"toggle-moonBase":true,"toggle-planetCracker":false,"toggle-hydrofracturer":true,"toggle-researchVessel":true,"toggle-beam":true,"toggle-limited-beam":true,"toggle-slab":true,"toggle-limited-slab":true,"toggle-steel":true,"toggle-limited-steel":true,"toggle-plate":true,"toggle-limited-plate":true,"toggle-alloy":true,"toggle-limited-alloy":true,"toggle-concrate":true,"toggle-limited-concrate":true,"toggle-gear":true,"toggle-limited-gear":true,"toggle-scaffold":true,"toggle-limited-scaffold":true,"toggle-ship":true,"toggle-limited-ship":true,"toggle-tanker":false,"toggle-limited-tanker":true,"toggle-parchment":true,"toggle-limited-parchment":false,"toggle-manuscript":true,"toggle-limited-manuscript":true,"toggle-compedium":true,"toggle-limited-compedium":true,"toggle-blueprint":true,"toggle-limited-blueprint":true,"toggle-kerosene":true,"toggle-limited-kerosene":true,"toggle-megalith":false,"toggle-limited-megalith":true,"toggle-eludium":true,"toggle-limited-eludium":true,"toggle-thorium":false,"toggle-limited-thorium":false,"toggle-upgrades":true,"toggle-missions":true,"toggle-techs":true,"toggle-races":true,"toggle-buildings":true,"toggle-zebras":true,"toggle-limited-zebras":true,"toggle-zebras-autumn":true,"toggle-zebras-spring":true,"toggle-zebras-winter":true,"toggle-harbor":true,"toggle-warehouse":true,"toggle-limited-ziggurat":8,"toggle-limited-spaceElevator":' +
                         (2 * options.auto.autoparagon.trigger % 1000 + 1) +
-                        ',"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":160,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":85,"toggle-limited-magneto":87,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
+                        ',"toggle-limited-library":270,"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":160,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":85,"toggle-limited-magneto":87,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
                         MoonBase_limit +
                         ',"toggle-upgradeFilter":' + upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-limited-hut":10,"toggle-limited-brewery":999,"toggle-limited-logHouse":999},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.98,"trade":0.98,"autoparagon":500007}}';
                     if (game.resPool.get("faith").value > game.resPool.get("faith").maxValue) {
@@ -4449,7 +4449,7 @@ var run = function() {
         localStorage['cbc.autoparagon.trigger'] = JSON.stringify(options.auto.autoparagon.trigger);
         localStorage['cbc.autoparagon.items.infinite.subTrigger'] = options.auto.autoparagon.items.infinite.subTrigger;
         /*localStorage['cbc.autoparagon.items.xfldc.subTrigger'] = JSON.stringify(options.auto.autoparagon.items.xfldc.subTrigger);*/
-        options.auto.inoutdeploy.trigger = localStorage['cbc.kitten-scientists'];
+        //options.auto.inoutdeploy.trigger = localStorage['cbc.kitten-scientists'];
     };
     //保存珂学家配置到key
     var loadFromKittenStorage = function() {
@@ -4990,16 +4990,17 @@ var run = function() {
                     value = window.prompt(
                         '输入重置时的传送仪数量，栗子：6\n达到指定传送仪且猫口上限后重置\n需要有6000%太阳革命加成和300k水晶后使用\n会默认保存500K水晶（可通过附加功能进行修改）\n可通过附加功能中燃烧到红月加快一定的效率\n若使用燃烧到红月功能会增加水晶消耗\n',
                         auto.trigger);
-                } else if (text == '导出入配置') {
+                } /*else if (text == '导出入配置') {
                     var kssave = localStorage['cbc.kitten-scientists'];
                     value = window.prompt('窗口内默认文本为当前配置,珂以直接复制,到qq窗口发送\n' + '尽量不按窗口内取消键，\n' + '按了需要更改珂学家的任意配置才珂以正常导出\n' +
                         '输入配置文本后按确定\n' + '导入配置（注意珂学家版本）在确定后需要刷新\n' + '请无视是否开启此选项\n', kssave);
                     localStorage['cbc.kitten-scientists'] = value;
-                } else {
+                }*/ else {
                     value = window.prompt('输入新的触发值 ' + text + '。 取值范围为 0 到 1 之间的小数。', auto.trigger);
                 }
 
-                if (value !== null && text != '导出入配置') {
+                //if (value !== null && text != '导出入配置') {
+                if (value !== null) {
                     auto.trigger = parseFloat(value);
                     saveToKittenStorage();
                     triggerButton[0].title = auto.trigger;
@@ -5372,7 +5373,7 @@ var run = function() {
     optionsListElement.append(getToggle('options', '选项'));
     optionsListElement.append(getToggle('autotime', '烧水晶领导力'));
     optionsListElement.append(getToggle('filter', '日志过滤'));
-    optionsListElement.append(getToggle('inoutdeploy', '导出入配置'));
+   // optionsListElement.append(getToggle('inoutdeploy', '导出入配置'));
 
     // add activity button
     // ===================
