@@ -2622,7 +2622,7 @@ var run = function() {
                     if (chron && options.auto.autoparagon.items.infinite.enabled && chron < options.auto.build.items.chronosphere.limited) {
                         if (manpower.value > 4e10) {
                             huntCount *= Math.floor(Math.max(manpower.value * 1e-6, 1e3));
-                        } else if (manpower.value > 2e9 && game.village.leader != null && game.village.leader.trait.name == "manager") {
+                        } else if (manpower.value > 1e9 && game.village.leader != null && game.village.leader.trait.name == "manager") {
                             huntCount *= Math.floor(Math.max(manpower.value * 1e-6, 5e3));
                         } 
                     }
@@ -2856,7 +2856,7 @@ var run = function() {
                                 break;
                             }
                         } else {
-                            if (game.village.traits[i].name == "manager") {
+                            if (game.resPool.get("manpower").value > 1e9 && game.village.traits[i].name == "manager") {
                                 profession = "manager";
                                 break;
                             }
