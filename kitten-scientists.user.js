@@ -1296,7 +1296,7 @@ var run = function() {
                     },
                     scholar: {
                         enabled: true,
-                        max: 22,
+                        max: 29,
                         limited: true
                     },
                     hunter: {
