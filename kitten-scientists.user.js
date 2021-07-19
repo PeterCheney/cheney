@@ -1587,10 +1587,6 @@ var run = function() {
                 if (game.resPool.get("timeCrystal").value < 1e4 && options.auto.build.items.chronosphere.limited) {
                     options.auto.build.items.chronosphere.limited = 0; //水晶低于保留值时关闭超时空传送仪
                 }
-                
-                if (options.auto.autoparagon.items.infinite.enabled && game.bld.getPriceRatio("hut") < 2.4) {
-                    options.auto.build.items.hut.enabled = true;
-                }
 
                 if (!options.auto.autoparagon.items.infinite.enabled && options.auto.autoparagon.enabled) {
                     var solarproduction = 1e4 * (10 + game.getEffect("solarRevolutionLimit") + (game.challenges.getChallenge("atheism").researched ? (game.religion.transcendenceTier) : 0)) * (1 + game.getLimitedDR(game.getEffect("faithSolarRevolutionBoost"), 4));
@@ -1752,6 +1748,16 @@ var run = function() {
                 		}
                 	}
                 }*/
+                
+                if (game.bld.getPriceRatio("hut") < 2.4) {
+                    options.auto.build.items.hut.enabled = true;
+                }
+
+                if (game.resPool.get("timeCrystal").value < 4e5 && !options.auto.build.items.tradepost.enabled) {
+                    var postN = Math.min(game.resPool.get("wood").value,game.resPool.get("minerals").value,game.resPool.get("gold").value,0)
+                    options.auto.build.items.tradepost.limited = 36 * Math.floor(Math.max(Math.log10(postN) - 11, 0));
+                    options.auto.build.items.tradepost.enabled = true;
+                }
 
                 if (game.workshopTab.visible && game.science.get("construction").researched) { //工坊优化
                     let retain_limit = Math.pow(1.5 * options.auto.autoparagon.trigger % 1000, 2);
@@ -1884,19 +1890,11 @@ var run = function() {
                         game.religion.praise();
                     }
                 } else { //无限流
-                    var retain_tradepost = 0;
-                    if (game.resPool.get("timeCrystal").value < 4e5) {
-                        var postN = Math.min(game.resPool.get("wood").value,game.resPool.get("minerals").value,game.resPool.get("gold").value,0)
-                        retain_tradepost = 36 * Math.floor(Math.max(Math.log10(postN) - 11, 0));
-                    }
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true, "trade":' + false /*(xfldc_tradepost != 0)*/ + ',"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-templars":true,"toggle-limited-templars":' +
                         retain_templars +
                         ',"toggle-field":false,"toggle-mine":false,"toggle-lumberMill":false,"toggle-quarry":false,"toggle-smelter":false,"toggle-biolab":false,"toggle-calciner":false,"toggle-reactor":false,"toggle-steamworks":false,"toggle-transcendence":true,"toggle-magneto":false,"toggle-library":true,"toggle-limited-library":' + 
-                        retain_library + ',"toggle-observatory":false,"toggle-tradepost":' +
-                        (retain_tradepost != 0) + ',"toggle-limited-tradepost":' + 
-                        retain_tradepost +
-                        ',"toggle-limited-workshop":' + 
+                        retain_library + ',"toggle-observatory":false,"toggle-limited-workshop":' + 
                         retain_workshop + ',"toggle-factory":true,"toggle-limited-factory":' + 
                         retain_factory + ',"toggle-limited-temple":' +
                         retain_temple + ',"toggle-mint":true,"toggle-limited-mint":' + 
