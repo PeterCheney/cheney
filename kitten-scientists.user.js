@@ -2015,7 +2015,7 @@ var run = function() {
                         }
                     }
                     if (!options.auto.autoparagon.items.infinite.enabled) {
-                        game.resPool.get("starchart").value += game.space.meta[1].meta[2].prices[2].val * 20;
+                        game.resPool.get("starchart").value += 40 * game.space.meta[1].meta[2].prices[2].val * Math.pow(1.12,game.space.meta[1].meta[2].val);
                         game.resPool.resources[39].value += 1e5;
                         game.resPool.get("faith").value += 1e5;
                         game.resPool.get("gold").value = game.resPool.get("gold").maxValue;
