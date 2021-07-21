@@ -2619,9 +2619,9 @@ var run = function() {
                     var chron = game.bld.getBuildingExt('chronosphere').meta.val;
                     if (chron && options.auto.autoparagon.items.infinite.enabled && chron < options.auto.build.items.chronosphere.limited) {
                         if (manpower.value > 4e10) {
-                            huntCount *= Math.floor(Math.max(manpower.value * 1e-6, 1e3));
+                            huntCount *= Math.floor(Math.min(manpower.value * 1e-6, 1e3));
                         } else if (manpower.value > 1e9 && game.village.leader != null && game.village.leader.trait.name == "manager") {
-                            huntCount *= Math.floor(Math.max(manpower.value * 1e-6, 5e3));
+                            huntCount *= Math.floor(Math.min(manpower.value * 1e-6, 5e3));
                         } 
                     }
                 }
