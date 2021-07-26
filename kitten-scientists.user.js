@@ -2032,6 +2032,7 @@ var run = function() {
                             game.saveToFile(true);
                         }
                     }
+                    game.challenges.onRunReset();
                     for (var i = 0; i < game.challenges.challenges.length; i++) {
                         game.challenges.challenges[i].pending = false;
                     }
