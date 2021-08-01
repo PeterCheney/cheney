@@ -1637,8 +1637,9 @@ var run = function() {
                                  options.auto.craft.items.compedium.enabled = false;
                                  options.auto.craft.items.manuscript.enabled = false;*/
                         }
-
-                        if (!options.auto.craft.items.slab.enabled && game.resPool.get("slab").value < game.bldTab.children[7].model.prices[1].val) {
+                        
+                        var mansionSlab = game.bld.getBuildingExt('mansion').meta.prices[1].val * Math.pow(game.bld.getBuildingExt("reactor").meta.priceRatio + game.getEffect("priceRatio"), game.bld.getBuildingExt('mansion').meta.on);
+                        if (!options.auto.craft.items.slab.enabled && game.resPool.get("slab").value < mansionSlab) {
                             $("#toggle-slab")[0].click();
                         }
 
@@ -1708,16 +1709,6 @@ var run = function() {
                 var faithN = Math.min(game.resPool.get("gold").value, game.resPool.get("faith").value);
                 var mintN = Math.min(game.resPool.get("minerals").value, game.resPool.get("gold").value, game.resPool.get("iron").value);
                 var chronosphereN = Math.min(game.resPool.get("science").value, game.resPool.get("timeCrystal").value, game.resPool.get("unobtainium").value, game.resPool.get("manpower").value);
-                /*function Math.floor(Math.max(Math.log10(number) {
-                	var L = 0;
-                	while (number > 1e12) {
-                		if (number < Number.MAX_VALUE) {
-                			number = number / 10;
-                			L++;
-                		}
-                	}Math.floor(Math.max(Math.log10())
-                	return L;
-                }*/
                 kittens_check = Boolean(options.auto.autoparagon.items.infinite.subTrigger);
                 var hutPrice = game.bld.getPriceRatio("hut");
                 options.auto.build.items.hut.limited = Math.floor(Math.max(Math.log2(woodN) - 18.5, 0) / Math.log2(game.bld.getPriceRatio("hut")));
@@ -1735,19 +1726,6 @@ var run = function() {
                     retain_chronosphere = 73 + (15 * Math.floor(Math.max(Math.log10(chronosphereN) - 11, 0)));
                 }
                 var xfldc_tradepost = 0;
-
-                /*if (game.resPool.get("relic").value > 1e10) {
-                	for (i in game.religion.meta[2].meta) {
-                		if (game.religion.meta[2].meta[i].unlocked) {
-                			var TuNumber = game.resPool.get("relic").value / game.religion.meta[2].meta[i].prices[0].val;
-                			if (i == 8 || 9) {
-                				voidNumber = 0;
-                			}
-                			=== Infinity ? 0 :
-                			spaceModel.options.controller.build(spaceModel, spaceNumber);
-                		}
-                	}
-                }*/
 
                 if (game.bld.getPriceRatio("hut") < 2.4) {
                     options.auto.build.items.hut.enabled = true;
@@ -1884,7 +1862,7 @@ var run = function() {
                         chro +
                         ',"toggle-ziggurat":true,"toggle-barn":true,"toggle-field":true,"toggle-hut":true,"toggle-logHouse":true,"toggle-mansion":true,"toggle-library":true,"toggle-biolab":true,"toggle-calciner":true,"toggle-reactor":true,"toggle-accelerator":true,"toggle-chapel":true,"toggle-steamworks":true,"toggle-magneto":true,"toggle-mint":true,"toggle-spaceStation":false,"toggle-sattelite":true,"toggle-spaceElevator":true,"toggle-moonOutpost":true,"toggle-moonBase":true,"toggle-planetCracker":false,"toggle-hydrofracturer":true,"toggle-researchVessel":true,"toggle-beam":true,"toggle-limited-beam":true,"toggle-slab":true,"toggle-limited-slab":true,"toggle-steel":true,"toggle-limited-steel":true,"toggle-plate":true,"toggle-limited-plate":true,"toggle-alloy":true,"toggle-limited-alloy":true,"toggle-concrate":true,"toggle-limited-concrate":true,"toggle-gear":true,"toggle-limited-gear":true,"toggle-scaffold":true,"toggle-limited-scaffold":true,"toggle-ship":true,"toggle-limited-ship":true,"toggle-tanker":false,"toggle-limited-tanker":true,"toggle-parchment":true,"toggle-limited-parchment":false,"toggle-manuscript":true,"toggle-limited-manuscript":true,"toggle-compedium":true,"toggle-limited-compedium":true,"toggle-blueprint":true,"toggle-limited-blueprint":true,"toggle-kerosene":true,"toggle-limited-kerosene":true,"toggle-megalith":false,"toggle-limited-megalith":true,"toggle-eludium":true,"toggle-limited-eludium":true,"toggle-thorium":false,"toggle-limited-thorium":false,"toggle-upgrades":true,"toggle-missions":true,"toggle-techs":true,"toggle-races":true,"toggle-buildings":true,"toggle-zebras":true,"toggle-limited-zebras":true,"toggle-zebras-autumn":true,"toggle-zebras-spring":true,"toggle-zebras-winter":true,"toggle-harbor":true,"toggle-warehouse":true,"toggle-limited-ziggurat":8,"toggle-limited-spaceElevator":' +
                         elevat +
-                        ',"toggle-limited-library":270,"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":165,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":90,"toggle-limited-magneto":92,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
+                        ',"toggle-limited-library":270,"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":248,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":165,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":90,"toggle-limited-magneto":92,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
                         MoonBase_limit +
                         ',"toggle-upgradeFilter":' + upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-limited-hut":10,"toggle-limited-brewery":999,"toggle-limited-logHouse":999},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.98,"trade":0.98,"autoparagon":500007}}';
                     if (game.resPool.get("faith").value > game.resPool.get("faith").maxValue) {
