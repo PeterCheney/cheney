@@ -121,7 +121,6 @@ var cnItems = {
     'Summer': '夏季',
     'Autumn': '秋季',
     'Winter': '冬季',
-    'Wood': '木材',
     'Beam': '木梁',
     'Slab': '石板',
     'Plate': '金属板',
@@ -1540,6 +1539,9 @@ var run = function() {
             message('禁用小猫珂学家！');
         },
         iterate: function() {
+            if (game.challenges.anyChallengeActive()) {
+                return;
+            }
             var subOptions = options.auto.options;
             if (options.auto.autoparagon.enabled) this.reset();
             if (options.auto.upgrade.enabled) this.upgrade();
@@ -1674,6 +1676,7 @@ var run = function() {
 
                     if (game.resPool.get("spice").value && !game.science.getPolicy("carnivale").researched) {
                         if (game.console.filters["trade"].enabled) { //日志过滤
+                            game.ui.renderFilters();
                             for (var i in game.console.filters) {
                                 game.console.filters[i].enabled = false;
                             }
