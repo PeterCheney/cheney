@@ -1938,7 +1938,7 @@ var run = function() {
                                         game.craft("alloy", Math.max(0, Math.floor((res.value - defaultResLimited) / game.workshop.getCraft("alloy").prices[0].val) + 1));
                                         break;
                                     case 'manpower':
-                                        var huntCount = Math.max(0, Math.floor((res.value - 10 * defaultResLimited) / 100));
+                                        var huntCount = Math.max(0, Math.floor((res.value - 50 * defaultResLimited) / 100));
                                         if (huntCount) {
                                             game.resPool.addResEvent("manpower", -huntCount * 100);
                                             game.village.gainHuntRes(huntCount);
