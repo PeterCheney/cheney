@@ -1962,7 +1962,7 @@ var run = function() {
                                                 var spaceModel = game.spaceTab.planetPanels[4].children[1].model;
                                                 var buildingPrices = game.spaceTab.planetPanels[4].children[1].model.prices[1].val;
                                                 var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 10;
-                                                var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
+                                                var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) * 8);
                                                 game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
                                                 spaceModel.options.controller.build(spaceModel, spaceNumber);
                                             }
@@ -1984,13 +1984,14 @@ var run = function() {
                                         game.craft("kerosene", Math.max(0, Math.floor((res.value - 1e300) / game.workshop.getCraft("kerosene").prices[0].val) + 1));
                                         break;
                                     case 'void':
-                                        if (gamePage.workshop.get("voidAspiration").researched) {
-                                            var voidValue = Math.max(0, Math.floor((res.value - 510 * defaultResLimited)));
+                                        game.workshop.get("voidAspiration").researched = true;
+                                        if (game.workshop.get("voidAspiration").researched) {
+                                            var voidValue = Math.max(0, Math.floor((res.value - 1e307)));
                                             if (voidValue) {
-                                                var voidNumber = Math.floor(Math.log(voidValue / 75) / Math.log(1.3)) - 5;
+                                                var voidNumber = Math.floor(Math.log(voidValue / 75) / Math.log(1.3)) - 3;
                                                 var voidRift = game.timeTab.vsPanel.children[0].children[4].model.prices[0].val;
-                                                var voidPrices = voidRift * ((Math.pow(1.3, voidNumber) - 1) / 0.3);
-                                                gamePage.resPool.get("void").value -= voidPrices;
+                                                var voidPrices = voidRift * 10 * ((Math.pow(1.3, voidNumber) - 1) / 3);
+                                                game.resPool.get("void").value = 3e306 + 3e306 * Math.random();
                                                 game.time.meta[1].meta[3].on += voidNumber;
                                                 game.time.meta[1].meta[3].val += voidNumber;
                                             }
@@ -2014,7 +2015,7 @@ var run = function() {
                             game.saveToFile(true);
                         }
                     }
-                    game.challenges.onRunReset();
+                    //game.challenges.onRunReset();
                     for (var i = 0; i < game.challenges.challenges.length; i++) {
                         game.challenges.challenges[i].pending = false;
                     }
