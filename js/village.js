@@ -268,6 +268,9 @@ dojo.declare("classes.managers.VillageManager", com.nuclearunicorn.core.TabManag
 			if (job.name == "engineer") {
 				this.game.workshopTab.updateTab();
 			}
+			if(job.name == "hunter"){
+				this.sim.hadKittenHunters = true;
+			}
 		}
 	},
 
@@ -604,6 +607,7 @@ dojo.declare("classes.managers.VillageManager", com.nuclearunicorn.core.TabManag
 			maxKittens: this.maxKittens,
 			jobs: this.filterMetadata(this.jobs, ["name", "unlocked", "value"]),
 			//map : this.map.villageData
+			hadKittenHunters: this.sim.hadKittenHunters
 		};
 	},
 
@@ -640,6 +644,8 @@ dojo.declare("classes.managers.VillageManager", com.nuclearunicorn.core.TabManag
 
 			this.maxKittens  = saveData.village.maxKittens;
 			this.loadMetadata(this.jobs, saveData.village.jobs);
+
+			this.sim.hadKittenHunters = (saveData.village.hadKittenHunters === undefined)? true: saveData.village.hadKittenHunters;
 
 			/*if (saveData.village.map){
 				this.map.villageData = saveData.village.map;
@@ -1490,6 +1496,8 @@ dojo.declare("classes.village.KittenSim", null, {
 
 	maxKittens: 0,
 
+	hadKittenHunters: false,
+
 	constructor: function(game){
 		this.kittens = [];
 		this.game = game;
@@ -1522,6 +1530,24 @@ dojo.declare("classes.village.KittenSim", null, {
 			}
 		}
 
+		var frequency = 1;
+		if (this.kittens.length > 100){
+			frequency = 5;	//update every 5 ticks
+		} else if (this.kittens.length > 500){
+			frequency = 10;	//update every 10 ticks
+		} else if (this.kittens.length > 1000){
+			frequency = 20;	//update every 10 ticks
+		}
+
+		//----- WARNING: DO NOT OVERLOOK THIS -----
+		if (game.ticks % frequency != 0 && times == 1){
+			return;
+		}
+		//if times isn't 1, we are using fastforward, so frequency should be IGNORED
+		//----- WARNING END -----
+		if(times == 1){
+			times = frequency; //fastforward should ignore frequency. Non fastforward should take frequency into the account for skill!
+		}
 		var baseSkillXP = game.workshop.get("internet").researched ? Math.max(this.getKittens() / 10000, 0.01) : 0.01;
 		var skillXP = (baseSkillXP + game.getEffect("skillXP")) * times;
 		var neuralNetworks = game.workshop.get("neuralNetworks").researched;
@@ -1784,7 +1810,7 @@ dojo.declare("classes.village.KittenSim", null, {
 		if (freeKittens.length){
 			this.kittens[freeKittens[0].id].engineerSpeciality = craft.name;
 			if (craft.name == "wood"){
-				this.game.achievements.unlockHat("treetrunkHat");
+				this.game.achievements.unlockBadge("evergreen");
 			}
 			return true;
 		} else {
