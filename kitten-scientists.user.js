@@ -3959,6 +3959,9 @@ var run = function() {
                         } else if (cryoKarma) {
                             tempPool['karma'] -= karmaPrice * Math.pow(priceRatio, k + data.val);
                         } else {
+							if (build.val >= build.limit && build.limit > 0) {
+								continue bulkLoop;
+							}
                             var pVal = prices[p].val * Math.pow(priceRatio, k + data.val);
                             tempPool[prices[p].name] -= (prices[p].name === 'void') ? Math.ceil(pVal) : pVal;
                         }
@@ -5000,7 +5003,7 @@ var run = function() {
                 var value;
                 if (text == '自动刷领导力') {
                     value = window.prompt(
-                        '输入重置时的传送仪数量，栗子：6\n达到指定传送仪且猫口上限后重置\n需要有6000%太阳革命加成和300k水晶后使用\n会默认保存500K水晶（可通过附加功能进行修改）\n可通过附加功能中燃烧到红月加快一定的效率\n若使用燃烧到红月功能会增加水晶消耗\n',
+                        '输入重置时的最低传送仪数量，栗子：6\n达到触发条件数量的传送仪且猫口到达上限后重置\n推荐需要有7000%太阳革命加成和500k水晶后使用\n会默认保存40K水晶\n默认燃烧到红月加快一定的效率\n黑暗天空挑战可以减低水晶消耗\n',
                         auto.trigger);
                 }
                 /*else if (text == '导出入配置') {
