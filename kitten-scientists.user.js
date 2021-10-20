@@ -27,22 +27,10 @@ var cnItems = {
     'neutral': '中立',
     'hostile': '敌对',
     'Furs': '皮毛',
-    'Unobtainium': '难得素',
-    'Catnip': '猫薄荷',
-    'Wood': '木材',
-    'Minerals': '矿物',
-    'Coal': '煤',
-    'Iron': '铁',
-    'Titanium': '钛',
-    'Gold': '黄金',
-    'Oil': '石油',
-    'Uranium': '铀',
-    'Manpower': '喵力',
     'Science': '科学点',
     'Culture': '文化点',
     'Faith': '信仰',
     'Kittens': '猫咪',
-    'Zebras': '斑马',
     'Starchart': '星图',
     'Antimatter': '反物质',
     'TemporalFlux': '时间通量',
@@ -110,6 +98,18 @@ var cnItems = {
     'Templars': '圣殿骑士',
     'Apocripha': '新约外传',
     'Transcendence': '超越',*/
+    'Unobtainium': '难得素',
+    'Catnip': '猫薄荷',
+    'Wood': '木材',
+    'Minerals': '矿物',
+    'Coal': '煤',
+    'Iron': '铁',
+    'Titanium': '钛',
+    'Gold': '黄金',
+    'Oil': '石油',
+    'Uranium': '铀',
+    'Manpower': '喵力',
+    'Zebras': '斑马',
     'Dragons': '龙',
     'Lizards': '蜥蜴',
     'Sharks': '鲨鱼',
@@ -121,7 +121,6 @@ var cnItems = {
     'Summer': '夏季',
     'Autumn': '秋季',
     'Winter': '冬季',
-    'Wood': '木材',
     'Beam': '木梁',
     'Slab': '石板',
     'Plate': '金属板',
@@ -246,8 +245,7 @@ var cnItem = function() {
 };
 
 
-var kg_version = '珂学家修改自零神脚本-Cheney';
-var address = '1MC7Vj5ovpq3mzn9JhyhYMPEBRFoRZgDwa';
+var kg_version = '珂学家-Cheney';
 
 // Game will be referenced in loadTest function
 var game = this.game;
@@ -689,7 +687,7 @@ var run = function() {
                     unicornPasture: {
                         require: false,
                         limited: 9999,
-                        enabled: true
+                        enabled: false
                     },
                     ziggurat: {
                         require: false,
@@ -1297,7 +1295,7 @@ var run = function() {
                     },
                     scholar: {
                         enabled: true,
-                        max: 22,
+                        max: 29,
                         limited: true
                     },
                     hunter: {
@@ -1418,9 +1416,9 @@ var run = function() {
             		cache:    [],
             		cacheSum: {}
             }*/
-            inoutdeploy: {
-                trigger: ''
-            }
+            /* inoutdeploy: {
+                 trigger: ''
+             }*/
         }
     };
 
@@ -1541,6 +1539,9 @@ var run = function() {
             message('禁用小猫珂学家！');
         },
         iterate: function() {
+            if (game.challenges.anyChallengeActive()) {
+                return;
+            }
             var subOptions = options.auto.options;
             if (options.auto.autoparagon.enabled) this.reset();
             if (options.auto.upgrade.enabled) this.upgrade();
@@ -1594,15 +1595,15 @@ var run = function() {
                     var productionRatio = solarproduction * (game.prestige.getParagonProductionRatio() + 1) / 3e6;
                     var steamworksVal = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("steamworks").meta.priceRatio + game.getEffect("priceRatio"));
                     var mineVal = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("mine").meta.priceRatio + game.getEffect("priceRatio"));
-                    var lumberMillval  = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("lumberMill").meta.priceRatio + game.getEffect("priceRatio"));
-                    var reactorVal = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("reactor").meta.priceRatio + game.getEffect("priceRatio")) / 3;
+                    var lumberMillval = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("lumberMill").meta.priceRatio + game.getEffect("priceRatio"));
+                    var reactorVal = Math.log2(productionRatio) / Math.log2(game.bld.getBuildingExt("reactor").meta.priceRatio + game.getEffect("priceRatio"));
                     var reactorLim = options.auto.build.items.reactor.limited;
                     var lumberMillLim = options.auto.build.items.lumberMill.limited;
                     var mineLim = options.auto.build.items.mine.limited;
                     var steamworksLim = options.auto.build.items.steamworks.limited;
                     var magnetoLim = options.auto.build.items.magneto.limited;
-                    if (productionRatio > 1.17 && reactorLim == 160 && steamworksLim == 92) {
-                        options.auto.build.items.reactor.limited += 160 +Math.ceil(reactorVal);
+                    if (productionRatio > 1.17 && reactorLim == 165 && steamworksLim == 90) {
+                        options.auto.build.items.reactor.limited += Math.ceil(reactorVal);
                         options.auto.build.items.lumberMill.limited += Math.ceil(lumberMillval);
                         options.auto.build.items.mine.limited += Math.ceil(mineVal);
                         options.auto.build.items.steamworks.limited += Math.ceil(steamworksVal);
@@ -1610,7 +1611,7 @@ var run = function() {
                     }
 
                     if (options.auto.build.items.hut.limited == 10 && game.workshop.get("concreteHuts").researched) {
-                        options.auto.build.items.hut.limited = 999;//小屋等混凝土小屋在造
+                        options.auto.build.items.hut.limited = 999; //小屋等混凝土小屋在造
                     }
 
                     if (game.bld.get("workshop").on > 0 && game.science.get("construction").researched) {
@@ -1624,22 +1625,23 @@ var run = function() {
                         }
 
                         if (game.bld.get("reactor").on == reactorLim && game.resPool.get("plate").value > 1e7 * Math.pow(1.17, reactorVal) && options.auto.craft.items.plate.enabled) {
-                                $("#toggle-plate")[0].click();
+                            $("#toggle-plate")[0].click();
                         }
 
-                       if (game.bld.get("temple").on == 150 && options.auto.craft.items.blueprint.enabled) {
-                           /*options.auto.resources[]
-                               furs: {
-                                   stock: 1000
-                               },
-                                $("#toggle-blueprint")[0].click();
-                                $("#toggle-concrate")[0].click();
-                                $("#toggle-concrate")[0].click();
-                                options.auto.craft.items.compedium.enabled = false;
-                                options.auto.craft.items.manuscript.enabled = false;*/
+                        if (game.bld.get("temple").on == 150 && options.auto.craft.items.blueprint.enabled) {
+                            /*options.auto.resources[]
+                                furs: {
+                                    stock: 1000
+                                },
+                                 $("#toggle-blueprint")[0].click();
+                                 $("#toggle-concrate")[0].click();
+                                 $("#toggle-concrate")[0].click();
+                                 options.auto.craft.items.compedium.enabled = false;
+                                 options.auto.craft.items.manuscript.enabled = false;*/
                         }
-
-                        if (!options.auto.craft.items.slab.enabled && game.resPool.get("slab").value < game.bldTab.children[7].model.prices[1].val) {
+                        
+                        var mansionSlab = game.bld.getBuildingExt('mansion').meta.prices[1].val * Math.pow(game.bld.getBuildingExt("reactor").meta.priceRatio + game.getEffect("priceRatio"), game.bld.getBuildingExt('mansion').meta.on);
+                        if (!options.auto.craft.items.slab.enabled && game.resPool.get("slab").value < mansionSlab) {
                             $("#toggle-slab")[0].click();
                         }
 
@@ -1653,7 +1655,7 @@ var run = function() {
                         }
                     }
 
-                    if (gamePage.workshop.get("chronoforge").researched && game.space.meta[0].meta[3].val && gamePage.calendar.cycle != 5) {
+                    if (game.workshop.get("chronoforge").researched && game.space.meta[0].meta[3].val && gamePage.calendar.cycle != 5) {
                         var x = 5;
                         if (x > 4 && gamePage.calendar.cycleYear != 0) {
                             x = x - gamePage.calendar.cycleYear;
@@ -1665,15 +1667,16 @@ var run = function() {
                         gamePage.timeTab.cfPanel.children[0].children[0].update();
                     }
 
-                    if (options.auto.build.items.mansion.limited < 999 &&game.science.meta[0].meta[41].researched && game.space.meta[1].meta[0].val > 12) {
-                            options.auto.space.items.sattelite.limited = 50;
-                            options.auto.space.items.planetCracker.enabled = true;
-                            options.auto.build.items.mansion.limited = 999;
-                            $("#toggle-spaceStation")[0].click();
+                    if (options.auto.build.items.mansion.limited < 999 && game.science.meta[0].meta[41].researched && game.space.meta[1].meta[0].val > 12) {
+                        options.auto.space.items.sattelite.limited = 50;
+                        options.auto.space.items.planetCracker.enabled = true;
+                        options.auto.build.items.mansion.limited = 999;
+                        $("#toggle-spaceStation")[0].click();
                     }
 
                     if (game.resPool.get("spice").value && !game.science.getPolicy("carnivale").researched) {
                         if (game.console.filters["trade"].enabled) { //日志过滤
+                            game.ui.renderFilters();
                             for (var i in game.console.filters) {
                                 game.console.filters[i].enabled = false;
                             }
@@ -1682,7 +1685,7 @@ var run = function() {
                         game.libraryTab.policyPanel.children[27].controller.onPurchase(game.libraryTab.policyPanel.children[27].model, {}, function() {});
                     }
 
-                    if (game.bld.get("chronosphere").val >= 8 && game.resPool.get("eludium").value > 720 && options.auto.craft.items.eludium.enabled) {
+                    if (game.bld.getBuildingExt('chronosphere').meta.val >= 8 && game.resPool.get("eludium").value > 720 && options.auto.craft.items.eludium.enabled) {
                         $("#toggle-eludium")[0].click();
                     }
 
@@ -1692,7 +1695,7 @@ var run = function() {
                     }
 
                     for (var i of game.resPool.resources) {
-                        game.resPool.addRes(i.name, game.getResourcePerTick(i.name, false), false);
+                        game.resPool.addResPerTick(i.name, game.getResourcePerTick(i.name, false));
                     }
                     game.village.update();
                 }
@@ -1709,44 +1712,33 @@ var run = function() {
                 var faithN = Math.min(game.resPool.get("gold").value, game.resPool.get("faith").value);
                 var mintN = Math.min(game.resPool.get("minerals").value, game.resPool.get("gold").value, game.resPool.get("iron").value);
                 var chronosphereN = Math.min(game.resPool.get("science").value, game.resPool.get("timeCrystal").value, game.resPool.get("unobtainium").value, game.resPool.get("manpower").value);
-                /*function Math.floor(Math.max(Math.log10(number) {
-                	var L = 0;
-                	while (number > 1e12) {
-                		if (number < Number.MAX_VALUE) {
-                			number = number / 10;
-                			L++;
-                		}
-                	}Math.floor(Math.max(Math.log10())
-                	return L;
-                }*/
                 kittens_check = Boolean(options.auto.autoparagon.items.infinite.subTrigger);
-                var retain_hut = 10 + (4 * Math.floor(Math.max(Math.log10(woodN) - 11, 0)));
-                var retain_loghouse = 210 + (36 * Math.floor(Math.max(Math.log10(loghouseN) - 11, 0)));
-                var retain_mansion = 100 + (36 * Math.floor(Math.max(Math.log10(coalN) - 11, 0)));
-                var retain_factory = 100 + (36 * Math.floor(Math.max(Math.log10(coalN) - 11, 0)));
-                var retain_temple = Math.max(100, Number(options.auto.autoparagon.items.infinite.subTrigger));
-                var retain_workshop = 220 + (36 * Math.floor(Math.max(Math.log10(loghouseN) - 11, 0)));
-                var retain_mint = 190 + (36 * Math.floor(Math.max(Math.log10(mintN) - 11, 0)));
+                var hutPrice = game.bld.getPriceRatio("hut");
+                options.auto.build.items.hut.limited = Math.floor(Math.max(Math.log2(woodN) - 18.5, 0) / Math.log2(game.bld.getPriceRatio("hut")));
+                var retain_loghouse = 150 + (11 * Math.floor(Math.max(Math.log2(loghouseN) - 36.55, 0)));
+                var retain_mansion = 101 + (36 * Math.floor(Math.max(Math.log10(coalN) - 11, 0)));
+                var retain_factory = 100 + Math.floor(11.25 * Math.max(Math.log2(coalN) - 36.54, 0));
+                var retain_temple = Math.max(101, Number(options.auto.autoparagon.items.infinite.subTrigger));
+                var retain_workshop = 170 + Math.floor(11.25 * Math.max(Math.log2(loghouseN) - 36.54, 0));
+                var retain_mint = 161 + Math.floor(11.25 * Math.max(Math.log2(mintN) - 36.54, 0));
                 //var retain_spaceStation = kittens_check ? parseFloat(retain_data[8]) : 0;
-                var retain_templars = 6 + (2 * Math.floor(Math.max(Math.log10(faithN) - 11, 0)));
+                var retain_templars = 7 + (2 * Math.floor(Math.max(Math.log10(faithN) - 11, 0)));
                 var retain_chronosphere = options.auto.autoparagon.trigger % 1000;
+                var retain_library = 250 + (36 * Math.floor(Math.max(Math.log10(woodN) - 11, 0)));
                 if (options.auto.autoparagon.trigger % 1000 == 73) {
                     retain_chronosphere = 73 + (15 * Math.floor(Math.max(Math.log10(chronosphereN) - 11, 0)));
                 }
                 var xfldc_tradepost = 0;
 
-                /*if (game.resPool.get("relic").value > 1e10) {
-                	for (i in game.religion.meta[2].meta) {
-                		if (game.religion.meta[2].meta[i].unlocked) {
-                			var TuNumber = game.resPool.get("relic").value / game.religion.meta[2].meta[i].prices[0].val;
-                			if (i == 8 || 9) {
-                				voidNumber = 0;
-                			}
-                			=== Infinity ? 0 :
-                			spaceModel.options.controller.build(spaceModel, spaceNumber);
-                		}
-                	}
-                }*/
+                if (game.bld.getPriceRatio("hut") < 2.4) {
+                    options.auto.build.items.hut.enabled = true;
+                }
+
+                if (game.resPool.get("timeCrystal").value < 4e5 && !options.auto.build.items.tradepost.enabled) {
+                    var postN = Math.min(game.resPool.get("wood").value, game.resPool.get("minerals").value, game.resPool.get("gold").value, 0)
+                    options.auto.build.items.tradepost.limited = 36 * Math.floor(Math.max(Math.log10(postN) - 11, 0));
+                    options.auto.build.items.tradepost.enabled = true;
+                }
 
                 if (game.workshopTab.visible && game.science.get("construction").researched) { //工坊优化
                     let retain_limit = Math.pow(1.5 * options.auto.autoparagon.trigger % 1000, 2);
@@ -1767,13 +1759,13 @@ var run = function() {
                     //生成材料
                     if (game.resPool.get("slab").value <= retain_slab)
                         game.craft("slab", Math.floor(retain_slab / ratio));
-                    if (game.resPool.get("plate").value <= retain_plate) //金属板
+                    if (game.resPool.get("plate").value <= retain_plate && game.workshop.getCraft("plate").unlocked) //金属板
                         game.craft("plate", Math.floor(Math.min(Math.ceil(retain_plate / ratio) * game.workshop.getCraft("plate").prices[0].val, game.resPool.get("iron").value) / game.workshop.getCraft("plate").prices[0].val));
-                    if (game.resPool.get("steel").value <= retain_steel && game.science.get("steel").researched) //钢
+                    if (game.resPool.get("steel").value <= retain_steel && game.workshop.getCraft("steel").unlocked) //钢
                         game.craft("steel", Math.floor(Math.min(Math.ceil(retain_steel / ratio) * game.workshop.getCraft("steel").prices[0].val, game.resPool.get("iron").value, game.resPool.get("coal").value) / game.workshop.getCraft("steel").prices[0].val));
-                    if (gamePage.science.get("chemistry").researched && game.resPool.get("alloy").value <= retain_alloy) //合金
+                    if (game.workshop.getCraft("alloy").unlocked && game.resPool.get("alloy").value <= retain_alloy) //合金
                         game.craft("alloy", Math.floor(Math.min(Math.ceil(retain_alloy / ratio) * game.workshop.getCraft("alloy").prices[1].val, game.resPool.get("steel").value) / game.workshop.getCraft("alloy").prices[1].val));
-                    if (gamePage.science.get("mechanization").researched && game.resPool.get("concrate").value <= retain_concrate) //混凝土
+                    if (game.workshop.getCraft("concrate").unlocked && game.resPool.get("concrate").value <= retain_concrate) //混凝土
                         game.craft("concrate", 0.99 * Math.floor(Math.min(Math.min(Math.ceil(retain_concrate / ratio) * game.workshop.getCraft("concrate").prices[1].val, game.resPool.get("steel").value) / game.workshop.getCraft("concrate").prices[1].val, Math.min(Math.ceil(retain_concrate / ratio) * game.workshop.getCraft("concrate").prices[0].val, game.resPool.get("slab").value) / game.workshop.getCraft("concrate").prices[0].val)));
                     if (game.resPool.get("furs").value >= 175)
                         game.craft("parchment", Math.floor(game.resPool.get("furs").value / game.workshop.getCraft("parchment").prices[0].val)); //所有毛皮都进行转换
@@ -1781,7 +1773,7 @@ var run = function() {
                         game.craft("manuscript", Math.floor(Math.min(game.resPool.get("parchment").value, game.resPool.get("culture").value / 400) * 0.01));
                     if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000 && game.resPool.get("manuscript").value >= retain_limit) //手稿转概要
                         game.craft("compedium", Math.floor(Math.min(game.resPool.get("manuscript").value - 100, game.resPool.get("science").value / 10000) * 0.01));
-                    if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000) //概要转蓝图
+                    if (game.bld.getBuildingExt("chronosphere").meta.val < options.auto.autoparagon.trigger % 1000 && game.workshop.getCraft("blueprint").unlocked) //概要转蓝图
                         game.craft("blueprint", Math.floor(Math.min(game.resPool.get("compedium").value - 100, game.resPool.get("science").value / 25000) * 0.01));
                     if (game.resPool.get("kerosene").value <= 1e5 && game.science.get("oilProcessing").researched) //石油转煤油
                         game.craft("kerosene", 1e5);
@@ -1866,40 +1858,39 @@ var run = function() {
                     var buildFilter = cbcSave.items["toggle-buildFilter"] != null ? cbcSave.items["toggle-buildFilter"] : true;
                     var tradeFilter = cbcSave.items["toggle-tradeFilter"] != null ? cbcSave.items["toggle-tradeFilter"] : true;
                 }
+                let chro = options.auto.autoparagon.trigger % 1000 + 4;
+                let elevat = 2 * options.auto.autoparagon.trigger + 1;
                 if (!options.auto.autoparagon.items.infinite.enabled) {
-                    localStorage['cbc.kitten-scientists'] =
-                        '{"version":1,"toggles":{"build":true,"space":true,"craft":true,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-solarchant":true,"toggle-scholasticism":false,"toggle-goldenSpire":true,"toggle-sunAltar":true,"toggle-stainedGlass":false,"toggle-basilica":true,"toggle-templars":true,"toggle-apocripha":true,"toggle-transcendence":true,"toggle-solarFarm":true,"toggle-mine":true,"toggle-lumberMill":true,"toggle-hydroPlant":true,"toggle-oilWell":true,"toggle-quarry":true,"toggle-smelter":true,"toggle-factory":true,"toggle-dataCenter":true,"toggle-academy":true,"toggle-observatory":true,"toggle-tradepost":true,"toggle-broadcastTower":true,"toggle-brewery":true,"toggle-unicornPasture":true,"toggle-chronosphere":true,"toggle-limited-chronosphere":' +
-                        (options.auto.autoparagon.trigger % 1000 + 4) +
-                        ',"toggle-ziggurat":true,"toggle-barn":true,"toggle-field":true,"toggle-hut":true,"toggle-logHouse":true,"toggle-mansion":true,"toggle-library":true,"toggle-limited-library":270,"toggle-biolab":true,"toggle-calciner":true,"toggle-reactor":true,"toggle-accelerator":true,"toggle-chapel":true,"toggle-steamworks":true,"toggle-magneto":true,"toggle-mint":true,"toggle-spaceStation":false,"toggle-sattelite":true,"toggle-spaceElevator":true,"toggle-moonOutpost":true,"toggle-moonBase":true,"toggle-planetCracker":false,"toggle-hydrofracturer":true,"toggle-researchVessel":true,"toggle-beam":true,"toggle-limited-beam":true,"toggle-slab":true,"toggle-limited-slab":true,"toggle-steel":true,"toggle-limited-steel":true,"toggle-plate":true,"toggle-limited-plate":true,"toggle-alloy":true,"toggle-limited-alloy":true,"toggle-concrate":true,"toggle-limited-concrate":true,"toggle-gear":true,"toggle-limited-gear":true,"toggle-scaffold":true,"toggle-limited-scaffold":true,"toggle-ship":true,"toggle-limited-ship":true,"toggle-tanker":false,"toggle-limited-tanker":true,"toggle-parchment":true,"toggle-limited-parchment":false,"toggle-manuscript":true,"toggle-limited-manuscript":true,"toggle-compedium":true,"toggle-limited-compedium":true,"toggle-blueprint":true,"toggle-limited-blueprint":true,"toggle-kerosene":true,"toggle-limited-kerosene":true,"toggle-megalith":false,"toggle-limited-megalith":true,"toggle-eludium":true,"toggle-limited-eludium":true,"toggle-thorium":false,"toggle-limited-thorium":false,"toggle-upgrades":true,"toggle-missions":true,"toggle-techs":true,"toggle-races":true,"toggle-buildings":true,"toggle-zebras":true,"toggle-limited-zebras":true,"toggle-zebras-autumn":true,"toggle-zebras-spring":true,"toggle-zebras-winter":true,"toggle-harbor":true,"toggle-warehouse":true,"toggle-limited-ziggurat":8,"toggle-limited-spaceElevator":' +
-                        (2 * options.auto.autoparagon.trigger % 1000 + 1) +
-                        ',"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":298,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":160,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":92,"toggle-limited-magneto":95,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
+                    localStorage['cbc.kitten-scientists'] = '{"version":1,"toggles":{"build":true,"space":true,"craft":true,"upgrade":true,"trade":true,"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-solarchant":true,"toggle-scholasticism":false,"toggle-goldenSpire":true,"toggle-sunAltar":true,"toggle-stainedGlass":false,"toggle-basilica":true,"toggle-templars":true,"toggle-apocripha":true,"toggle-transcendence":true,"toggle-solarFarm":true,"toggle-mine":true,"toggle-lumberMill":true,"toggle-hydroPlant":true,"toggle-oilWell":true,"toggle-quarry":true,"toggle-smelter":true,"toggle-factory":true,"toggle-dataCenter":true,"toggle-academy":true,"toggle-observatory":true,"toggle-tradepost":true,"toggle-broadcastTower":true,"toggle-brewery":true,"toggle-unicornPasture":true,"toggle-chronosphere":true,"toggle-limited-chronosphere":' +
+                        chro +
+                        ',"toggle-ziggurat":true,"toggle-barn":true,"toggle-field":true,"toggle-hut":true,"toggle-logHouse":true,"toggle-mansion":true,"toggle-library":true,"toggle-biolab":true,"toggle-calciner":true,"toggle-reactor":true,"toggle-accelerator":true,"toggle-chapel":true,"toggle-steamworks":true,"toggle-magneto":true,"toggle-mint":true,"toggle-spaceStation":false,"toggle-sattelite":true,"toggle-spaceElevator":true,"toggle-moonOutpost":true,"toggle-moonBase":true,"toggle-planetCracker":false,"toggle-hydrofracturer":true,"toggle-researchVessel":true,"toggle-beam":true,"toggle-limited-beam":true,"toggle-slab":true,"toggle-limited-slab":true,"toggle-steel":true,"toggle-limited-steel":true,"toggle-plate":true,"toggle-limited-plate":true,"toggle-alloy":true,"toggle-limited-alloy":true,"toggle-concrate":true,"toggle-limited-concrate":true,"toggle-gear":true,"toggle-limited-gear":true,"toggle-scaffold":true,"toggle-limited-scaffold":true,"toggle-ship":true,"toggle-limited-ship":true,"toggle-tanker":false,"toggle-limited-tanker":true,"toggle-parchment":true,"toggle-limited-parchment":false,"toggle-manuscript":true,"toggle-limited-manuscript":true,"toggle-compedium":true,"toggle-limited-compedium":true,"toggle-blueprint":true,"toggle-limited-blueprint":true,"toggle-kerosene":true,"toggle-limited-kerosene":true,"toggle-megalith":false,"toggle-limited-megalith":true,"toggle-eludium":true,"toggle-limited-eludium":true,"toggle-thorium":false,"toggle-limited-thorium":false,"toggle-upgrades":true,"toggle-missions":true,"toggle-techs":true,"toggle-races":true,"toggle-buildings":true,"toggle-zebras":true,"toggle-limited-zebras":true,"toggle-zebras-autumn":true,"toggle-zebras-spring":true,"toggle-zebras-winter":true,"toggle-harbor":true,"toggle-warehouse":true,"toggle-limited-ziggurat":8,"toggle-limited-spaceElevator":' +
+                        elevat +
+                        ',"toggle-limited-library":270,"toggle-limited-temple":150,"toggle-limited-observatory":500,"toggle-limited-hydroPlant":35,"toggle-limited-warehouse":100,"toggle-limited-harbor":200,"toggle-limited-academy":210,"toggle-limited-smelter":248,"toggle-limited-broadcastTower":135,"toggle-limited-reactor":165,"toggle-limited-calciner":160,"toggle-limited-quarry":200,"toggle-limited-steamworks":90,"toggle-limited-magneto":92,"toggle-limited-oilWell":209,"toggle-limited-mint":150,"toggle-limited-barn":30,"toggle-limited-lumberMill":253,"toggle-limited-sattelite":16,"toggle-limited-planetCracker":8,"toggle-limited-hydrofracturer":24,"toggle-limited-moonBase":' +
                         MoonBase_limit +
                         ',"toggle-upgradeFilter":' + upgradeFilter + ',"toggle-researchFilter":' + researchFilter + ',"toggle-buildFilter":' + buildFilter + ',"toggle-tradeFilter":' + tradeFilter + ',"toggle-limited-hut":10,"toggle-limited-brewery":999,"toggle-limited-logHouse":999},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.98,"trade":0.98,"autoparagon":500007}}';
                     if (game.resPool.get("faith").value > game.resPool.get("faith").maxValue) {
                         game.religion.praise();
                     }
                 } else { //无限流
-                    var retain_tradepost = 0;
-                    if (game.resPool.get("timeCrystal").value < 4e5) {
-                        var postN = Math.min(game.resPool.get("wood").value,game.resPool.get("minerals").value,game.resPool.get("gold").value,0)
-                        retain_tradepost = 36 * Math.floor(Math.max(Math.log10(postN) - 11, 0));
-                    }
                     localStorage['cbc.kitten-scientists'] =
                         '{"version":1,"toggles":{"build":true,"craft":false,"upgrade":true, "trade":' + false /*(xfldc_tradepost != 0)*/ + ',"faith":true,"time":false,"options":true,"autotime":false,"autoparagon":true},"items":{"toggle-templars":true,"toggle-limited-templars":' +
                         retain_templars +
-                        ',"toggle-field":false,"toggle-mine":false,"toggle-lumberMill":false,"toggle-quarry":false,"toggle-smelter":false,"toggle-biolab":false,"toggle-calciner":false,"toggle-reactor":false,"toggle-steamworks":false,"toggle-magneto":false,"toggle-library":true,"toggle-limited-library":300,"toggle-observatory":false,"toggle-tradepost":' +
-                        (retain_tradepost != 0) + ',"toggle-limited-tradepost":' + retain_tradepost +
-                        ',"toggle-limited-workshop":' + retain_workshop + ',"toggle-factory":true,"toggle-limited-factory":' + retain_factory + ',"toggle-limited-temple":' +
-                        retain_temple + ',"toggle-mint":true,"toggle-limited-mint":' + retain_mint + ',"toggle-limited-ziggurat":1,"toggle-chronosphere":true,"toggle-limited-chronosphere":' + retain_chronosphere +
-                        ',"toggle-barn":false,"toggle-harbor":false,"toggle-warehouse":false,"toggle-hut":true,"toggle-limited-hut":' +
-                        retain_hut + ',"toggle-logHouse":true,"toggle-limited-logHouse":' + retain_loghouse +
-                        ',"toggle-mansion":true,"toggle-limited-mansion":' + retain_mansion +
+                        ',"toggle-field":false,"toggle-mine":false,"toggle-lumberMill":false,"toggle-quarry":false,"toggle-smelter":false,"toggle-biolab":false,"toggle-calciner":false,"toggle-reactor":false,"toggle-steamworks":false,"toggle-transcendence":true,"toggle-magneto":false,"toggle-library":true,"toggle-limited-library":' +
+                        retain_library + ',"toggle-observatory":false,"toggle-limited-workshop":' +
+                        retain_workshop + ',"toggle-factory":true,"toggle-limited-factory":' +
+                        retain_factory + ',"toggle-limited-temple":' +
+                        retain_temple + ',"toggle-mint":true,"toggle-limited-mint":' +
+                        retain_mint + ',"toggle-limited-ziggurat":1,"toggle-chronosphere":true,"toggle-limited-chronosphere":' + retain_chronosphere +
+                        ',"toggle-barn":false,"toggle-harbor":false,"toggle-warehouse":false,"toggle-hut":false,"toggle-logHouse":true,"toggle-limited-logHouse":' +
+                        retain_loghouse +
+                        ',"toggle-mansion":true,"toggle-limited-mansion":' +
+                        retain_mansion +
                         ',"toggle-upgrades":true,"toggle-techs":true,"toggle-buildings":false,"toggle-zebras":false,"toggle-leviathans":true,"toggle-hunt":true,"toggle-infinite":' +
                         options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-chronocontrol":0},"resources":{},"triggers":{"faith":0,"time":0,"build":0,"space":0,"craft":0.85,"trade":0.98,"autoparagon":500007}}';
                 }
                 loadFromKittenStorage();
             }
-            if ((game.resPool.get("kittens").value >= 500 || options.auto.autoparagon.items.infinite.enabled)&& (game.resPool.get("kittens").value >= game.resPool.get("kittens").maxValue || kittens_check) && game.bld.get("chronosphere").val >= options.auto.autoparagon.trigger % 1000 && game.resPool.get("faith").value >= 10000 && game.resPool.get("gold").value >= 10000 && game.resPool.get("science").value >= 500000 / (0.015 * (options.auto.autoparagon.trigger % 1000)) && game.workshop.get("fluxCondensator").researched) {
+            if ((game.resPool.get("kittens").value >= 500 || options.auto.autoparagon.items.infinite.enabled) && (game.resPool.get("kittens").value >= game.resPool.get("kittens").maxValue || kittens_check) && game.bld.getBuildingExt('chronosphere').meta.val >= options.auto.autoparagon.trigger % 1000 && game.resPool.get("gold").value >= 10000 && game.resPool.get("science").value >= 500000 / (0.015 * (options.auto.autoparagon.trigger % 1000)) && game.workshop.get("fluxCondensator").researched) {
                 localStorage['cbc.autoparagon.step'] = 1;
                 if (!options.auto.autoparagon.items.infinite.enabled) {
                     let cbcSave = JSON.parse(localStorage['cbc.kitten-scientists']);
@@ -1918,7 +1909,6 @@ var run = function() {
                         options.auto.autoparagon.items.infinite.enabled + ',"toggle-limited-library":50,"toggle-limited-temple":' + retain_temple + ',"toggle-limited-hut":10,"toggle-limited-logHouse":' + retain_loghouse + ',"toggle-logHouse":true,"toggle-hut":true,"toggle-limited-workshop":' + retain_workshop + ',"toggle-hunt":false,"toggle-transcendence":true, "toggle-templars":true,"toggle-races":true,"toggle-missions":true,"set-missions-subTrigger":5,"toggle-mint":true,"toggle-limited-mint":10,"toggle-factory":false,"toggle-xfldc":' + false /*options.auto.autoparagon.items.xfldc.enabled*/ + '},"resources":{},"triggers":{"faith":0,"time":0,"build":0.5,"space":0,"craft":0.95,"trade":0.98,"autoparagon":500007}}';
                 }
                 loadFromKittenStorage();
-
                 if (localStorage['cbc.resetAutomatic.step'] == 1 || !localStorage['cbc.resetAutomatic.step']) {
                     localStorage['cbc.resetAutomatic.step'] = 2;
                     if (options.auto.autoparagon.items.infinite.enabled && gamePage.science.get("oilProcessing").researched) {
@@ -1948,7 +1938,7 @@ var run = function() {
                                         game.craft("alloy", Math.max(0, Math.floor((res.value - defaultResLimited) / game.workshop.getCraft("alloy").prices[0].val) + 1));
                                         break;
                                     case 'manpower':
-                                        var huntCount = Math.max(0, Math.floor((res.value - 10 * defaultResLimited) / 100));
+                                        var huntCount = Math.max(0, Math.floor((res.value - 50 * defaultResLimited) / 100));
                                         if (huntCount) {
                                             game.resPool.addResEvent("manpower", -huntCount * 100);
                                             game.village.gainHuntRes(huntCount);
@@ -1958,18 +1948,23 @@ var run = function() {
                                         var scienceValue = Math.max(0, Math.floor(res.value - 1e290));
                                         if (scienceValue) {
                                             if (game.workshop.get("chronoforge").researched && gamePage.calendar.cycle != 4) {
-                                                if(!game.timeTab.cfPanel) {game.timeTab.render();}
+                                                if (!game.timeTab.cfPanel) {
+                                                    game.timeTab.render();
+                                                }
                                                 game.timeTab.cfPanel.children[0].children[0].controller.doShatterAmt(gamePage.timeTab.cfPanel.children[0].children[0].model, 20);
                                                 game.spaceTab.render();
+                                                if (!game.spaceTab.planetPanels[4]) {
+                                                    if (game.opts.autoSaveReset && game.resPool.resources[10].value < 1e4) {
+                                                        game.saveToFile(true);
+                                                    }
+                                                    break;
+                                                }
                                                 var spaceModel = game.spaceTab.planetPanels[4].children[1].model;
                                                 var buildingPrices = game.spaceTab.planetPanels[4].children[1].model.prices[1].val;
                                                 var spaceNumber = Math.floor(Math.log(scienceValue / 5e5) / Math.log(1.125)) - 10;
-                                                var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) / 0.125);
+                                                var spacePrices = buildingPrices * ((Math.pow(1.125, spaceNumber) - 1) * 8);
                                                 game.craft("kerosene", Math.ceil((spacePrices / game.getResCraftRatio("kerosene")) / game.workshop.getCraft("kerosene").prices[0].val));
                                                 spaceModel.options.controller.build(spaceModel, spaceNumber);
-                                                if (game.opts.autoSaveReset != undefined && game.opts.autoSaveReset && game.resPool.resources[10].value < 1e4) {
-                                                    game.saveToFile(true);
-                                                }
                                             }
                                         }
                                         break;
@@ -1977,23 +1972,26 @@ var run = function() {
                                         var cultureValue = Math.max(0, Math.floor(res.value - 1e290));
                                         if (cultureValue) {
                                             var number = Math.floor(Math.log(0.15 * cultureValue + 100) * 7.1550236 - 32.95);
-                                            if (!number) {break;}
-                                            var levelPrices = 100 * ((Math.pow(1.15, number ) - 1) / 0.15);
+                                            if (!number) {
+                                                break;
+                                            }
+                                            var levelPrices = 100 * ((Math.pow(1.15, number) - 1) / 0.15);
                                             game.resPool.get("culture").value -= levelPrices;
-                                            activity('建造 ' +number + '个蜥蜴的' + ' 大使馆 ', 'ks-build');
+                                            activity('建造 ' + number + '个蜥蜴的' + ' 大使馆 ', 'ks-build');
                                         }
                                         break;
                                     case 'oil':
                                         game.craft("kerosene", Math.max(0, Math.floor((res.value - 1e300) / game.workshop.getCraft("kerosene").prices[0].val) + 1));
                                         break;
                                     case 'void':
-                                        if (gamePage.workshop.get("voidAspiration").researched) {
-                                            var voidValue = Math.max(0, Math.floor((res.value - 510 * defaultResLimited)));
+                                        game.workshop.get("voidAspiration").researched = true;
+                                        if (game.workshop.get("voidAspiration").researched) {
+                                            var voidValue = Math.max(0, Math.floor((res.value - 1e307)));
                                             if (voidValue) {
-                                                var voidNumber = Math.floor(Math.log(voidValue / 75) / Math.log(1.3)) - 5;
+                                                var voidNumber = Math.floor(Math.log(voidValue / 75) / Math.log(1.3)) - 3;
                                                 var voidRift = game.timeTab.vsPanel.children[0].children[4].model.prices[0].val;
-                                                var voidPrices = voidRift * ((Math.pow(1.3, voidNumber) - 1) / 0.3);
-                                                gamePage.resPool.get("void").value -= voidPrices;
+                                                var voidPrices = voidRift * 10 * ((Math.pow(1.3, voidNumber) - 1) / 3);
+                                                game.resPool.get("void").value = 3e306 + 3e306 * Math.random();
                                                 game.time.meta[1].meta[3].on += voidNumber;
                                                 game.time.meta[1].meta[3].val += voidNumber;
                                             }
@@ -2004,8 +2002,9 @@ var run = function() {
                         }
                     }
                     if (!options.auto.autoparagon.items.infinite.enabled) {
-                        game.resPool.get("starchart").value += game.spaceTab.planetPanels[0].children[2].model.prices[2].val * 20;
+                        game.resPool.get("starchart").value += 40 * game.space.meta[1].meta[2].prices[2].val * Math.pow(1.12, game.space.meta[1].meta[2].val);
                         game.resPool.resources[39].value += 1e5;
+                        game.resPool.get("faith").value += 1e5;
                         game.resPool.get("gold").value = game.resPool.get("gold").maxValue;
                         game.resPool.get("minerals").value = game.resPool.get("minerals").maxValue;
                         game.resPool.get("manpower").value += game.resPool.get("manpower").maxValue;
@@ -2016,6 +2015,7 @@ var run = function() {
                             game.saveToFile(true);
                         }
                     }
+                    //game.challenges.onRunReset();
                     for (var i = 0; i < game.challenges.challenges.length; i++) {
                         game.challenges.challenges[i].pending = false;
                     }
@@ -2045,11 +2045,14 @@ var run = function() {
         },
         autotime: function() {
             if (game.workshop.get("chronoforge").researched && !game.challenges.anyChallengeActive() && !game.bld.get("steamworks").isAutomationEnabled && game.time.getCFU("ressourceRetrieval").on == 0) {
+                if (game.resPool.get("burnedParagon").value + game.resPool.get("paragon").value > 2e9) {
+                    return;
+                }
                 var autotime = options.auto.autotime.items;
                 var factor = game.challenges.getChallenge("1000Years").researched ? 5 : 10;
                 var skipTimeYear = Math.floor(options.auto.autotime.items.x1.subTrigger / 1000) * 1000;
                 if (skipTimeYear > 0) {
-                    skipTimeYear = Math.min(10000000, skipTimeYear);
+                    skipTimeYear = Math.min(1e7, skipTimeYear);
                 } else {
                     return;
                 }
@@ -2058,9 +2061,9 @@ var run = function() {
                 var d1 = 1 + 0.00001 * darkYears;
                 var h1 = 1 + 0.01 * game.time.heat - 0.01 * game.getEffect("heatMax");
                 if (darkYears > 0 && game.time.heat > game.getEffect("heatMax")) {
-                    sumPrices += d1 * h1 * skipTimeYear + h1 * 0.00001 * ((skipTimeYear * skipTimeYear + skipTimeYear) / 2) + 0.05 * ((skipTimeYear * skipTimeYear + skipTimeYear) / 2) * d1 + (0.0000005 * (skipTimeYear * (skipTimeYear + 1) * (2 * skipTimeYear + 1)) / 6);
+                    sumPrices += d1 * h1 * skipTimeYear + h1 * 0.00001 * ((skipTimeYear * skipTimeYear + skipTimeYear) / 2) + 0.05 * ((skipTimeYear * skipTimeYear + skipTimeYear) * 0.5) * d1 + (0.0000005 * (skipTimeYear * (skipTimeYear + 1) * (2 * skipTimeYear + 1)) / 6);
                 } else if (darkYears + skipTimeYear > 0 || game.time.heat + factor * skipTimeYear > game.getEffect("heatMax")) {
-                    var heatYear2 = Math.ceil((game.getEffect("heatMax") - game.time.heat) / 5);
+                    var heatYear2 = Math.ceil((game.getEffect("heatMax") - game.time.heat) * 0.2);
                     var darkYear1 = 1 + 0.00001 * darkYears + skipTimeYear;
                     if (d1 < 0) {
                         d1 = 1;
@@ -2083,9 +2086,9 @@ var run = function() {
                         game.resPool.addResEvent("temporalFlux", game.bld.get("chronosphere").on * skipTimeYear);
                     }
                     game.diplomacy.unlockElders();
-                    game.resPool.get("paragon").value += (skipTimeYear / 1000);
+                    game.resPool.get("paragon").value += (skipTimeYear * 0.001);
                     game.resPool.get("timeCrystal").value -= sumPrices;
-                    game.stats.getStat("totalParagon").val += skipTimeYear / 1000;
+                    game.stats.getStat("totalParagon").val += skipTimeYear * 0.001;
                     game.stats.getStat("totalYears").val += skipTimeYear;
                     game.calendar.day = 0;
                     game.calendar.season = 0;
@@ -2114,7 +2117,9 @@ var run = function() {
                 var button = buildManager.getBuildButton(name, build.variant);
 
                 if (!button || !button.model.metadata) {
-                    if (!game.bld.getBuildingExt("ziggurat").on && build.variant =="z") {continue;}
+                    if (!game.bld.getBuildingExt("ziggurat").on && build.variant == "z") {
+                        continue;
+                    }
                     buildManager.manager.render();
                     continue;
                 }
@@ -2189,7 +2194,9 @@ var run = function() {
             var buildManager = this.buildManager;
 
             if (upgrades.upgrades.enabled && game.bld.meta[0].meta[21].on) {
-                if (!game.workshopTab.buttons) {game.workshopTab.render()}
+                if (!game.workshopTab.buttons) {
+                    game.workshopTab.render()
+                }
                 var work = game.workshop.upgrades;
                 let noup = ["factoryOptimization", "factoryRobotics", "spaceEngineers", "chronoEngineers", "amFission",
                     "biofuel", "gmo", "factoryAutomation", "advancedAutomation", "pneumaticPress", "steelPlants",
@@ -2232,7 +2239,9 @@ var run = function() {
             }
 
             if (upgrades.techs.enabled && game.libraryTab.visible) {
-                if (!game.libraryTab.buttons) {game.libraryTab.render();}
+                if (!game.libraryTab.buttons) {
+                    game.libraryTab.render();
+                }
                 var tech = game.science.techs;
                 let noup = [];
                 let autoparagonban = ["antimatter", "cryptotheology", "voidSpace", "paradoxalKnowledge", "quantumCryptography", "metaphysics"];
@@ -2266,14 +2275,16 @@ var run = function() {
             }
 
             if (upgrades.policies.enabled && game.science.meta[0].meta[10].researched && options.auto.autoparagon.enabled) {
-                if (!game.libraryTab.policyPanel || !game.libraryTab.policyPanel.children) {game.libraryTab.render();}
+                if (!game.libraryTab.policyPanel || !game.libraryTab.policyPanel.children) {
+                    game.libraryTab.render();
+                }
                 var poli = game.science.policies;
                 let noup = [];
-                let autoparagon = [0, 3, 8, 11, 15, 20, 23, 26, 31, 34, 36];
-                let infiniit = [1, 2, 8, 25, 30,34,37];
+                let autoparagon = [0, 3, 8, 11, 15, 20, 23, 26, 31, 34, 37];
+                let infiniit = [1, 2, 8, 25, 30, 34, 37];
                 if (!options.auto.autoparagon.items.infinite.enabled) {
                     noup = noup.concat(autoparagon);
-                } else {//(options.auto.autoparagon.items.infinite.enabled) {
+                } else { //(options.auto.autoparagon.items.infinite.enabled) {
                     noup = noup.concat(infiniit);
                 }
                 for (var i = 0; i < noup.length; i++) {
@@ -2468,9 +2479,9 @@ var run = function() {
 
             var buildList = bulkManager.bulk(builds, metaData, trigger, 'bonfire');
             //var refreshRequired = false;
-            for (var entry of buildList) {
-                if (entry.count > 0) {
-                    buildManager.build(entry.name || entry.id, entry.stage, entry.count);
+            for (var i = 0; i < buildList.length; i++) {
+                if (buildList[i].count > 0) {
+                    buildManager.build(buildList[i].name || buildList[i].id, buildList[i].stage, buildList[i].count);
                     //refreshRequired = true;
                 }
             }
@@ -2591,26 +2602,31 @@ var run = function() {
                 return;
             }
             if (options.auto.options.items.hunt.subTrigger <= manpower.value / manpower.maxValue) {
-                // No way to send only some hunters. Thus, we hunt with everything
-                var huntCount = Math.floor(manpower.value / 100) - 1;
-                storeForSummary('hunt', huntCount);
-                activity('派出 ' + huntCount + ' 波小猫去打猎', 'ks-hunt');
-
-                var huntCount = Math.floor(manpower.maxValue / 100);
+                var huntCount = Math.floor(manpower.value * 0.01) - 1;
                 var aveOutput = this.craftManager.getAverageHunt();
                 var trueOutput = {};
 
-                for (var out in aveOutput) {
+                /*for (var out in aveOutput) {
                     var res = this.craftManager.getResource(out);
                     trueOutput[out] = (res.maxValue > 0) ? Math.min(aveOutput[out] * huntCount, Math.max(res.maxValue - res.value, 0)) : aveOutput[out] * huntCount;
-
-                    if (manpower.value >= manpower.maxValue) {
-                        var huntCount = Math.ceil(manpower.value / 100000000);
+                }*/
+                if (manpower.value >= manpower.maxValue) {
+                    var huntCount = Math.floor(manpower.value * 1e-9);
+                    var chron = game.bld.getBuildingExt('chronosphere').meta.val;
+                    if (chron && options.auto.autoparagon.items.infinite.enabled && chron < options.auto.build.items.chronosphere.limited) {
+                        if (manpower.value > 4e10) {
+                            huntCount *= Math.floor(Math.min(manpower.value * 1e-6, 1e3));
+                        } else if (manpower.value > 1e9 && game.village.leader != null && game.village.leader.trait.name == "manager") {
+                            huntCount *= Math.floor(Math.min(manpower.value * 1e-6, 5e3));
+                        }
                     }
                 }
-
-                game.resPool.addResEvent("manpower", -huntCount * 100);
-                game.village.gainHuntRes(huntCount);
+                if (huntCount) {
+                    game.resPool.addResEvent("manpower", -huntCount * 100);
+                    game.village.gainHuntRes(huntCount);
+                    //storeForSummary('hunt', huntCount);
+                    activity('派出 ' + huntCount + ' 波小猫去打猎', 'ks-hunt');
+                }
             }
         },
         trade: function() {
@@ -2725,7 +2741,6 @@ var run = function() {
             }
             if (tradesDone.length === 0) {
                 return;
-                console.log()
             }
 
             var tradeNet = {};
@@ -2827,15 +2842,21 @@ var run = function() {
                 var leader = game.village.leader;
                 var profession;
                 //选择领袖
-                if (leader == null) {
+                if (leader === null || leader.trait.name == "engineer") {
                     for (var i = 0; i < game.village.traits.length; i++) {
                         if (!options.auto.autoparagon.items.infinite.enabled) {
                             if (game.village.traits[i].name == "merchant") {
                                 profession = "merchant";
+                                break;
                             }
                         } else {
-                            if (game.village.traits[i].name == "manager") {
+                            if (game.resPool.get("manpower").value > 1e9 && game.village.traits[i].name == "manager") {
                                 profession = "manager";
+                                break;
+                            }
+                            if (game.village.traits[i].name == "engineer") {
+                                profession = "engineer";
+                                break;
                             }
                         }
                     }
@@ -2909,11 +2930,11 @@ var run = function() {
                     return;
                 }
                 if (options.auto.autoparagon.items.infinite.enabled && freeKittens >= 1) {
-                    /*if (game.village.jobs[2].unlocked && game.resPool.get("science").value <){
+                    if (game.village.jobs[2].unlocked && game.resPool.get("science").value < 1e13) {
                         game.village.assignJob(game.village.getJob("scholar"), freeKittens);
                         game.villageTab.updateTab();
                         return;
-                    }*/
+                    }
                     if (game.village.jobs[3].unlocked) {
                         game.village.assignJob(game.village.getJob("hunter"), freeKittens);
                         game.villageTab.updateTab();
@@ -2921,7 +2942,7 @@ var run = function() {
                     }
                 }
 
-                if (options.auto.autoparagon.enabled && freeKittens >= 1) {
+                if (options.auto.autoparagon.enabled && freeKittens >= 1 && !game.village.jobs[4].value) {
                     let fresh = false;
                     if (game.village.jobs[3].unlocked && !game.village.jobs[3].value) {
                         game.village.assignJob(game.village.getJob("hunter"), 1);
@@ -3938,6 +3959,9 @@ var run = function() {
                         } else if (cryoKarma) {
                             tempPool['karma'] -= karmaPrice * Math.pow(priceRatio, k + data.val);
                         } else {
+							if (build.val >= build.limit && build.limit > 0) {
+								continue bulkLoop;
+							}
                             var pVal = prices[p].val * Math.pow(priceRatio, k + data.val);
                             tempPool[prices[p].name] -= (prices[p].name === 'void') ? Math.ceil(pVal) : pVal;
                         }
@@ -4085,13 +4109,15 @@ var run = function() {
             var output = {};
             for (var s in race.sells) {
                 var item = race.sells[s];
-                if (!this.isValidTrade(item, race)) {continue;}
+                if (!this.isValidTrade(item, race)) {
+                    continue;
+                }
                 var resource = this.craftManager.getResource(item.name);
                 var mean = 0;
                 var tradeChance = (race.embassyPrices) ? item.chance * (1 + game.getLimitedDR(0.01 * race.embassyLevel, 0.75)) : item.chance;
                 var sRatio = (!item.seasons) ? 1 : 1 + item.seasons[game.calendar.getCurSeason().name];
-                var normBought = (successRat - bonusRat) * Math.min(tradeChance/100, 1);
-                var normBonus = bonusRat * Math.min(tradeChance/100, 1);
+                var normBought = (successRat - bonusRat) * Math.min(tradeChance / 100, 1);
+                var normBonus = bonusRat * Math.min(tradeChance / 100, 1);
                 mean = (normBought + 1.25 * normBonus) * item.value * rRatio * sRatio * tRatio;
                 output[item.name] = mean;
             }
@@ -4123,7 +4149,8 @@ var run = function() {
 
             for (var i in materials) {
                 if (i === "manpower") {
-                    var total = this.craftManager.getValueAvailable(i, true) / materials[i];
+                    var manpowerValue = Math.max(this.craftManager.getValueAvailable(i, true) - 100, 0);
+                    var total = manpowerValue / materials[i];
                 } else {
                     var total = this.craftManager.getValueAvailable(i, limited, options.auto.trade.trigger) / materials[i];
                 }
@@ -4437,7 +4464,7 @@ var run = function() {
         localStorage['cbc.autoparagon.trigger'] = JSON.stringify(options.auto.autoparagon.trigger);
         localStorage['cbc.autoparagon.items.infinite.subTrigger'] = options.auto.autoparagon.items.infinite.subTrigger;
         /*localStorage['cbc.autoparagon.items.xfldc.subTrigger'] = JSON.stringify(options.auto.autoparagon.items.xfldc.subTrigger);*/
-        options.auto.inoutdeploy.trigger = localStorage['cbc.kitten-scientists'];
+        //options.auto.inoutdeploy.trigger = localStorage['cbc.kitten-scientists'];
     };
     //保存珂学家配置到key
     var loadFromKittenStorage = function() {
@@ -4976,18 +5003,21 @@ var run = function() {
                 var value;
                 if (text == '自动刷领导力') {
                     value = window.prompt(
-                        '输入重置时的传送仪数量，栗子：6\n达到指定传送仪且猫口上限后重置\n需要有6000%太阳革命加成和300k水晶后使用\n会默认保存500K水晶（可通过附加功能进行修改）\n可通过附加功能中燃烧到红月加快一定的效率\n若使用燃烧到红月功能会增加水晶消耗\n',
+                        '该触发条件为自动领导力和无限流重置时的最低传送仪数量\n默认：6\n达到触发条件数量的传送仪且猫口到达上限后重置\n会默认保存40K水晶\n自动领导力会默认燃烧到红月加快一定的效率\n黑暗天空挑战可以减低水晶消耗\n具体可以看右下角自动刷领导力说明书',
                         auto.trigger);
-                } else if (text == '导出入配置') {
-                    var kssave = localStorage['cbc.kitten-scientists'];
-                    value = window.prompt('窗口内默认文本为当前配置,珂以直接复制,到qq窗口发送\n' + '尽量不按窗口内取消键，\n' + '按了需要更改珂学家的任意配置才珂以正常导出\n' +
-                        '输入配置文本后按确定\n' + '导入配置（注意珂学家版本）在确定后需要刷新\n' + '请无视是否开启此选项\n', kssave);
-                    localStorage['cbc.kitten-scientists'] = value;
-                } else {
+                }
+                /*else if (text == '导出入配置') {
+                                   var kssave = localStorage['cbc.kitten-scientists'];
+                                   value = window.prompt('窗口内默认文本为当前配置,珂以直接复制,到qq窗口发送\n' + '尽量不按窗口内取消键，\n' + '按了需要更改珂学家的任意配置才珂以正常导出\n' +
+                                       '输入配置文本后按确定\n' + '导入配置（注意珂学家版本）在确定后需要刷新\n' + '请无视是否开启此选项\n', kssave);
+                                   localStorage['cbc.kitten-scientists'] = value;
+                               }*/
+                else {
                     value = window.prompt('输入新的触发值 ' + text + '。 取值范围为 0 到 1 之间的小数。', auto.trigger);
                 }
 
-                if (value !== null && text != '导出入配置') {
+                //if (value !== null && text != '导出入配置') {
+                if (value !== null) {
                     auto.trigger = parseFloat(value);
                     saveToKittenStorage();
                     triggerButton[0].title = auto.trigger;
@@ -5253,10 +5283,10 @@ var run = function() {
                     value = window.prompt('输入一个新的触发值 ' + option.label + '。\n取值范围为 0 到 ' + game.space.meta[0].meta.length +
                         ' 之间的整数，分别对应 ' + game.space.meta[0].meta.length + ' 颗星球。', option.subTrigger);
                 } else if (name == 'x1') {
-                    value = window.prompt('最少1000年的起跳，先提前做好阻抗、加速器、锅炉、时计炉，条件需要资源回复数量0，蒸汽工坊没开自动化，有足够时间水晶，输入每次燃烧水晶的数量。', option.subTrigger);
+                    value = window.prompt('输入每次燃烧水晶的数（最少1000年）\n先提前做好阻抗、加速器、锅炉、时计炉\n使用本功能条件为：\n资源回复数量为0，蒸汽工坊没开自动化，有足够时间水晶，太阳提取数量为0\n为了防止过多领导力，最大支持2G领导力总和。', option.subTrigger);
                 } else if (name == 'infinite') {
                     value = window.prompt(
-                        '使用本功能前请备份存档\n使用本功能前请备份存档\n使用本功能前请备份存档\n使用本功能请达到无限流要求后，手动进行重置\n设置每轮次制作的传送仪数量为自动领导力的触发值\n手动点出对应传送仪数量(科学家限制等级自动建造亦可)\n达成重置条件后将自动进行重置\n注1：所有非工艺受到传送仪影响的资源均为增量(信仰请提前挂出一定量)\n注2：本配置不检查输入的配置是否能进行增量发展，请自行检查\n注3：若不按照配置输入方式则会按照默认配置进行\n注4：0为不跳过喵口检查\n配置输入方式如下：\n是否跳过猫口检查,小屋,木屋,宅邸,工厂,神殿,工坊,铸币厂,空间站,圣殿骑士\n默认情况下配置为：\n0,10,210,65,55,100,180,70,0,10',
+                        '使用本功能前请务必备份存档!\n第一次使用推荐使用满猫口存档导入\n务必调整设置自动领导力的触发条件(即每轮传送仪数量)\n珂学家会根据资源自动调整建筑上限数量\n默认触发条件为1即不等待猫口重置，如需等猫口改为0即可\n详细信息请看右下角无限流说明书',
                         option.subTrigger);
                 }
                 /*else if (name == 'xfldc') {
@@ -5360,7 +5390,7 @@ var run = function() {
     optionsListElement.append(getToggle('options', '选项'));
     optionsListElement.append(getToggle('autotime', '烧水晶领导力'));
     optionsListElement.append(getToggle('filter', '日志过滤'));
-    optionsListElement.append(getToggle('inoutdeploy', '导出入配置'));
+    // optionsListElement.append(getToggle('inoutdeploy', '导出入配置'));
 
     // add activity button
     // ===================

@@ -67,9 +67,9 @@ WToolbarHappiness = React.createClass({
             getTooltip: this.getTooltip,
             className: "happiness"
         },
-            $r("div", {
+            $r("div", {className:"happinessText",
                 dangerouslySetInnerHTML: {
-                    __html: "(:3)&nbsp;" + Math.floor(game.village.happiness * 100) + "%"
+                    __html: Math.floor(game.village.happiness * 100) + "%"
                 }
             })
         );
@@ -94,6 +94,9 @@ WToolbarHappiness = React.createClass({
 				if(resources[i].name == "elderBox" && this.game.resPool.get("wrappingPaper").value){
 					resHappiness -= happinessPerLuxury; // Present Boxes and Wrapping Paper do not stack.
 				}
+				if(resources[i].type == "uncommon"){
+					resHappiness += this.game.getEffect("consumableLuxuryHappiness");
+				}
 			}
 		}
 		tooltip += $I("village.happiness.rare.resources") + ": +" + this.game.getDisplayValueExt(resHappiness, false, false, 0) + "%<br>";
@@ -105,7 +108,7 @@ WToolbarHappiness = React.createClass({
 
 		if (this.game.calendar.festivalDays > 0){
 			var festivalHappinessEffect = 30 * (1+this.game.getEffect("festivalRatio"));
-			tooltip += $I("village.happiness.festival") + ": +"+festivalHappinessEffect+"%<br>";
+			tooltip += $I("village.happiness.festival") + ": +" + this.game.getDisplayValueExt(festivalHappinessEffect, false, false, 0) + "%<br>";
 		}
 
         var unhappiness = this.game.village.getUnhappiness() / (1 + this.game.getEffect("unhappinessRatio")),
@@ -146,9 +149,9 @@ WToolbarEnergy = React.createClass({
             getTooltip: this.getTooltip,
             className: "energy" + className
         },
-            $r("div", {
+            $r("div", {className:"energyText",
                 dangerouslySetInnerHTML: {
-                    __html: "&#9889;&nbsp;" + game.getDisplayValueExt(resPool.energyProd - resPool.energyCons) + $I("unit.watt")
+                    __html: game.getDisplayValueExt(resPool.energyProd - resPool.energyCons) + $I("unit.watt")
 				}
             })
         );
@@ -199,6 +202,9 @@ WToolbarMOTD = React.createClass({
     }
 });
 WToolbarPollution = React.createClass({
+    freshMessage: false,
+    message: "",
+
     render: function(){
         var game = this.props.game;
 
@@ -206,28 +212,28 @@ WToolbarPollution = React.createClass({
             return $r(WToolbarIconContainer, {
                 game: game,
                 getTooltip: this.getTooltip,
-                className: this.freshMessage ? "energy warning": null
+                className: "pollutionIcon " + (this.freshMessage ? "energy warning": null)
             },
-                $r("div", {}, 
-                $I("pollution.label"))
+                $r("div", {className:"pollutionText"},
+                (game.science.get("ecology").researched ? (this.getPollutionMod()) : "\xa0"))
             );
         }
         return null;
     },
     getTooltip: function(notUpdateFreshMessage){
-        this.game = this.props.game;    //hack
+        var game = this.props.game;
 
         var message = "";
-        var eqPol = this.game.bld.getEquilibriumPollution();
-        var eqPolLvl = this.game.bld.getPollutionLevel(eqPol);
-        var pollution = this.game.bld.cathPollution;
-        var polLvl = this.game.bld.getPollutionLevel();
-        var polLvlShow = this.game.bld.getPollutionLevel(pollution * 2);
+        var eqPol = game.bld.getEquilibriumPollution();
+        var eqPolLvl = game.bld.getPollutionLevel(eqPol);
+        var pollution = game.bld.cathPollution;
+        var polLvl = game.bld.getPollutionLevel();
+        var polLvlShow = game.bld.getPollutionLevel(pollution * 2);
         if (polLvl >= 4){
-            message += $I("pollution.level1") + "<br/>" + $I("pollution.level2") + "<br/>" + $I("pollution.level3", [this.game.getDisplayValueExt(game.villageTab.getVillageTitle(), false, false, 0)]) + "<br/>" + $I("pollution.level4");
+            message += $I("pollution.level1") + "<br/>" + $I("pollution.level2") + "<br/>" + $I("pollution.level3", [game.getDisplayValueExt(game.villageTab.getVillageTitle(), false, false, 0)]) + "<br/>" + $I("pollution.level4");
         }
-        else if (polLvlShow == 3){
-            message += $I("pollution.level1") + "<br/>" + $I("pollution.level2") + "<br/>" + $I("pollution.level3", [this.game.getDisplayValueExt(game.villageTab.getVillageTitle(), false, false, 0)]);
+        else if (polLvlShow == 3 || polLvl == 3){
+            message += $I("pollution.level1") + "<br/>" + $I("pollution.level2") + "<br/>" + $I("pollution.level3", [game.getDisplayValueExt(game.villageTab.getVillageTitle(), false, false, 0)]);
         }
         else if (polLvlShow == 2){
             message += $I("pollution.level1") + "<br/>" + $I("pollution.level2");
@@ -237,15 +243,15 @@ WToolbarPollution = React.createClass({
         } else {
             message = $I("pollution.level0");
         }
-        
-        var warnLvl = this.game.bld.getPollutionLevel(pollution * 4);
+
+        var warnLvl = game.bld.getPollutionLevel(pollution * 4);
         if (warnLvl >= 1 && warnLvl <= 4 && warnLvl > polLvlShow && warnLvl <= eqPolLvl) {
             message += "<br/>" + $I("pollution.level" + warnLvl + ".warning");
         }
         if (pollution * 1.5 <= eqPol || eqPolLvl > polLvl){
             message += "<br/>" + $I("pollution.increasing");
         }
-        else if (pollution >= 0 && this.game.bld.cathPollutionPerTick <= 0 && eqPolLvl <= polLvl){
+        else if (pollution >= 0 && game.bld.cathPollutionPerTick <= 0 && eqPolLvl <= polLvl){
             message += "<br/>" + $I("pollution.cleaning");
         }
         else if (eqPolLvl == polLvl && eqPol > 0){
@@ -255,10 +261,19 @@ WToolbarPollution = React.createClass({
             message += "<br/>" + $I("pollution.pristine");
         }
 
-        message +="<br/>CO2: " + (game.science.get("ecology").researched ? 
-            (game.getDisplayValueExt((game.bld.cathPollution / game.bld.getPollutionLevelBase())*100) + "ppm") : $I("pollution.unspecified"));    
+        if (notUpdateFreshMessage){
+            return message;
+        }
+        message +="<br/>二氧化碳: " + (game.science.get("ecology").researched ?
+            this.getPollutionMod() : $I("pollution.unspecified"));
+        this.freshMessage = false;
 
         return message;
+    },
+
+    getPollutionMod: function(){
+        var game = this.props.game;
+        return game.getDisplayValueExt((game.bld.cathPollution / game.bld.getPollutionLevelBase())*100) + "ppm";
     }
 });
 
@@ -340,12 +355,13 @@ WToolbar = React.createClass({
     getIcons: function(){
         var icons = [];
         icons.push(
-            $r(WToolbarPollution, {game: this.props.game}),
-            $r(WToolbarFPS, {game: this.props.game}),
-            $r(WToolbarMOTD, {game: this.props.game}),
-            $r(WToolbarHappiness, {game: this.props.game}),
-            $r(WToolbarEnergy, {game: this.props.game}),
-            $r(WBLS, {game: this.props.game}),
+            $r(WToolbarFPS, {game: this.state.game}),
+            $r(WToolbarPollution, {game: this.state.game}),
+            $r(WToolbarHappiness, {game: this.state.game}),
+            $r(WToolbarEnergy, {game: this.state.game}),
+            $r(WBLS, {game: this.state.game}),
+            $r(WToolbarMOTD, {game: this.state.game}),
+            //$r(WLogin, {game: this.state.game})
 
         );
         return icons;

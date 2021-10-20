@@ -254,14 +254,8 @@ dojo.declare("com.nuclearunicorn.game.Calendar", null, {
 		var celestialBonus = this.game.workshop.get("celestialMechanics").researched
 			? this.game.ironWill ? 1.6 : 1.2
 			: 1;
-
 		var sciBonus = 25 * celestialBonus * (1 + this.game.getEffect("scienceRatio"));
-		var sciGain = this.game.resPool.addResEvent("science", sciBonus);
-
 		var isSilent = this.game.workshop.get("seti").researched;
-		if (sciGain > 0 && !isSilent){
-			this.game.msg($I("calendar.msg.science", [this.game.getDisplayValueExt(sciGain)]), "", "astronomicalEvent", true);
-		}
 
 		if (this.game.science.get("astronomy").researched) {
 			var timeRatioBonus = 1 + this.game.getEffect("timeRatio") * 0.25;
@@ -273,11 +267,23 @@ dojo.declare("com.nuclearunicorn.game.Calendar", null, {
 			var starcharts = eventChance <= 1
 				? 1
 				: Math.floor(eventChance) + (this.game.rand(10000) < (eventChance - Math.floor(eventChance)) * 10000 ? 1 : 0);
+			sciBonus *= starcharts;
+			var sciGain = this.game.resPool.addResEvent("science", sciBonus);
 
+			if (sciGain > 0 && !isSilent){
+				this.game.msg($I("calendar.msg.science", [this.game.getDisplayValueExt(sciGain)]), "", "astronomicalEvent", true);
+			}
 			if (!isSilent) {
 				this.game.msg($I("calendar.msg.starchart", [starcharts]), "", "astronomicalEvent");
 			}
 			this.game.resPool.addResEvent("starchart", starcharts);
+		}
+		else{
+			var sciGain = this.game.resPool.addResEvent("science", sciBonus);
+
+			if (sciGain > 0 && !isSilent){
+				this.game.msg($I("calendar.msg.science", [this.game.getDisplayValueExt(sciGain)]), "", "astronomicalEvent", true);
+			}
 		}
 	},
 
@@ -375,7 +381,7 @@ dojo.declare("com.nuclearunicorn.game.Calendar", null, {
 
 		var ticksPerYear = this.ticksPerDay * this.daysPerSeason * this.seasonsPerYear;
 		if (this.day < 0){
-			this.game.time.flux -= (1 + timeAccelerationRatio) / ticksPerYear;
+			this.game.time.flux -= 1/(1 + timeAccelerationRatio) / ticksPerYear;
 		} else {
 			this.game.time.flux += timeAccelerationRatio / ticksPerYear;
 		}
