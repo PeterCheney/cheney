@@ -4,3 +4,6 @@ build.version.json
 /res/i18n/
 paragon.html
 infinite.html
+test/game.test.js
+test/game.test.js~62e4c501 (fix unit tests)
+test/setup.js
