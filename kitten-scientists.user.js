@@ -1726,7 +1726,7 @@ var run = function() {
                 var retain_chronosphere = options.auto.autoparagon.trigger % 1000;
                 var retain_library = 250 + (36 * Math.floor(Math.max(Math.log10(woodN) - 11, 0)));
                 if (options.auto.autoparagon.trigger % 1000 == 73) {
-                    retain_chronosphere = 73 + (15 * Math.floor(Math.max(Math.log10(chronosphereN) - 11, 0)));
+                    retain_chronosphere = 73 + (15 * Math.floor(Math.max(Math.log10(chronosphereN) - 10, 0)));
                 }
                 var xfldc_tradepost = 0;
 
