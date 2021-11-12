@@ -234,10 +234,10 @@ var cnItem = function() {
     );*/
 
     /*
-    		//开启生词打印
-    		console.log(
-    	'有需要汉化的英文：', text
-    		);
+            //开启生词打印
+            console.log(
+        '有需要汉化的英文：', text
+            );
     */
 
     //返回生词字串
@@ -288,9 +288,9 @@ var run = function() {
                         label: '无限流'
                     },
                     /*xfldc: {
-                    	enabled: false,
-                    	subTrigger: "0",
-                    	label: '暂时没效果' //'建造冷冻仓(无限流专用)'
+                        enabled: false,
+                        subTrigger: "0",
+                        label: '暂时没效果' //'建造冷冻仓(无限流专用)'
                     }*/
                 }
             },
@@ -1413,8 +1413,8 @@ var run = function() {
             },
             /*,
             cache: {
-            		cache:    [],
-            		cacheSum: {}
+                    cache:    [],
+                    cacheSum: {}
             }*/
             /* inoutdeploy: {
                  trigger: ''
@@ -1579,7 +1579,7 @@ var run = function() {
                     game.religionTab.refineTCBtn.controller._transform(game.religionTab.refineTCBtn.model, 1);
                 }
 
-                if (game.diplomacyTab.visible && game.resPool.get("unobtainium").value >= 6000 && !game.science.getPolicy("necrocracy").researched) {
+                if (game.diplomacyTab && game.diplomacyTab.visible && game.resPool.get("unobtainium").value >= 6000 && !game.science.getPolicy("necrocracy").researched) {
                     if (game.diplomacyTab.racePanels.length == 8) {
                         game.diplomacy.tradeMultiple(game.diplomacy.get("leviathans"), 1);
                         game.libraryTab.policyPanel.children[13].controller.onPurchase(game.libraryTab.policyPanel.children[13].model, {}, function() {});
@@ -1780,65 +1780,65 @@ var run = function() {
                 }
 
                 /*if (options.auto.autoparagon.items.xfldc.enabled) { //冷冻仓功能
-                	var xfldc_data = (options.auto.autoparagon.items.xfldc.subTrigger != null && options.auto.autoparagon.items.xfldc
-                		.subTrigger != NaN) ? (options.auto.autoparagon.items.xfldc.subTrigger).toString().split(',') : [];
-                	//var data= "每次建造冷冻仓数量,每次燃烧水晶数量,是否跳过过热判断,交易站,时间电池,时机炉,时间锅炉";
-                	//var retain_data= "10,10,0,400,36,50,17";
-                	var xfldc_amount = (xfldc_data.length == 4 || xfldc_data.length == 7) ? parseFloat(xfldc_data[0]) : parseFloat(
-                		options.auto.autoparagon.items.xfldc.subTrigger);
-                	var xfldc_crystal = (xfldc_data.length == 4 || xfldc_data.length == 7) ? parseFloat(xfldc_data[1]) : 10;
-                	var xfldc_overheat = (xfldc_data.length == 4 || xfldc_data.length == 7) ? parseFloat(xfldc_data[2]) : 0; //每次造冷冻仓的数量,每次获得通量时燃烧水晶的数量，是否跳过过热判断
-                	var xfldc_tradepost = (xfldc_data.length == 4 || xfldc_data.length == 7) ? parseFloat(xfldc_data[3]) : 400;
-                	var xfldc_temporalBattery = xfldc_data.length == 7 ? parseFloat(xfldc_data[4]) : 36;
-                	var xfldc_blastFurnace = xfldc_data.length == 7 ? parseFloat(xfldc_data[5]) : 50;
-                	var xfldc_timeBoiler = xfldc_data.length == 7 ? parseFloat(xfldc_data[6]) : 17;
+                    var xfldc_data = (options.auto.autoparagon.items.xfldc.subTrigger != null && options.auto.autoparagon.items.xfldc
+                        .subTrigger != NaN) ? (options.auto.autoparagon.items.xfldc.subTrigger).toString().split(',') : [];
+                    //var data= "每次建造冷冻仓数量,每次燃烧水晶数量,是否跳过过热判断,交易站,时间电池,时机炉,时间锅炉";
+                    //var retain_data= "10,10,0,400,36,50,17";
+                    var xfldc_amount = (xfldc_data.length == 4 || xfldc_data.length == 7) ? parseFloat(xfldc_data[0]) : parseFloat(
+                        options.auto.autoparagon.items.xfldc.subTrigger);
+                    var xfldc_crystal = (xfldc_data.length == 4 || xfldc_data.length == 7) ? parseFloat(xfldc_data[1]) : 10;
+                    var xfldc_overheat = (xfldc_data.length == 4 || xfldc_data.length == 7) ? parseFloat(xfldc_data[2]) : 0; //每次造冷冻仓的数量,每次获得通量时燃烧水晶的数量，是否跳过过热判断
+                    var xfldc_tradepost = (xfldc_data.length == 4 || xfldc_data.length == 7) ? parseFloat(xfldc_data[3]) : 400;
+                    var xfldc_temporalBattery = xfldc_data.length == 7 ? parseFloat(xfldc_data[4]) : 36;
+                    var xfldc_blastFurnace = xfldc_data.length == 7 ? parseFloat(xfldc_data[5]) : 50;
+                    var xfldc_timeBoiler = xfldc_data.length == 7 ? parseFloat(xfldc_data[6]) : 17;
 
-                	if (xfldc_tradepost != 0 && game.tabs[4].visible && game.tabs[5].visible && gamePage.bld.meta[0].meta[
-                			33].val >= options.auto.autoparagon.trigger % 1000 && game.bld.meta[0].meta[29].val >= retain_temple &&
-                		game.resPool.get("unobtainium").value > Math.pow(10, 15)) { //冷冻仓没事做搞搞利维坦交易
-                		if (!game.religion.getZU("blackPyramid").val && game.resPool.get("spice").value <= 150000 && game.diplomacy.races[
-                				3].unlocked) { //无黑金字塔
-                			game.diplomacy.tradeMultiple(game.diplomacy.races[4], 1000);
-                		}
-                	}
-                	/*if (game.science.get("voidSpace").researched && game.workshop.get("chronoforge").researched && game
-                		.bld.meta[0].meta[33].val >= options.auto.autoparagon.trigger % 1000) { //需要建造冷冻仓
-                		var cfPanel = game.tabs[7].cfPanel.children[0].children;
-                		var vsPanel = game.tabs[7].vsPanel.children[0].children;
-                		if (game.time.getVSU("cryochambers").val < xfldc_amount && game.resPool.get("karma").value >= game.time.getVSU(
-                				"cryochambers").prices[2].val && game.time.getVSU("cryochambers").val + game.time.getVSU("usedCryochambers")
-                			.val < 16070) {
-                			for (var i = 0; i < xfldc_amount; i++)
-                				vsPanel[1].controller.buyItem(vsPanel[1].model, {}, function() {}); //建造冷冻仓
-                		} else {
-                			let factor = gamePage.challenges.getChallenge("1000Years").researched ? 5 : 10;
-                			if (game.time.getVSU("usedCryochambers").val) { //存在需要修复的冷冻仓
-                				options.auto.time.items.chronocontrol.limited = vsPanel[2].model.on ? 1 : 0;
-                				options.auto.time.items.temporalBattery.limited = cfPanel[1].model.on < xfldc_temporalBattery ?
-                					xfldc_temporalBattery : 0;
-                				options.auto.time.items.blastFurnace.limited = cfPanel[2].model.on < xfldc_blastFurnace ? xfldc_blastFurnace :
-                					0;
-                				if (gamePage.getEffect("heatMax") - gamePage.time.heat < factor * xfldc_crystal * 1.02 && game.time.getCFU(
-                						"timeBoiler").on < xfldc_timeBoiler && game.time.getVSU("usedCryochambers").val != 0) //过热了点点炉子
-                					cfPanel[3].controller.buyItem(cfPanel[3].model, {}, function() {});
-                				if (game.calendar.darkFutureYears(true) > 0) //黑暗未来
-                					cfPanel[5].controller.buyItem(cfPanel[5].model, {}, function() {});
-                				if (gamePage.workshop.get("turnSmoothly").researched && game.tabs[0].buttons[35].model.on >= options.auto.autoparagon
-                					.trigger % 1000) { //解锁时空波动
-                					game.timeTab.update();
-                					var ldcx = Math.floor(game.resPool.get("temporalFlux").value / 3000);
-                					for (var i = 0; i < ldcx; i++)
-                						vsPanel[0].controller.buyItem(vsPanel[0].model, {}, function() {}); //修复冷冻仓
-                				}
-                			}
-                			if (gamePage.workshop.get("turnSmoothly").researched && game.resPool.get("temporalFlux").value < game.resPool.get("temporalFlux").maxValue && (gamePage.getEffect("heatMax") - gamePage.time.heat > factor * xfldc_crystal || xfldc_overheat || game.time.getVSU("usedCryochambers").val == 0)) { //烧水晶
-                				if (!game.time.getCFU("blastFurnace").isAutomationEnabled)
-                					game.time.getCFU("blastFurnace").isAutomationEnabled = true;
-                				cfPanel[0].controller.doShatterAmt(cfPanel[0].model, xfldc_crystal);
-                				cfPanel[0].update();
-                			}
-                		}
-                	}
+                    if (xfldc_tradepost != 0 && game.tabs[4].visible && game.tabs[5].visible && gamePage.bld.meta[0].meta[
+                            33].val >= options.auto.autoparagon.trigger % 1000 && game.bld.meta[0].meta[29].val >= retain_temple &&
+                        game.resPool.get("unobtainium").value > Math.pow(10, 15)) { //冷冻仓没事做搞搞利维坦交易
+                        if (!game.religion.getZU("blackPyramid").val && game.resPool.get("spice").value <= 150000 && game.diplomacy.races[
+                                3].unlocked) { //无黑金字塔
+                            game.diplomacy.tradeMultiple(game.diplomacy.races[4], 1000);
+                        }
+                    }
+                    /*if (game.science.get("voidSpace").researched && game.workshop.get("chronoforge").researched && game
+                        .bld.meta[0].meta[33].val >= options.auto.autoparagon.trigger % 1000) { //需要建造冷冻仓
+                        var cfPanel = game.tabs[7].cfPanel.children[0].children;
+                        var vsPanel = game.tabs[7].vsPanel.children[0].children;
+                        if (game.time.getVSU("cryochambers").val < xfldc_amount && game.resPool.get("karma").value >= game.time.getVSU(
+                                "cryochambers").prices[2].val && game.time.getVSU("cryochambers").val + game.time.getVSU("usedCryochambers")
+                            .val < 16070) {
+                            for (var i = 0; i < xfldc_amount; i++)
+                                vsPanel[1].controller.buyItem(vsPanel[1].model, {}, function() {}); //建造冷冻仓
+                        } else {
+                            let factor = gamePage.challenges.getChallenge("1000Years").researched ? 5 : 10;
+                            if (game.time.getVSU("usedCryochambers").val) { //存在需要修复的冷冻仓
+                                options.auto.time.items.chronocontrol.limited = vsPanel[2].model.on ? 1 : 0;
+                                options.auto.time.items.temporalBattery.limited = cfPanel[1].model.on < xfldc_temporalBattery ?
+                                    xfldc_temporalBattery : 0;
+                                options.auto.time.items.blastFurnace.limited = cfPanel[2].model.on < xfldc_blastFurnace ? xfldc_blastFurnace :
+                                    0;
+                                if (gamePage.getEffect("heatMax") - gamePage.time.heat < factor * xfldc_crystal * 1.02 && game.time.getCFU(
+                                        "timeBoiler").on < xfldc_timeBoiler && game.time.getVSU("usedCryochambers").val != 0) //过热了点点炉子
+                                    cfPanel[3].controller.buyItem(cfPanel[3].model, {}, function() {});
+                                if (game.calendar.darkFutureYears(true) > 0) //黑暗未来
+                                    cfPanel[5].controller.buyItem(cfPanel[5].model, {}, function() {});
+                                if (gamePage.workshop.get("turnSmoothly").researched && game.tabs[0].buttons[35].model.on >= options.auto.autoparagon
+                                    .trigger % 1000) { //解锁时空波动
+                                    game.timeTab.update();
+                                    var ldcx = Math.floor(game.resPool.get("temporalFlux").value / 3000);
+                                    for (var i = 0; i < ldcx; i++)
+                                        vsPanel[0].controller.buyItem(vsPanel[0].model, {}, function() {}); //修复冷冻仓
+                                }
+                            }
+                            if (gamePage.workshop.get("turnSmoothly").researched && game.resPool.get("temporalFlux").value < game.resPool.get("temporalFlux").maxValue && (gamePage.getEffect("heatMax") - gamePage.time.heat > factor * xfldc_crystal || xfldc_overheat || game.time.getVSU("usedCryochambers").val == 0)) { //烧水晶
+                                if (!game.time.getCFU("blastFurnace").isAutomationEnabled)
+                                    game.time.getCFU("blastFurnace").isAutomationEnabled = true;
+                                cfPanel[0].controller.doShatterAmt(cfPanel[0].model, xfldc_crystal);
+                                cfPanel[0].update();
+                            }
+                        }
+                    }
                 }*/
             }
 
@@ -2139,6 +2139,9 @@ var run = function() {
             }
 
             var buildList = bulkManager.bulk(builds, metaData, trigger, 'faith');
+            if (!buildList) {
+                return buildManager.manager.render();
+            }
 
             for (var entry in buildList) {
                 if (buildList[entry].count > 0) {
@@ -2147,7 +2150,7 @@ var run = function() {
             }
 
             /*if (refreshRequired) {
-            	game.ui.render();
+                game.ui.render();
             }*/
         },
         chrono: function() {
@@ -2335,7 +2338,7 @@ var run = function() {
                     }
             }
             let freshrequire = false;
-            if (upgrades.races.enabled && game.diplomacy.hasUnlockedRaces()) {
+            if (upgrades.races.enabled && game.diplomacyTab && game.diplomacy.hasUnlockedRaces()) {
                 var maxRaces = (game.diplomacy.get('leviathans').unlocked) ? 8 : 7;
                 if (game.diplomacyTab.racePanels.length < maxRaces) {
                     var manpower = craftManager.getValueAvailable('manpower', true);
@@ -2478,17 +2481,17 @@ var run = function() {
             }
 
             var buildList = bulkManager.bulk(builds, metaData, trigger, 'bonfire');
-            //var refreshRequired = false;
-			if (buildList) {
-				for (var i = 0; i < buildList.length; i++) {
-					if (buildList[i].count > 0) {
-						buildManager.build(buildList[i].name || buildList[i].id, buildList[i].stage, buildList[i].count);
-						//refreshRequired = true;
-					}
-				}
+            if (!buildList) {
+                return buildManager.manager.render();
+            }
+            for (var i = 0; i < buildList.length; i++) {
+                if (buildList[i].count > 0) {
+                    buildManager.build(buildList[i].name || buildList[i].id, buildList[i].stage, buildList[i].count);
+                    //refreshRequired = true;
+                }
             }
             /*if (refreshRequired) {
-            	game.ui.render();
+                game.ui.render();
             }*/
         },
         space: function() {
@@ -2506,12 +2509,12 @@ var run = function() {
                 var build = builds[name];
                 metaData[name] = buildManager.getBuild(name);
             }
-            if (refreshRequired) {
-                buildManager.manager.render();
-            }
 
             var buildList = bulkManager.bulk(builds, metaData, trigger, 'space');
-            var refreshRequired = false;
+            if (!buildList) {
+                return buildManager.manager.render();
+            }
+
             for (var entry in buildList) {
                 if (buildList[entry].count > 0) {
                     buildManager.build(buildList[entry].id, buildList[entry].count);
@@ -2519,7 +2522,7 @@ var run = function() {
                 }
             }
             /*if (refreshRequired) {
-            	game.ui.render();
+                game.ui.render();
             }*/
         },
         craft: function() {
@@ -2781,62 +2784,62 @@ var run = function() {
             var optionVals = options.auto.options.items;
 
             /*AutoEmbassy:
-            		 if (optionVals.buildEmbassies.enabled) {
-            	 var culture = craftManager.getResource('culture');
-            	 if (optionVals.buildEmbassies.subTrigger <= culture.value / culture.maxValue) {
-            			 var racePanels = game.diplomacyTab.racePanels;
-            			 var cultureVal = craftManager.getValueAvailable('culture', true);
+                     if (optionVals.buildEmbassies.enabled) {
+                 var culture = craftManager.getResource('culture');
+                 if (optionVals.buildEmbassies.subTrigger <= culture.value / culture.maxValue) {
+                         var racePanels = game.diplomacyTab.racePanels;
+                         var cultureVal = craftManager.getValueAvailable('culture', true);
 
-            			 var embassyBulk = {};
-            			 var bulkTracker = [];
+                         var embassyBulk = {};
+                         var bulkTracker = [];
 
-            			 for (var i = 0; i < racePanels.length; i++) {
-            		 if (!racePanels[i].embassyButton) {continue;}
-            		 var name = racePanels[i].race.name;
-            		 var race = game.diplomacy.get(name);
-            		 embassyBulk[name] = {'val': 0, 'basePrice': race.embassyPrices[0].val, 'currentEm': race.embassyLevel, 'priceSum': 0, 'race': race};
-            		 bulkTracker.push(name);
-            			 }
+                         for (var i = 0; i < racePanels.length; i++) {
+                     if (!racePanels[i].embassyButton) {continue;}
+                     var name = racePanels[i].race.name;
+                     var race = game.diplomacy.get(name);
+                     embassyBulk[name] = {'val': 0, 'basePrice': race.embassyPrices[0].val, 'currentEm': race.embassyLevel, 'priceSum': 0, 'race': race};
+                     bulkTracker.push(name);
+                         }
 
-            			 if (bulkTracker.length === 0) {break AutoEmbassy;}
+                         if (bulkTracker.length === 0) {break AutoEmbassy;}
 
-            			 var refreshRequired = false;
+                         var refreshRequired = false;
 
-            			 while (bulkTracker.length > 0) {
-            		 for (var i=0; i < bulkTracker.length; i++) {
-            				 var name = bulkTracker[i];
-            				 var emBulk = embassyBulk[name];
-            				 var nextPrice = emBulk.basePrice * Math.pow(1.15, emBulk.currentEm + emBulk.val);
-            				 if (nextPrice <= cultureVal) {
-            			 cultureVal -= nextPrice;
-            			 emBulk.priceSum += nextPrice;
-            			 emBulk.val += 1;
-            			 refreshRequired = true;
-            				 } else {
-            			 bulkTracker.splice(i, 1);
-            			 i--;
-            				 }
-            		 }
-            			 }
+                         while (bulkTracker.length > 0) {
+                     for (var i=0; i < bulkTracker.length; i++) {
+                             var name = bulkTracker[i];
+                             var emBulk = embassyBulk[name];
+                             var nextPrice = emBulk.basePrice * Math.pow(1.15, emBulk.currentEm + emBulk.val);
+                             if (nextPrice <= cultureVal) {
+                         cultureVal -= nextPrice;
+                         emBulk.priceSum += nextPrice;
+                         emBulk.val += 1;
+                         refreshRequired = true;
+                             } else {
+                         bulkTracker.splice(i, 1);
+                         i--;
+                             }
+                     }
+                         }
 
-            			 for (var name in embassyBulk) {
-            		 var emBulk = embassyBulk[name];
-            		 if (emBulk.val === 0) {continue;}
-            		 var cultureVal = craftManager.getValueAvailable('culture', true);
-            		 if (emBulk.priceSum > cultureVal) {warning('Something has gone horribly wrong.' + [emBulk.priceSum, cultureVal]);}
-            		 game.resPool.resources[13].value -= emBulk.priceSum;
-            		 emBulk.race.embassyLevel += emBulk.val;
-            		 storeForSummary('embassy', emBulk.val);
-            		 if (emBulk.val !== 1) {
-            				 activity('Built ' + emBulk.val + ' embassies for ' + name, 'ks-trade');
-            		 } else {
-            				 activity('Built ' + emBulk.val + ' embassy for ' + name, 'ks-trade');
-            		 }
-            			 }
+                         for (var name in embassyBulk) {
+                     var emBulk = embassyBulk[name];
+                     if (emBulk.val === 0) {continue;}
+                     var cultureVal = craftManager.getValueAvailable('culture', true);
+                     if (emBulk.priceSum > cultureVal) {warning('Something has gone horribly wrong.' + [emBulk.priceSum, cultureVal]);}
+                     game.resPool.resources[13].value -= emBulk.priceSum;
+                     emBulk.race.embassyLevel += emBulk.val;
+                     storeForSummary('embassy', emBulk.val);
+                     if (emBulk.val !== 1) {
+                             activity('Built ' + emBulk.val + ' embassies for ' + name, 'ks-trade');
+                     } else {
+                             activity('Built ' + emBulk.val + ' embassy for ' + name, 'ks-trade');
+                     }
+                         }
 
-            			 if (refreshRequired) {game.ui.render();}
-            	 }
-            		 }*/
+                         if (refreshRequired) {game.ui.render();}
+                 }
+                     }*/
 
             if (optionVals.leaderPromote.enabled && game.science.get('civil').researched) {
                 //var gold = craftManager.getResource('gold');
@@ -2869,18 +2872,18 @@ var run = function() {
                 }
 
                 /*if (leader != null && options.auto.autoparagon.items.infinite.enabled && options.auto.autoparagon.items.xfldc.enabled &&
-                	game.diplomacy.races[7].unlocked) { //无限流冷冻仓更改领袖
-                	let prkitten = gamePage.village.sim.kittens.filter(kitten => kitten.trait.name == "merchant").sort(function(a,
-                		b) {
-                		return b.rank - a.rank;
-                	});
-                	let prkittenpos = -1;
-                	if (prkitten.length != 0) {
-                		prkittenpos = 0;
-                		prkitten = prkitten[0];
-                	}
-                	if (prkitten && prkittenpos != -1)
-                		gamePage.villageTab.censusPanel.census.makeLeader(prkitten);
+                    game.diplomacy.races[7].unlocked) { //无限流冷冻仓更改领袖
+                    let prkitten = gamePage.village.sim.kittens.filter(kitten => kitten.trait.name == "merchant").sort(function(a,
+                        b) {
+                        return b.rank - a.rank;
+                    });
+                    let prkittenpos = -1;
+                    if (prkitten.length != 0) {
+                        prkittenpos = 0;
+                        prkitten = prkitten[0];
+                    }
+                    if (prkitten && prkittenpos != -1)
+                        gamePage.villageTab.censusPanel.census.makeLeader(prkitten);
                 }*/
                 if (leader != null) {
                     var rank = leader.rank;
@@ -3961,9 +3964,9 @@ var run = function() {
                         } else if (cryoKarma) {
                             tempPool['karma'] -= karmaPrice * Math.pow(priceRatio, k + data.val);
                         } else {
-							if (build.val >= build.limit && build.limit > 0) {
-								continue bulkLoop;
-							}
+                            if (build.val >= build.limit && build.limit > 0) {
+                                continue bulkLoop;
+                            }
                             var pVal = prices[p].val * Math.pow(priceRatio, k + data.val);
                             tempPool[prices[p].name] -= (prices[p].name === 'void') ? Math.ceil(pVal) : pVal;
                         }
@@ -4252,43 +4255,43 @@ var run = function() {
     /*var CacheManager = function () {};
 
     CacheManager.prototype = {
-    		pushToCache: function (data) {
-    	var cache = options.auto.cache.cache;
-    	var cacheSum = options.auto.cache.cacheSum;
-    	var materials = data['materials'];
-    	var currentTick = game.timer.ticksTotal;
+            pushToCache: function (data) {
+        var cache = options.auto.cache.cache;
+        var cacheSum = options.auto.cache.cacheSum;
+        var materials = data['materials'];
+        var currentTick = game.timer.ticksTotal;
 
-    	cache.push(data);
-    	for (var mat in materials) {
-    			if (!cacheSum[mat]) {cacheSum[mat] = 0;}
-    			cacheSum[mat] += materials[mat];
-    	}
+        cache.push(data);
+        for (var mat in materials) {
+                if (!cacheSum[mat]) {cacheSum[mat] = 0;}
+                cacheSum[mat] += materials[mat];
+        }
 
-    	for (var i = 0; i < cache.length; i++) {
-    			var oldData = cache[i];
-    			if (cache.length > 10000) {
-    		var oldMaterials = oldData['materials'];
-    		for (var mat in oldMaterials) {
-    				if (!cacheSum[mat]) {cacheSum[mat] = 0;}
-    				cacheSum[mat] -= oldMaterials[mat];
-    		}
-    		cache.shift;
-    		i--;
-    			} else {
-    		return;
-    			}
-    	}
-    		},
-    		getResValue: function (res) {
-    	var cache = options.auto.cache.cache;
-    	if (cache.length === 0) {return 0;}
-    	var cacheSum = options.auto.cache.cacheSum;
-    	if (!cacheSum[res]) {return 0;}
-    	var currentTick = game.timer.ticksTotal;
-    	var startingTick = cache[0].timeStamp;
+        for (var i = 0; i < cache.length; i++) {
+                var oldData = cache[i];
+                if (cache.length > 10000) {
+            var oldMaterials = oldData['materials'];
+            for (var mat in oldMaterials) {
+                    if (!cacheSum[mat]) {cacheSum[mat] = 0;}
+                    cacheSum[mat] -= oldMaterials[mat];
+            }
+            cache.shift;
+            i--;
+                } else {
+            return;
+                }
+        }
+            },
+            getResValue: function (res) {
+        var cache = options.auto.cache.cache;
+        if (cache.length === 0) {return 0;}
+        var cacheSum = options.auto.cache.cacheSum;
+        if (!cacheSum[res]) {return 0;}
+        var currentTick = game.timer.ticksTotal;
+        var startingTick = cache[0].timeStamp;
 
-    	return (cacheSum[res] / (currentTick - startingTick));
-    		}
+        return (cacheSum[res] / (currentTick - startingTick));
+            }
     };*/
 
     // ==============================
@@ -5167,11 +5170,11 @@ var run = function() {
 
         input.on('change', function() {
             if (input.is(':checked') && !option.enabled) {
-				if (name == 'infinite') {
-					if (options.auto.autoparagon.trigger < 66) {
-						options.auto.autoparagon.trigger = 73;
-					}
-				}
+                if (name == 'infinite') {
+                    if (options.auto.autoparagon.trigger < 66) {
+                        options.auto.autoparagon.trigger = 73;
+                    }
+                }
                 option.enabled = true;
                 if (option.filter) {
                     message('过滤 ' + elementLabel);
@@ -5297,9 +5300,9 @@ var run = function() {
                         option.subTrigger);
                 }
                 /*else if (name == 'xfldc') {
-                	value = window.prompt(
-                		'本功能仅在无限流状态下可用\n格式如下：\n每回合建造冷冻仓数量,每次燃烧水晶的数量,是否跳过过热判断,交易站\n默认配置如下：10,10,0,400\n注：0为不跳过过热判断\n注2：若不进行特殊设置默认情况做50时机炉17锅炉。17为50时机炉热量/水晶性价比最高的？（大概吧）\n注3：跳过过热判断依旧建造一定数量的锅炉\n注4：可选参数：时间电池,时计炉数量,锅炉数量,对于时计炉的热量最优解请自行计算。',
-                		option.subTrigger);
+                    value = window.prompt(
+                        '本功能仅在无限流状态下可用\n格式如下：\n每回合建造冷冻仓数量,每次燃烧水晶的数量,是否跳过过热判断,交易站\n默认配置如下：10,10,0,400\n注：0为不跳过过热判断\n注2：若不进行特殊设置默认情况做50时机炉17锅炉。17为50时机炉热量/水晶性价比最高的？（大概吧）\n注3：跳过过热判断依旧建造一定数量的锅炉\n注4：可选参数：时间电池,时计炉数量,锅炉数量,对于时计炉的热量最优解请自行计算。',
+                        option.subTrigger);
                 }*/
                 else {
                     value = window.prompt('输入一个新的触发值 ' + option.label + '。 取值范围为 0 到 1 之间的小数', option.subTrigger);
