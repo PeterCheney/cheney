@@ -2479,11 +2479,13 @@ var run = function() {
 
             var buildList = bulkManager.bulk(builds, metaData, trigger, 'bonfire');
             //var refreshRequired = false;
-            for (var i = 0; i < buildList.length; i++) {
-                if (buildList[i].count > 0) {
-                    buildManager.build(buildList[i].name || buildList[i].id, buildList[i].stage, buildList[i].count);
-                    //refreshRequired = true;
-                }
+			if (buildList) {
+				for (var i = 0; i < buildList.length; i++) {
+					if (buildList[i].count > 0) {
+						buildManager.build(buildList[i].name || buildList[i].id, buildList[i].stage, buildList[i].count);
+						//refreshRequired = true;
+					}
+				}
             }
             /*if (refreshRequired) {
             	game.ui.render();
@@ -5165,6 +5167,11 @@ var run = function() {
 
         input.on('change', function() {
             if (input.is(':checked') && !option.enabled) {
+				if (name == 'infinite') {
+					if (options.auto.autoparagon.trigger < 66) {
+						options.auto.autoparagon.trigger = 73;
+					}
+				}
                 option.enabled = true;
                 if (option.filter) {
                     message('过滤 ' + elementLabel);
