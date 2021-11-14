@@ -299,7 +299,7 @@ var run = function() {
                 items: {
                     x1: {
                         enabled: false,
-                        subTrigger: 1,
+                        subTrigger: 1e7,
                         label: '燃烧水晶数量'
                     }
                 }
@@ -3090,7 +3090,7 @@ var run = function() {
             var btn = game.tabs[5].zgUpgradeButtons[i];
             if (validBuildings.indexOf(btn.id) != -1) {
                 if (btn.model.visible) {
-                    unicornPrice = 0;
+                    var unicornPrice = 0;
                     for (var j in btn.model.prices) {
                         if (btn.model.prices[j].name == "unicorns")
                             unicornPrice += btn.model.prices[j].val;
@@ -5293,7 +5293,7 @@ var run = function() {
                     value = window.prompt('输入一个新的触发值 ' + option.label + '。\n取值范围为 0 到 ' + game.space.meta[0].meta.length +
                         ' 之间的整数，分别对应 ' + game.space.meta[0].meta.length + ' 颗星球。', option.subTrigger);
                 } else if (name == 'x1') {
-                    value = window.prompt('输入每次燃烧水晶的数（最少1000年）\n先提前做好阻抗、加速器、锅炉、时计炉\n使用本功能条件为：\n资源回复数量为0，蒸汽工坊没开自动化，有足够时间水晶，太阳提取数量为0\n为了防止过多领导力，最大支持2G领导力总和。', option.subTrigger);
+                    value = window.prompt('输入每次燃烧水晶的数（最少1000年）\n先提前做好阻抗、加速器、锅炉、时计炉\n使用本功能条件为：\n资源回复数量为0，蒸汽工坊没开自动化，有足够时间水晶，太阳提取数量为0\n最好取消勾选自动刷领导力。\n为了防止过多领导力，最大支持2G领导力总和。', option.subTrigger);
                 } else if (name == 'infinite') {
                     value = window.prompt(
                         '使用本功能前请务必备份存档!\n第一次使用推荐使用满猫口存档导入\n务必调整设置自动领导力的触发条件(即每轮传送仪数量)\n珂学家会根据资源自动调整建筑上限数量\n默认触发条件为1即不等待猫口重置，如需等猫口改为0即可\n详细信息请看右下角无限流说明书',
