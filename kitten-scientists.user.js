@@ -2228,6 +2228,10 @@ var run = function() {
                     "orbitalGeodesy", "uplink", "hubbleTelescope", "astrophysicists", "solarSatellites", "starlink", "unobtainiumDrill", "storageBunkers", "mWReactor", "register",
                     "thoriumEngine", "pumpjack", "lhc", "satelliteRadio"
                 ];
+                if (1 + this.game.prestige.getParagonStorageRatio() < 10) {
+                    var lowParagon = ["carbonSequestration", "pumpjack"];
+                    noup = noup.concat(lowParagon);
+                }
                 if (options.auto.autoparagon.enabled)
                     noup = noup.concat(autoparagonban);
                 if (options.auto.autoparagon.items.infinite.enabled)
