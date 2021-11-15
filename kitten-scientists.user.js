@@ -307,6 +307,7 @@ var run = function() {
             faith: {
                 // Should religion building be automated?
                 enabled: true,
+                refresh:false,
                 // At what percentage of the storage capacity should KS build faith buildings?
                 trigger: 0,
                 // Which religious upgrades should be researched?
@@ -2106,9 +2107,11 @@ var run = function() {
             var bulkManager = this.bulkManager;
             var trigger = options.auto.faith.trigger;
 
+            if (!options.auto.faith.refresh) {
+                buildManager.manager.render();
+            }
             // Render the tab to make sure that the buttons actually exist in the DOM. Otherwise we can't click them.
 
-            var refreshRequired = false;
             var metaData = {};
             for (var name in builds) {
                 var build = builds[name];
