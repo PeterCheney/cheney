@@ -2631,7 +2631,7 @@ var run = function() {
                     var res = this.craftManager.getResource(out);
                     trueOutput[out] = (res.maxValue > 0) ? Math.min(aveOutput[out] * huntCount, Math.max(res.maxValue - res.value, 0)) : aveOutput[out] * huntCount;
                 }*/
-                if (manpower.value >= manpower.maxValue) {
+                if (manpower.value > manpower.maxValue || (manpower.value == manpower.maxValue && !game.resPool.get("spice").value)) {
                     var huntCount = Math.floor(manpower.value * 1e-9);
                     var chron = game.bld.getBuildingExt('chronosphere').meta.val;
                     if (chron && options.auto.autoparagon.items.infinite.enabled && chron < options.auto.build.items.chronosphere.limited) {
