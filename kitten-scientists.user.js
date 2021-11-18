@@ -1718,7 +1718,7 @@ var run = function() {
                 var faithN = Math.min(game.resPool.get("gold").value, game.resPool.get("faith").value);
                 var mintN = Math.min(game.resPool.get("minerals").value, game.resPool.get("gold").value, game.resPool.get("iron").value);
                 var chronosphereN = Math.min(game.resPool.get("science").value, game.resPool.get("timeCrystal").value, game.resPool.get("unobtainium").value, game.resPool.get("manpower").value);
-                kittens_check = Boolean(options.auto.autoparagon.items.infinite.subTrigger);
+                kittens_check = (options.auto.autoparagon.items.infinite.subTrigger != "0");
                 var hutPrice = game.bld.getPriceRatio("hut");
                 options.auto.build.items.hut.limited = Math.floor(Math.max(Math.log2(woodN) - 18.5, 0) / Math.log2(game.bld.getPriceRatio("hut")));
                 var retain_loghouse = 150 + (11 * Math.floor(Math.max(Math.log2(loghouseN) - 36.55, 0)));
